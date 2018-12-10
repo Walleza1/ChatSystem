@@ -8,12 +8,14 @@ import java.net.InetAddress;
 import java.util.Date;
 
 public class User implements Serializable {
-    private int idUser;
+
+	private static final long serialVersionUID = 1L;
+	private int idUser;
     private String pseudo;
     private Date timeStamp;
     private InetAddress address;
 
-    public User(int idUser, String pseudo, Date timeStamp, InetAddress address) {
+    public User(int idUser, String peudo, Date timeStamp, InetAddress address) {
         this.idUser = idUser;
         this.pseudo = pseudo;
         this.timeStamp = timeStamp;

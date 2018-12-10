@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.net.InetAddress;
 
 public abstract class Packet implements Serializable {
-    protected User Source;
+
+	private static final long serialVersionUID = 1L;
+	
+	protected User Source;
     protected User Destination;
     protected InetAddress addrSource;
     protected InetAddress addrDestination;
