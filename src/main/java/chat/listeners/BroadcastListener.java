@@ -12,5 +12,7 @@ public class BroadcastListener extends DatagramListener {
     protected void managePacket(DatagramPacket p) {
         String received=new String(p.getData(),0,p.getLength());
         System.out.println("Broadcast : "+received);
+        notifyObservers();
     }
+
 }

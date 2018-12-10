@@ -9,18 +9,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Observable;
+import java.util.Observer;
 
-public class Main extends Application {
-
+public class Main extends Application implements Observer {
+    public int nb_message=0;
     @Override
     public void start(Stage primaryStage) throws IOException {
-        ClassLoader cl = ClassLoader.getSystemClassLoader();
-
-        URL[] urls = ((URLClassLoader)cl).getURLs();
-
-        for(URL url: urls){
-            System.out.println(url.getFile());
-        }
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
@@ -30,4 +25,11 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        this.nb_message+=1;
+        System.out.println("Nombre message "+this.nb_message);
+    }
+
 }

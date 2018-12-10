@@ -3,8 +3,9 @@ package chat.listeners;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.Observable;
 
-public abstract class DatagramListener extends Thread{
+public abstract class DatagramListener extends Observable implements Runnable {
     protected DatagramSocket socket;
 
     public DatagramListener(DatagramSocket socket) {
@@ -32,6 +33,13 @@ public abstract class DatagramListener extends Thread{
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void notifyObservers() {
+        this.setChanged();
+        super.notifyObservers();
+        this.clearChanged();
     }
 
     protected abstract void managePacket(DatagramPacket p);
