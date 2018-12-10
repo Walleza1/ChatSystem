@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.util.Date;
 
 public class User implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 	private int idUser;
     private String pseudo;
@@ -45,13 +44,4 @@ public class User implements Serializable {
         return address;
     }
 
-   /* @Override
-    public String toJson() {
-        return "{" +
-                "\"idUser:\":"+this.idUser+","+
-                "\"pseudo:\":\""+this.pseudo+"\","+
-                "\"date\":\""+this.timeStamp.toString()+"\","+
-                "\"address\":\""+this.address.toString()+"\","+
-                "}";
-    }*/
 }

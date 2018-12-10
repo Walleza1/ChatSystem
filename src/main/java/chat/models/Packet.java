@@ -2,6 +2,7 @@ package chat.models;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.util.Date;
 
 public abstract class Packet implements Serializable {
 
@@ -11,12 +12,22 @@ public abstract class Packet implements Serializable {
     protected User Destination;
     protected InetAddress addrSource;
     protected InetAddress addrDestination;
+    protected Date timeStamp;
+
 
     public Packet(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
         Source = source;
         Destination = destination;
         this.addrSource = addrSource;
         this.addrDestination = addrDestination;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Date getTimeStamp() {
+        return timeStamp;
     }
 
     public User getSource() {
