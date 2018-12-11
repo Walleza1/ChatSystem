@@ -19,14 +19,14 @@ public class Network extends Observable implements Observer {
 
     private Network() throws SocketException {
         this.broadcastListener=new BroadcastListener(new DatagramSocket(BROADCAST_PORT));
-        this.unicastListener=new UnicastListener(new DatagramSocket(UNICAST_PORT));
+        //this.unicastListener=new UnicastListener(new DatagramSocket(UNICAST_PORT));
         Thread b=new Thread(broadcastListener);
-        Thread c=new Thread(unicastListener);
+        //Thread c=new Thread(unicastListener);
 
         this.broadcastListener.addObserver(this);
 
         b.start();
-        c.start();
+        //c.start();
     }
 
     public static Network getInstance() throws SocketException {

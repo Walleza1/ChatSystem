@@ -10,9 +10,11 @@ public class Message extends Packet {
 	private int idMessage;
     private String contenu;
 
-    public Message(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
-        super(source, destination, addrSource, addrDestination);
-    }
+	public Message(int idMessage,User source, User destination, String contenu) {
+		super(source, destination);
+		this.idMessage = idMessage;
+		this.contenu = contenu;
+	}
 
 	public int getIdMessage() {
 		return idMessage;

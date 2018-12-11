@@ -1,5 +1,6 @@
 package chat;
 
+import chat.models.Message;
 import chat.models.Network;
 import chat.models.User;
 
@@ -13,7 +14,7 @@ public class MainCLI {
         User Vincent=new User(1,"20100",new Date(),InetAddress.getLocalHost());
         User Kompe=new User(2,"Walleza",new Date(),InetAddress.getLocalHost());
         /** Msg def **/
-        //Message msg=new Message(0,Vincent,Kompe,new Date(),"Coucou t nul");
+        Message msg=new Message(1,Vincent,Kompe,"Coucou");
         Network myNet=Network.getInstance();
     }
 }

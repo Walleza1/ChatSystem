@@ -11,12 +11,12 @@ public class Notifications extends Packet {
 	private NotificationType type;
 
 
-	public Notifications(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
-		super(source, destination, addrSource, addrDestination);
+	public Notifications(User source, User destination) {
+		super(source, destination);
 	}
 
-	public Notifications(User source, User destination, InetAddress addrSource, InetAddress addrDestination, NotificationType type) {
-		super(source, destination, addrSource, addrDestination);
+	public Notifications(User source, User destination, NotificationType type) {
+		super(source, destination);
 		this.type = type;
 	}
 
@@ -24,20 +24,20 @@ public class Notifications extends Packet {
 		return type;
 	}
 
-	public Notifications createNewPseudoPaquet(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
-		Notifications ret = new Notifications(source, destination, addrSource, addrDestination);
+	public static Notifications createNewPseudoPaquet(User source, User destination) {
+		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.newPseudo;
 		return ret;
 	}
 
-	public Notifications createNewUserPaquet(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
-		Notifications ret = new Notifications(source, destination, addrSource, addrDestination);
+	public static Notifications createNewUserPaquet(User source, User destination) {
+		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.newUser;
 		return ret;
 	}
 
-	public Notifications createLogOutPaquet(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
-		Notifications ret = new Notifications(source, destination, addrSource, addrDestination);
+	public static Notifications createLogOutPaquet(User source, User destination) {
+		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.logout;
 		return ret;
 	}

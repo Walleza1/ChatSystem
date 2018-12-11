@@ -10,16 +10,12 @@ public abstract class Packet implements Serializable {
 	
 	protected User Source;
     protected User Destination;
-    protected InetAddress addrSource;
-    protected InetAddress addrDestination;
     protected Date timeStamp;
 
 
-    public Packet(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
+    public Packet(User source, User destination ){
         Source = source;
         Destination = destination;
-        this.addrSource = addrSource;
-        this.addrDestination = addrDestination;
     }
 
     public static long getSerialVersionUID() {
@@ -44,21 +40,5 @@ public abstract class Packet implements Serializable {
 
     public void setDestination(User destination) {
         Destination = destination;
-    }
-
-    public InetAddress getAddrSource() {
-        return addrSource;
-    }
-
-    public void setAddrSource(InetAddress addrSource) {
-        this.addrSource = addrSource;
-    }
-
-    public InetAddress getAddrDestination() {
-        return addrDestination;
-    }
-
-    public void setAddrDestination(InetAddress addrDestination) {
-        this.addrDestination = addrDestination;
     }
 }

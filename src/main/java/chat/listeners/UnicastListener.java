@@ -1,17 +1,50 @@
 package chat.listeners;
 
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import chat.models.Packet;
+import chat.models.User;
 
-public class UnicastListener extends DatagramListener {
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Observable;
 
-    public UnicastListener(DatagramSocket socket) {
-        super(socket);
+public class UnicastListener extends Observable implements Runnable{
+    public ServerSocket socket;
+
+    private HashMap<User,Thread> chatRooms;
+
+    public UnicastListener(ServerSocket socket) {
+        this.socket=socket;
+        this.chatRooms=new HashMap<User,Thread>();
     }
 
     @Override
-    protected void managePacket(DatagramPacket p) {
-        String received=new String(p.getData(),0,p.getLength());
+    public void notifyObservers() {
+        this.setChanged();
+        super.notifyObservers();
+        this.clearChanged();
+    }
+
+    protected void managePacket(Packet p) {
+        String received=p.getClass().toString();
         System.out.println("Unicast : "+received);
+        notifyObservers();
+    }
+
+    @Override
+    public void run() {
+        try {
+            Socket distant=this.socket.accept();
+            ObjectInputStream is = new ObjectInputStream(distant.getInputStream());
+            Packet p = (Packet) is.readObject();
+            managePacket(p);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 }

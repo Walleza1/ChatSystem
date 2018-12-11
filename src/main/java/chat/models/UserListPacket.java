@@ -7,10 +7,11 @@ public class UserListPacket extends Packet {
 
 	private static final long serialVersionUID = 1L;
 	
-	private ArrayList <User> UserList = new ArrayList <User> (); 
+	private ArrayList <User> UserList = new ArrayList <User> ();
 
-	private UserListPacket(User source, User destination, InetAddress addrSource, InetAddress addrDestination) {
-		super(source, destination, addrSource, addrDestination);
+	public UserListPacket(User source, User destination, ArrayList<User> userList) {
+		super(source, destination);
+		UserList = userList;
 	}
 
 	public ArrayList<User> getUserList() {
