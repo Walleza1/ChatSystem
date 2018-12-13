@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -15,9 +14,11 @@ public class Main extends Application implements Observer {
     public int nb_message=0;
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("chat.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("root.fxml"));
         primaryStage.setTitle("Clavardage 1.0");
-        primaryStage.setScene(new Scene(root, 1280, 720));
+        Scene scene = new Scene(root, 1280, 720);
+        primaryStage.setScene(scene);
+        scene.setRoot(FXMLLoader.load(getClass().getClassLoader().getResource("login.fxml")));
         primaryStage.show();
     }
 

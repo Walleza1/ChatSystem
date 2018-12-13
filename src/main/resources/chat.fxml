@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -20,11 +28,67 @@
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31;">
                <children>
-                  <HBox prefHeight="720.0" prefWidth="427.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <GridPane prefHeight="720.0" prefWidth="427.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
                      <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="80.0" style="-fx-background-color: #1c2127;" />
+                        <AnchorPane maxWidth="80.0" minWidth="80.0" prefHeight="200.0" prefWidth="80.0" style="-fx-background-color: #1D232A;">
+                           <children>
+                              <AnchorPane layoutX="1.0" layoutY="23.0" style="-fx-background-color: #1D232A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+                                 <children>
+                                    <ImageView fitHeight="150.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                                       <image>
+                                          <Image url="@../../../img/5ed9d6f25cc4b49fba68d5cd133f11fa.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutY="136.0" style="-fx-background-color: #1D232A;" AnchorPane.bottomAnchor="538.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="136.0">
+                                 <children>
+                                    <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="65.0" text="About" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font></Button>
+                                 </children>
+                              </AnchorPane>
+                              <Line endX="70.0" startX="10.0" stroke="#6ed9a0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
+                           </children>
+                        </AnchorPane>
+                        <GridPane GridPane.columnIndex="1">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="120.0" prefHeight="120.0" vgrow="NEVER" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <AnchorPane prefHeight="120.0" prefWidth="210.0" GridPane.vgrow="NEVER">
+                                 <children>
+                                    <Circle fill="DODGERBLUE" layoutX="67.0" layoutY="69.0" radius="45.0" stroke="#ffffff00" strokeType="INSIDE" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
+                                    <Label layoutX="123.0" layoutY="37.0" prefHeight="21.0" prefWidth="203.0" text="Username" textFill="WHITE" AnchorPane.leftAnchor="120.0">
+                                       <font>
+                                          <Font name="Century Gothic" size="36.0" />
+                                       </font>
+                                    </Label>
+                                 </children></AnchorPane>
+                              <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31;" GridPane.rowIndex="1">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <GridPane.margin>
+                                    <Insets left="2.0" right="2.0" />
+                                 </GridPane.margin>
+                              </ListView>
+                           </children>
+                        </GridPane>
                      </children>
-                  </HBox>
+                  </GridPane>
                </children></AnchorPane>
          </children>
       </GridPane>

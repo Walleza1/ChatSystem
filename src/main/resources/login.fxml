@@ -52,25 +52,42 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField maxWidth="286.0" minHeight="70.0" prefHeight="31.0" prefWidth="30.0" promptText="Nom d'utilisateur" scaleShape="false" GridPane.hgrow="NEVER" GridPane.rowIndex="2">
+                        <StackPane GridPane.hgrow="NEVER" GridPane.rowIndex="2">
                            <GridPane.margin>
-                              <Insets left="140.0" />
-                           </GridPane.margin>
-                           <font>
-                              <Font name="Century Gothic" size="31.0" />
-                           </font>
-                           <opaqueInsets>
                               <Insets />
-                           </opaqueInsets>
-                        </TextField>
-                        <Button mnemonicParsing="false" style="-fx-background-color: #6ED9A0;" text="Se connecter" textFill="WHITE" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets left="140.0" />
                            </GridPane.margin>
-                           <font>
-                              <Font name="Century Gothic" size="36.0" />
-                           </font>
-                        </Button>
+                           <children>
+                              <TextField maxWidth="286.0" minHeight="70.0" prefHeight="31.0" prefWidth="30.0" promptText="Nom d'utilisateur" scaleShape="false">
+                                 <font>
+                                    <Font name="Century Gothic" size="31.0" />
+                                 </font>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </TextField>
+                           </children>
+                        </StackPane>
+                        <StackPane GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                           <children>
+                              <Button fx:id="test" mnemonicParsing="false" style="-fx-background-color: #6ED9A0;" text="Se connecter" textFill="WHITE">
+                                 <font>
+                                    <Font name="Century Gothic" size="36.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </StackPane>
+                        <StackPane GridPane.rowIndex="5">
+                           <children>
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Jérome Kompé - Vincent Erb" textFill="WHITE">
+                                 <font>
+                                    <Font name="Century Gothic" size="21.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </StackPane>
                      </children>
                   </GridPane>
                </children>
