@@ -1,5 +1,6 @@
 package chat.net;
 
+import chat.models.ObserverFlag;
 import chat.models.Packet;
 
 import java.io.*;
@@ -28,11 +29,14 @@ public class Discussion extends Observable implements Runnable{
             try {
                 Packet p = (Packet) in.readObject();
                 this.setChanged();
-                notifyObservers(p);
+                ObserverFlag observerFlag=new ObserverFlag(ObserverFlag.Flag.packetReceived,p);
+                notifyObservers(observerFlag);
                 this.clearChanged();
             }catch (Exception e) {
                 try {
                     this.distant.close();
+                    ObserverFlag observerFlag=new ObserverFlag(ObserverFlag.Flag.close);
+                    notifyObservers(observerFlag);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

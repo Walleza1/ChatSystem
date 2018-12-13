@@ -1,6 +1,7 @@
 package chat;
 
 import chat.models.Packet;
+import chat.net.NetworkManager;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -26,24 +27,16 @@ public class TestTCP {
         Packet p = (Packet) in.readObject();
 
         System.out.println("Packet received "+p.getClass().toString());*/
-
+        InetAddress local=Inet4Address.getLocalHost();
+        System.out.println(local);
+        InetAddress myAddr=null;
         try(final DatagramSocket socket = new DatagramSocket()){
             socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-            System.out.println("Here "+socket.getLocalAddress().getHostAddress());
+            myAddr=socket.getLocalAddress();
+            socket.close();
         }
-        Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
-        while (e.hasMoreElements())
-        {
-            NetworkInterface n = e.nextElement();
-            System.out.println(n.getName());
-            Enumeration<InetAddress> ee = n.getInetAddresses();
-            while (ee.hasMoreElements())
-            {
-                InetAddress i = ee.nextElement();
-                if (!i.isSiteLocalAddress()){
-                    System.out.println("\t"+i.getHostAddress());
-                }
-            }
-        }
+        NetworkInterface i=NetworkInterface.getByInetAddress(myAddr);
+        System.out.println(i.getInterfaceAddresses().size());
+        System.out.println(i.getInterfaceAddresses().get(0).getBroadcast());
     }
 }

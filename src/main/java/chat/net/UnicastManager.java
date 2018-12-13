@@ -1,5 +1,6 @@
 package chat.net;
 
+import chat.models.ObserverFlag;
 import chat.models.Packet;
 
 import java.io.IOException;
@@ -52,13 +53,13 @@ public class UnicastManager extends Observable implements Runnable, Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        managePacket((Packet) o);
-        System.out.println("Taille ChatRooms "+this.chatRooms.size());
-        Discussion mine=((Discussion)observable);
-        try {
-            mine.sendMessage((Packet)o);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (o instanceof ObserverFlag){
+            ObserverFlag observerFlag=(ObserverFlag) o;
+            if (observerFlag.getFlag() == ObserverFlag.Flag.packetReceived){
+                notifyObservers(observerFlag.getPacket());
+            }else{
+                chatRooms.remove(observable);
+            }
         }
     }
 }

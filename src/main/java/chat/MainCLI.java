@@ -1,6 +1,7 @@
 package chat;
 
 import chat.models.Message;
+import chat.models.Notifications;
 import chat.net.NetworkManager;
 import chat.models.User;
 
@@ -16,5 +17,9 @@ public class MainCLI {
         /** Msg def **/
         Message msg = new Message(1, Vincent, Kompe, "Coucou");
         NetworkManager myNet = NetworkManager.getInstance();
+
+        Notifications notifications=Notifications.createNewUserPaquet(Vincent,Kompe);
+
+        myNet.sendPacket(notifications);
     }
 }

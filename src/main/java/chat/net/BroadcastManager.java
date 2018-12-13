@@ -20,10 +20,13 @@ public class BroadcastManager extends Observable implements Runnable{
             try {
                 socket.receive(incomingPacket);
                 byte[] data = incomingPacket.getData();
+
                 //String receveid=new String(incomingData,0,incomingPacket.getLength());
                 ByteArrayInputStream in = new ByteArrayInputStream(data);
                 ObjectInputStream is = new ObjectInputStream(in);
+
                 Packet p = (Packet) is.readObject();
+
                 //pas la peine de lire ce qu'on envoie !
                 //if(!p.getAddrSource().equals(ContactCollection.getMe().getIp())) {
                 managePacket(p);
@@ -42,7 +45,6 @@ public class BroadcastManager extends Observable implements Runnable{
     }
 
     protected void managePacket(Packet p) {
-        //String received=new String(p.getData(),0,p.getLength());
         String received=p.getClass().toString();
         System.out.println("Broadcast : "+received);
         this.setChanged();
@@ -52,18 +54,17 @@ public class BroadcastManager extends Observable implements Runnable{
 
     public void sendPacket(Packet p){
         try {
-            DatagramSocket sendersock=new DatagramSocket();
-            sendersock.setBroadcast(true);
-            InetAddress br=InetAddress.getByName("255.255.255.255");
+            DatagramSocket senderSocket=new DatagramSocket();
+            senderSocket.setBroadcast(true);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(outputStream);
             os.writeObject(p);
             byte[] data = outputStream.toByteArray();
             outputStream.close();
             os.close();
-            DatagramPacket sendPacket = new DatagramPacket(data, data.length, br, 6668);
-            sendersock.send(sendPacket);
-            sendersock.close();
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, NetworkManager.broadcastAddr, NetworkManager.BROADCAST_PORT);
+            senderSocket.send(sendPacket);
+            senderSocket.close();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
