@@ -9,27 +9,20 @@ import java.util.Date;
 
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int idUser;
     private String pseudo;
     private Date timeStamp;
     private InetAddress address;
 
-    public User(int idUser, String peudo, Date timeStamp, InetAddress address) {
-        this.idUser = idUser;
+    public User(String pseudo, Date timeStamp, InetAddress address) {
         this.pseudo = pseudo;
         this.timeStamp = timeStamp;
         this.address = address;
     }
 
-    public User(int idUser, String pseudo, InetAddress address) {
-        this.idUser = idUser;
+    public User(String pseudo, InetAddress address) {
         this.pseudo = pseudo;
         this.timeStamp=new Date();
         this.address = address;
-    }
-
-    public int getIdUser() {
-        return idUser;
     }
 
     public String getPseudo() {

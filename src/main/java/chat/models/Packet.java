@@ -1,7 +1,6 @@
 package chat.models;
 
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.util.Date;
 
 public abstract class Packet implements Serializable {
