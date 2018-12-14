@@ -3,7 +3,10 @@ package chat.net;
 import chat.models.ObserverFlag;
 import chat.models.Packet;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -36,14 +39,20 @@ public class UnicastManager extends Observable implements Runnable, Observer {
     public void run() {
         try {
             while(true) {
-                System.out.println("UnicastManager en attente");
                 Socket distant = this.socket.accept();
+                System.out.println("Connexion étalie");
+
+                ObjectInputStream in=new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
+                Packet p = (Packet) in.readObject();
+                notifyObservers(p);
                 Discussion discussion =new Discussion(distant);
                 discussion.addObserver(this);
                 chatRooms.put(distant.getInetAddress(), discussion);
                 new Thread(discussion).start();
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
