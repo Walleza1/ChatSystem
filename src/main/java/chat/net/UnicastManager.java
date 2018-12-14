@@ -35,7 +35,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
     @Override
     public void run() {
         try {
-            while(!this.socket.isClosed()) {
+            while(true) {
                 System.out.println("UnicastManager en attente");
                 Socket distant = this.socket.accept();
                 Discussion discussion =new Discussion(distant);

@@ -2,11 +2,9 @@ package chat.net;
 
 import chat.models.Notifications;
 import chat.models.Packet;
-import chat.models.User;
 
 import java.io.IOException;
 import java.net.*;
-import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -33,14 +31,15 @@ public class NetworkManager extends Observable implements Observer {
      * Search our routable InetAddress and the broadcast InetAddress
      * @throws SocketException
      */
-    private NetworkManager() throws SocketException, UnknownHostException {
-        this.broadcastManager =new BroadcastManager(udpSocket);
+    private NetworkManager() {
         try {
-            this.unicastManager =new UnicastManager(tcpSocket);
             this.udpSocket=new DatagramSocket(BROADCAST_PORT);
             this.tcpSocket=new ServerSocket(UNICAST_PORT);
+            this.broadcastManager =new BroadcastManager(udpSocket);
+            this.unicastManager =new UnicastManager(tcpSocket);
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error lors création socket");
         }
         Thread b=new Thread(broadcastManager);
         Thread c=new Thread(unicastManager);
@@ -57,9 +56,16 @@ public class NetworkManager extends Observable implements Observer {
             this.myAddr =socket.getLocalAddress();
         } catch (UnknownHostException e) {
             System.out.println("No Internet");
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
         // Get our local network broadcast InetAddress.
-        NetworkInterface ni=NetworkInterface.getByInetAddress(this.myAddr);
+        NetworkInterface ni= null;
+        try {
+            ni = NetworkInterface.getByInetAddress(this.myAddr);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         for (int i=0;i<ni.getInterfaceAddresses().size();i++){
             if (ni.getInterfaceAddresses().get(i).getBroadcast() != null){
                 broadcastAddr=ni.getInterfaceAddresses().get(i).getBroadcast();
@@ -68,13 +74,9 @@ public class NetworkManager extends Observable implements Observer {
     }
 
     /** Singleton Instance **/
-    public static NetworkManager getInstance() throws SocketException {
+    public static NetworkManager getInstance() {
         if (uniqueInstance==null){
-            try {
-                uniqueInstance=new NetworkManager();
-            } catch (UnknownHostException e) {
-                System.out.println("Cannot create NetWorkManager");
-            }
+            uniqueInstance=new NetworkManager();
         }
         return uniqueInstance;
     }
@@ -101,9 +103,6 @@ public class NetworkManager extends Observable implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         this.setChanged();
-        if (o!=null) {
-            System.out.println("NetWorkManager :" + o.getClass().toString());
-        }
         notifyObservers(o);
         this.clearChanged();
     }

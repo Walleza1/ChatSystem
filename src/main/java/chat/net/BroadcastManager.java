@@ -19,7 +19,7 @@ public class BroadcastManager extends Observable implements Runnable{
      */
     public void run() {
         byte[] incomingData = new byte[1024];
-        while(!this.socket.isClosed()) {
+        while(true) {
             DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
             try {
                 socket.receive(incomingPacket);

@@ -1,24 +1,33 @@
 package chat;
-//TODO
 
+import chat.models.Message;
+import chat.models.Packet;
 import chat.models.User;
+import chat.net.NetworkManager;
 
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Scanner;
 
-public class Controller {
-
+public class Controller implements Observer,Runnable {
     private User self;
+    private User distant;
+    private NetworkManager myNet;
 
-    {
+    private Controller(){
         try {
-            self = new User("default", InetAddress.getByName("127.0.0.1"));
+            this.myNet=NetworkManager.getInstance();
+            this.myNet.addObserver(this);
+            this.self=new User("Moi", new Date(), myNet.getMyAddr());
+            this.distant=new User("Lui",new Date(), InetAddress.getByName("10.32.0.83"));
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            System.out.println("Distant failed");
         }
     }
-
-    private Controller(){}
 
     private static Controller INSTANCE = null;
 
@@ -46,4 +55,33 @@ public class Controller {
     }
 
     public boolean isUsernameAvailable(String s){return true;}
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Packet p=(Packet)o;
+        if (p instanceof Message) {
+            Message m=(Message) p;
+            System.out.println("From " + ((Packet) o).getSource().getPseudo() + " : " + m.getContenu());
+        }
+    }
+
+    public void sendPacket(Packet p){
+        this.myNet.sendPacket(p);
+    }
+
+    @Override
+    public void run() {
+        Scanner scan=new Scanner(System.in);
+        Boolean close=false;
+        Message msg=null;
+        while(!close){
+            String str = scan.nextLine();
+            if (str.equals("close")){
+                close=true;
+                continue;
+            }
+            msg=new Message(1,this.self,this.distant,str);
+            this.sendPacket(msg);
+        }
+    }
 }
