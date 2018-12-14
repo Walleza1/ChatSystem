@@ -24,6 +24,7 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        userList.setStyle("-fx-control-inner-background: #242A31;");
         userList.getItems().add("Ceci est un test");
         userList.getItems().add("Ceci est un autre test djhefjehsdkgjdhfcglfkjhdglkjfhgk");
         username.setText(controller.getUsername());

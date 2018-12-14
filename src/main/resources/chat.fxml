@@ -68,14 +68,14 @@
                               <AnchorPane prefHeight="120.0" prefWidth="210.0" GridPane.vgrow="NEVER">
                                  <children>
                                     <Circle fill="DODGERBLUE" layoutX="67.0" layoutY="69.0" radius="45.0" stroke="#ffffff00" strokeType="INSIDE" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
-                                    <Label fx:id="username" layoutX="123.0" layoutY="37.0" maxWidth="500.0" prefHeight="46.0" prefWidth="208.0" text="Username" textFill="WHITE" AnchorPane.leftAnchor="120.0">
+                                    <Label fx:id="username" layoutX="123.0" layoutY="37.0" maxWidth="500.0" prefHeight="46.0" prefWidth="208.0" text="Username" textFill="WHITE" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="0.0">
                                        <font>
                                           <Font name="Century Gothic" size="36.0" />
                                        </font>
                                     </Label>
                                  </children>
                               </AnchorPane>
-                              <ListView fx:id="userList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31;" GridPane.rowIndex="1">
+                              <ListView fx:id="userList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31; -fx-border-color: #242A31; -fx-border-width: 0;" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>

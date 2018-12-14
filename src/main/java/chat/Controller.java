@@ -6,7 +6,6 @@ import chat.models.User;
 import chat.net.NetworkManager;
 
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Observable;
@@ -23,7 +22,7 @@ public class Controller implements Observer,Runnable {
             this.myNet=NetworkManager.getInstance();
             this.myNet.addObserver(this);
             this.self=new User("Moi", new Date(), myNet.getMyAddr());
-            this.distant=new User("Lui",new Date(), InetAddress.getByName("10.32.0.83"));
+            this.distant=new User("Lui",new Date(), InetAddress.getByName("10.32.2.222"));
         } catch (UnknownHostException e) {
             System.out.println("Distant failed");
         }
