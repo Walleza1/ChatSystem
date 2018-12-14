@@ -8,15 +8,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
@@ -42,6 +41,8 @@ public class ChatController implements Initializable {
     @FXML
     private ListView userList;
 
+    private TextField newUsername = null;
+
     @FXML
     public void logOut (MouseEvent event) throws IOException {
         //call controller method Delete all data
@@ -53,9 +54,30 @@ public class ChatController implements Initializable {
     }
 
     @FXML
+    public void About () {
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("À-propos");
+        alert.setHeaderText(null);
+        alert.setContentText("Ce projet a été réalisé dans le cadre du projet POO 2018 par Jérôme Kompé et Vincent Erb à l'INSA Toulouse.");
+
+        alert.showAndWait();
+    }
+
+
+    @FXML
     public void changeUsername () {
-        System.out.println("Coucou");
-        username.setText("");
+        TextInputDialog dialog = new TextInputDialog("walter");
+        dialog.setTitle("Changer de nom d'utilisateur");
+        dialog.setHeaderText("Changement de nom d'utilisateur");
+        dialog.setContentText("Entrer un nouveau nom d'utilisateur : ");
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()){
+            if (controller.isUsernameAvailable(result.get())) {
+                username.setText(result.get());
+            }
+        }
     }
 
 }

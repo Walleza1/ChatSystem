@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -46,9 +48,29 @@ public class LoginController implements Initializable {
             app_stage.setScene(chat_scene);
             app_stage.show();
         }
-
-
     }
+
+    @FXML
+    public void connectViaEnter (KeyEvent event) throws IOException{
+        if(event.getCode().equals(KeyCode.ENTER)){
+            if (userTextField.getText().equals("")){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous devez entrer un nom d'utilisateur.");
+                alert.showAndWait();
+
+            } else if (controller.isUsernameAvailable(userTextField.getText())){
+                controller.setUsername(userTextField.getText());
+                Parent chat_parent = FXMLLoader.load(getClass().getResource("/chat.fxml"));
+                Scene chat_scene = new Scene(chat_parent);
+                Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                app_stage.setScene(chat_scene);
+                app_stage.show();
+            }
+        }
+    }
+
     @FXML
     public void handleHoverConnect(){
         test.setStyle("-fx-background-color: #79f4b3;");
