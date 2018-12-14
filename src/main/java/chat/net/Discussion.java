@@ -12,17 +12,33 @@ public class Discussion extends Observable implements Runnable{
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    /**
+     * Représentation d'une discussion en tcp.
+     * @param distant
+     * @throws IOException
+     */
     public Discussion(Socket distant) throws IOException {
         this.distant = distant;
         this.out = new ObjectOutputStream(distant.getOutputStream());
         this.in = new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
     }
 
-
+    /** Envois d'un packet
+     * Lorsqu'un packet est envoyé, il est envoyé en objet serialized.
+     * @param p
+     * @throws IOException
+     */
     public void sendMessage(Packet p) throws IOException {
         out.writeObject(p);
     }
 
+    /**
+     * Socket en attente d'un packet.
+     * Lorsque le Socket est fermé
+     *  - Par le correspondant.
+     *  - A cause d'une erreur TCP.
+     * Je notifie mon observateur grâce à l'object ObserverFlag.
+     */
     @Override
     public void run() {
         while(!this.distant.isClosed()){

@@ -1,7 +1,5 @@
 package chat.models;
 
-import java.net.InetAddress;
-
 public class Notifications extends Packet {
 	public enum NotificationType {
 		newPseudo, newUser, logout;

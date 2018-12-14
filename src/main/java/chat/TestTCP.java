@@ -1,13 +1,10 @@
 package chat;
 
-import chat.models.Packet;
-import chat.net.NetworkManager;
-
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.net.*;
-import java.util.Enumeration;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 
 public class TestTCP {
     public static void main(String args[]) throws IOException, ClassNotFoundException {

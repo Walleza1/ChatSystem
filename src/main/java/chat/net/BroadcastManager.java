@@ -13,6 +13,10 @@ public class BroadcastManager extends Observable implements Runnable{
         this.socket = socket;
     }
 
+    /** DatagrammeSocket in received state.
+     * We use ObjectInputStream And ObjectOutputStream.
+     * When we're gonna receive a packet notify observers.
+     */
     public void run() {
         byte[] incomingData = new byte[1024];
         while(!this.socket.isClosed()) {
@@ -21,16 +25,12 @@ public class BroadcastManager extends Observable implements Runnable{
                 socket.receive(incomingPacket);
                 byte[] data = incomingPacket.getData();
 
-                //String receveid=new String(incomingData,0,incomingPacket.getLength());
                 ByteArrayInputStream in = new ByteArrayInputStream(data);
                 ObjectInputStream is = new ObjectInputStream(in);
 
                 Packet p = (Packet) is.readObject();
-
-                //pas la peine de lire ce qu'on envoie !
-                //if(!p.getAddrSource().equals(ContactCollection.getMe().getIp())) {
                 managePacket(p);
-                //}
+
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -38,20 +38,27 @@ public class BroadcastManager extends Observable implements Runnable{
     }
 
     @Override
-    public void notifyObservers() {
+    public void notifyObservers(Object p) {
         this.setChanged();
-        super.notifyObservers();
+        super.notifyObservers(p);
         this.clearChanged();
     }
 
+    /**
+     * What do our BroadcastManager do when it receive a packet.
+     * Transmit it to our observers
+     * @param p
+     */
     protected void managePacket(Packet p) {
         String received=p.getClass().toString();
         System.out.println("Broadcast : "+received);
-        this.setChanged();
-        notifyObservers();
-        this.clearChanged();
+        notifyObservers(p);
     }
 
+    /** Send Packet
+     * Broadcast a UDP Packet thru local network.
+     * @param p
+     */
     public void sendPacket(Packet p){
         try {
             DatagramSocket senderSocket=new DatagramSocket();
@@ -65,12 +72,8 @@ public class BroadcastManager extends Observable implements Runnable{
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, NetworkManager.broadcastAddr, NetworkManager.BROADCAST_PORT);
             senderSocket.send(sendPacket);
             senderSocket.close();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Envois d'un packet udp broadcast raté");
         }
     }
 }
