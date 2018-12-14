@@ -37,4 +37,6 @@ public class User implements Serializable {
         return address;
     }
 
+    public void setPseudo (String s){ this.pseudo = s;}
+
 }

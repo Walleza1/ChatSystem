@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.ChatController">
    <children>
       <GridPane prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -41,22 +41,24 @@
                            <children>
                               <AnchorPane layoutX="1.0" layoutY="23.0" style="-fx-background-color: #1D232A;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
                                  <children>
-                                    <ImageView fitHeight="150.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                                    <ImageView fx:id="changeUsernameIcon" fitHeight="150.0" fitWidth="50.0" onMouseClicked="#changeUsername" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                                        <image>
                                           <Image url="@../../../img/5ed9d6f25cc4b49fba68d5cd133f11fa.png" />
                                        </image>
                                     </ImageView>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane layoutY="136.0" style="-fx-background-color: #1D232A;" AnchorPane.bottomAnchor="538.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="136.0">
-                                 <children>
-                                    <Button mnemonicParsing="false" prefHeight="46.0" prefWidth="65.0" text="About" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font></Button>
-                                 </children>
-                              </AnchorPane>
                               <Line endX="70.0" startX="10.0" stroke="#6ed9a0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
+                              <Button fx:id="logout" layoutX="7.0" layoutY="200.0" mnemonicParsing="false" onMouseClicked="#logOut" prefHeight="46.0" prefWidth="65.0" text="X" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+                                 <font>
+                                    <Font name="Roboto" size="20.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="logout1" layoutX="14.0" layoutY="134.0" mnemonicParsing="false" onMouseClicked="#logOut" prefHeight="46.0" prefWidth="65.0" text="about" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="136.0">
+                                 <font>
+                                    <Font name="Roboto" size="12.0" />
+                                 </font>
+                              </Button>
                            </children>
                         </AnchorPane>
                         <GridPane GridPane.columnIndex="1">
@@ -71,13 +73,13 @@
                               <AnchorPane prefHeight="120.0" prefWidth="210.0" GridPane.vgrow="NEVER">
                                  <children>
                                     <Circle fill="DODGERBLUE" layoutX="67.0" layoutY="69.0" radius="45.0" stroke="#ffffff00" strokeType="INSIDE" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
-                                    <Label layoutX="123.0" layoutY="37.0" prefHeight="21.0" prefWidth="203.0" text="Username" textFill="WHITE" AnchorPane.leftAnchor="120.0">
+                                    <Label fx:id="username" layoutX="123.0" layoutY="37.0" prefHeight="21.0" prefWidth="203.0" text="Username" textFill="WHITE" AnchorPane.leftAnchor="120.0">
                                        <font>
                                           <Font name="Century Gothic" size="36.0" />
                                        </font>
                                     </Label>
                                  </children></AnchorPane>
-                              <ListView prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31;" GridPane.rowIndex="1">
+                              <ListView fx:id="userList" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31;" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>

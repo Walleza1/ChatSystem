@@ -1,5 +1,6 @@
 package chat;
 
+import chat.view.LoginController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -11,14 +12,14 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class Main extends Application implements Observer {
-    public int nb_message=0;
+
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("root.fxml"));
+
+        Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
+        Scene scene = new Scene (root);
         primaryStage.setTitle("Clavardage 1.0");
-        Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
-        scene.setRoot(FXMLLoader.load(getClass().getClassLoader().getResource("login.fxml")));
         primaryStage.show();
     }
 
@@ -28,8 +29,7 @@ public class Main extends Application implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        this.nb_message+=1;
-        System.out.println("Nombre message "+this.nb_message);
+
     }
 
 }

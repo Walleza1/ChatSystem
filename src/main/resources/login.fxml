@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #242A31;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #242A31;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.LoginController">
    <children>
       <Line endX="300.0" rotate="90.0" startX="-300.0" stroke="#fbfcfc" />
       <GridPane>
@@ -57,7 +57,7 @@
                               <Insets />
                            </GridPane.margin>
                            <children>
-                              <TextField maxWidth="286.0" minHeight="70.0" prefHeight="31.0" prefWidth="30.0" promptText="Nom d'utilisateur" scaleShape="false">
+                              <TextField fx:id="userTextField" maxWidth="286.0" minHeight="70.0" prefHeight="31.0" prefWidth="30.0" promptText="Nom d'utilisateur" scaleShape="false">
                                  <font>
                                     <Font name="Century Gothic" size="31.0" />
                                  </font>
@@ -72,7 +72,7 @@
                               <Insets />
                            </GridPane.margin>
                            <children>
-                              <Button fx:id="test" mnemonicParsing="false" style="-fx-background-color: #6ED9A0;" text="Se connecter" textFill="WHITE">
+                              <Button fx:id="test" mnemonicParsing="false" onMouseClicked="#handleLoginClick" onMouseEntered="#handleHoverConnect" onMouseExited="#handleHoverConnectDone" style="-fx-background-color: #6ED9A0;" text="Se connecter" textFill="WHITE">
                                  <font>
                                     <Font name="Century Gothic" size="36.0" />
                                  </font>
