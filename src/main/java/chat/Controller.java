@@ -13,7 +13,7 @@ import java.util.*;
 public class Controller implements Observer,Runnable {
     private User self;
     private User distant;
-    private ArrayList<User> userList;
+    private ArrayList<User> userList = new ArrayList<User>();
     private NetworkManager myNet;
 
     private Controller(){
@@ -58,7 +58,18 @@ public class Controller implements Observer,Runnable {
         this.sendPacket(notifications);
         System.out.println("hi");
         //TODO timer
+        userList.add(getSelf());
         return true;
+    }
+
+    public boolean usernameInList(String s){
+        boolean res = false;
+        for (User u : userList){
+            if (u.getPseudo() == s){
+                res = true;
+            }
+        }
+        return res;
     }
 
     @Override
@@ -100,5 +111,6 @@ public class Controller implements Observer,Runnable {
     public void logout () {
         //TODO
         //Deletes all user data, resetting the app as if it was launched for the first time
+        INSTANCE = new Controller();
     }
 }

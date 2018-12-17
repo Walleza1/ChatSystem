@@ -104,8 +104,14 @@ public class ChatController implements Initializable {
         Optional<String> result = dialog.showAndWait();
 
         if (result.isPresent()){
-            if (controller.isUsernameAvailable(result.get())) {
+            if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Ce nom d'utilisateur est déjà pris");
+                alert.showAndWait();
             }
         }
     }
