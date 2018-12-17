@@ -15,6 +15,7 @@ public class Controller implements Observer,Runnable {
     private User distant;
     private ArrayList<User> userList = new ArrayList<User>();
     private NetworkManager myNet;
+    private Boolean usernameOk = true;
 
     private Controller(){
         try {
@@ -56,7 +57,14 @@ public class Controller implements Observer,Runnable {
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
         this.sendPacket(notifications);
-        //TODO timer
+
+        long d = System.currentTimeMillis();
+        while(System.currentTimeMillis() < d + 1000){
+            if(!usernameOk){
+                return false;
+            }
+        }
+        System.out.println("OK");
         userList.add(getSelf());
         return true;
     }
@@ -76,6 +84,20 @@ public class Controller implements Observer,Runnable {
         Packet p=(Packet)o;
         if (p instanceof Notifications) {
             System.out.println("Received Notifications "+((Notifications) p).getType().toString());
+            //TYPE NEW USER
+            if (((Notifications) p).getType() == Notifications.NotificationType.newUser) {
+                //TODO
+                //Send list of users
+
+                //TYPE NEW PSEUDO
+            } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
+                System.out.println("newPseudoNotif received");
+                for (User u : userList){
+                    if(u.getAddress() == p.getSource().getAddress()){
+                        u.setPseudo(p.getSource().getPseudo());
+                    }
+                }
+            }
         }else{
             if (p instanceof Message) {
                 Message m=(Message) p;

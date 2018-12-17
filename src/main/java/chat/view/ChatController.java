@@ -108,6 +108,7 @@ public class ChatController implements Initializable {
             if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
                 controller.sendPacket(Notifications.createNewPseudoPaquet(controller.getSelf(),null));
+                System.out.println("Sent new pseudo packet");
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Erreur");
