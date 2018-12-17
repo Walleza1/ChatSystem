@@ -26,6 +26,7 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        userList.setStyle("-fx-background-insets: 0 ;");
         userList.setStyle("-fx-control-inner-background: #242A31;");
         userList.setFixedCellSize(50);
         userList.getItems().add("Jean");
@@ -33,6 +34,7 @@ public class ChatController implements Initializable {
         userList.getItems().add("Qui");
         userList.getItems().add("Danse");
         username.setText(controller.getUsername());
+        distantUser.setOpacity(0);
     }
 
     @FXML
@@ -42,12 +44,20 @@ public class ChatController implements Initializable {
     private Label username;
 
     @FXML
+    private Label distantUser;
+
+    @FXML
     private ImageView changeUsernameIcon;
 
     @FXML
     private ListView userList;
 
+    @FXML
     private TextField newUsername = null;
+
+    @FXML
+    private Button closeDiscussionButton;
+
 
     @FXML
     public void logOut (MouseEvent event) throws IOException {
@@ -88,4 +98,9 @@ public class ChatController implements Initializable {
         }
     }
 
+    @FXML
+    public void userClicked () {
+        distantUser.setOpacity(1);
+        distantUser.setText((String) userList.getSelectionModel().getSelectedItem());
+    }
 }
