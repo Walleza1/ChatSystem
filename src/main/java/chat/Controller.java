@@ -73,6 +73,7 @@ public class Controller implements Observer,Runnable {
         Scanner scan=new Scanner(System.in);
         Boolean close=false;
         Message msg=null;
+        System.out.println("My address "+this.myNet.getMyAddr());
         while(!close){
             String str = scan.nextLine();
             if (str.equals("close")){

@@ -39,20 +39,22 @@ public class UnicastManager extends Observable implements Runnable, Observer {
     public void run() {
         try {
             while(true) {
+                System.out.println("Unicast Server Ok");
                 Socket distant = this.socket.accept();
                 System.out.println("Connexion étalie");
 
-                ObjectInputStream in=new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
+                /*ObjectInputStream in=new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
                 Packet p = (Packet) in.readObject();
+                this.setChanged();
                 notifyObservers(p);
+                this.clearChanged();
+                in.close();*/
                 Discussion discussion =new Discussion(distant);
                 discussion.addObserver(this);
                 chatRooms.put(distant.getInetAddress(), discussion);
                 new Thread(discussion).start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -104,6 +106,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
                 discussion.addObserver(this);
                 chatRooms.put(distant.getInetAddress(), discussion);
                 new Thread(discussion).start();
+                discussion.sendMessage(p);
             } catch (IOException e) {
                 System.out.println("Erreur à l'envois d'un nouveau message");
             }
