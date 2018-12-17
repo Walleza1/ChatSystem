@@ -57,6 +57,7 @@ public class Controller implements Observer,Runnable {
         Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
         this.sendPacket(notifications);
         System.out.println("hi");
+        //TODO timer
         return true;
     }
 
