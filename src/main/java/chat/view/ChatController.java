@@ -58,6 +58,8 @@ public class ChatController implements Initializable {
     @FXML
     private Button closeDiscussionButton;
 
+    @FXML
+    private TextArea textArea;
 
     @FXML
     public void logOut (MouseEvent event) throws IOException {
@@ -102,5 +104,12 @@ public class ChatController implements Initializable {
     public void userClicked () {
         distantUser.setOpacity(1);
         distantUser.setText((String) userList.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML
+    public void closeDiscussion () {
+        System.out.println("toto");
+        distantUser.setOpacity(0);
+
     }
 }

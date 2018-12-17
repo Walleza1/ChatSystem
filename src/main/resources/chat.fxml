@@ -97,7 +97,7 @@
                            <children>
                               <AnchorPane layoutX="704.0" layoutY="-52.0" prefHeight="80.0" prefWidth="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <Button layoutX="14.0" layoutY="28.0" minWidth="50.0" mnemonicParsing="false" text="X" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                                    <Button fx:id="closeDiscussionButton" layoutX="14.0" layoutY="28.0" minWidth="50.0" mnemonicParsing="false" onMouseClicked="#closeDiscussion" text="X" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                                        <font>
                                           <Font name="Century Gothic" size="20.0" />
                                        </font>
