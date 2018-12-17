@@ -29,8 +29,9 @@ public class BroadcastManager extends Observable implements Runnable{
                 ObjectInputStream is = new ObjectInputStream(in);
 
                 Packet p = (Packet) is.readObject();
-                managePacket(p);
-
+                if (!p.getSource().getAddress().equals(NetworkManager.getInstance().getMyAddr())){
+                    managePacket(p);
+                }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
