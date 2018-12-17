@@ -83,4 +83,9 @@ public class Controller implements Observer,Runnable {
             this.sendPacket(msg);
         }
     }
+
+    public void logout () {
+        //TODO
+        //Deletes all user data, resetting the app as if it was launched for the first time
+    }
 }

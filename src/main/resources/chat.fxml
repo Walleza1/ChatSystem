@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.ChatController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@chatstyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.ChatController">
    <children>
       <SplitPane dividerPositions="0.32629107981220656" prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -95,7 +95,19 @@
                      <children>
                         <AnchorPane prefHeight="80.0" prefWidth="200.0" style="-fx-background-color: #dee4ec;">
                            <children>
-                              <AnchorPane layoutX="704.0" layoutY="-52.0" prefHeight="80.0" prefWidth="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <AnchorPane layoutX="704.0" layoutY="-52.0" prefHeight="80.0" prefWidth="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <Button layoutX="14.0" layoutY="28.0" minWidth="50.0" mnemonicParsing="false" text="X" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+                                       <font>
+                                          <Font name="Century Gothic" size="20.0" />
+                                       </font>
+                                    </Button>
+                                 </children></AnchorPane>
+                              <Label layoutX="27.0" layoutY="32.0" text="DistantUser" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="25.0">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
                            </children></AnchorPane>
                         <AnchorPane prefHeight="230.0" prefWidth="858.0" style="-fx-background-color: #f2f8ff;" VBox.vgrow="ALWAYS">
                            <children>

@@ -2,6 +2,7 @@ package chat.view;
 
 import chat.Controller;
 import chat.Main;
+import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -25,8 +27,11 @@ public class ChatController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         userList.setStyle("-fx-control-inner-background: #242A31;");
-        userList.getItems().add("Ceci est un test");
-        userList.getItems().add("Ceci est un autre test djhefjehsdkgjdhfcglfkjhdglkjfhgk");
+        userList.setFixedCellSize(50);
+        userList.getItems().add("Jean");
+        userList.getItems().add("Petit");
+        userList.getItems().add("Qui");
+        userList.getItems().add("Danse");
         username.setText(controller.getUsername());
     }
 
@@ -46,6 +51,7 @@ public class ChatController implements Initializable {
 
     @FXML
     public void logOut (MouseEvent event) throws IOException {
+        controller.logout();
         //call controller method Delete all data
         Parent chat_parent = FXMLLoader.load(getClass().getResource("/login.fxml"));
         Scene chat_scene = new Scene(chat_parent);
@@ -53,6 +59,7 @@ public class ChatController implements Initializable {
         app_stage.setScene(chat_scene);
         app_stage.show();
     }
+
 
     @FXML
     public void About () {
@@ -68,7 +75,7 @@ public class ChatController implements Initializable {
 
     @FXML
     public void changeUsername () {
-        TextInputDialog dialog = new TextInputDialog("walter");
+        TextInputDialog dialog = new TextInputDialog("");
         dialog.setTitle("Changer de nom d'utilisateur");
         dialog.setHeaderText("Changement de nom d'utilisateur");
         dialog.setContentText("Entrer un nouveau nom d'utilisateur : ");
