@@ -2,6 +2,7 @@ package chat.view;
 
 import chat.Controller;
 import chat.Main;
+import chat.models.Notifications;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -106,6 +107,7 @@ public class ChatController implements Initializable {
         if (result.isPresent()){
             if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
+                controller.sendPacket(Notifications.createNewPseudoPaquet(controller.getSelf(),null));
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Erreur");

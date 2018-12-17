@@ -56,7 +56,6 @@ public class Controller implements Observer,Runnable {
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
         this.sendPacket(notifications);
-        System.out.println("hi");
         //TODO timer
         userList.add(getSelf());
         return true;
@@ -65,7 +64,7 @@ public class Controller implements Observer,Runnable {
     public boolean usernameInList(String s){
         boolean res = false;
         for (User u : userList){
-            if (u.getPseudo() == s){
+            if (u.getPseudo().equals(s)){
                 res = true;
             }
         }
