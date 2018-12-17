@@ -1,8 +1,8 @@
 package chat.view;
 
 import chat.Controller;
-import chat.Main;
-import javafx.event.ActionEvent;
+
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,8 +31,7 @@ public class LoginController implements Initializable {
 
     public LoginController(){}
 
-    @FXML
-    public void handleLoginClick(MouseEvent event) throws IOException{
+    public void login (Event e) throws IOException{
         if (userTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erreur");
@@ -44,30 +43,21 @@ public class LoginController implements Initializable {
             controller.setUsername(userTextField.getText());
             Parent chat_parent = FXMLLoader.load(getClass().getResource("/chat.fxml"));
             Scene chat_scene = new Scene(chat_parent);
-            Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage app_stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             app_stage.setScene(chat_scene);
             app_stage.show();
         }
     }
 
     @FXML
+    public void handleLoginClick(MouseEvent event) throws IOException{
+        login(event);
+    }
+
+    @FXML
     public void connectViaEnter (KeyEvent event) throws IOException{
         if(event.getCode().equals(KeyCode.ENTER)){
-            if (userTextField.getText().equals("")){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Vous devez entrer un nom d'utilisateur.");
-                alert.showAndWait();
-
-            } else if (controller.isUsernameAvailable(userTextField.getText())){
-                controller.setUsername(userTextField.getText());
-                Parent chat_parent = FXMLLoader.load(getClass().getResource("/chat.fxml"));
-                Scene chat_scene = new Scene(chat_parent);
-                Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                app_stage.setScene(chat_scene);
-                app_stage.show();
-            }
+            login(event);
         }
     }
 

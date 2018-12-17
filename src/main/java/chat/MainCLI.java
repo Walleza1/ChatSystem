@@ -1,7 +1,5 @@
 package chat;
 
-import chat.net.NetworkManager;
-
 import java.io.IOException;
 
 public class MainCLI {

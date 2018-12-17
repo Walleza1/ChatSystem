@@ -35,6 +35,10 @@ public class ChatController implements Initializable {
         userList.getItems().add("Danse");
         username.setText(controller.getUsername());
         distantUser.setOpacity(0);
+        textArea.setOpacity(0);
+        closeDiscussionButton.setOpacity(0);
+        fileButton.setOpacity(0);
+        sendButton.setOpacity(0);
     }
 
     @FXML
@@ -57,6 +61,12 @@ public class ChatController implements Initializable {
 
     @FXML
     private Button closeDiscussionButton;
+
+    @FXML
+    private Button fileButton;
+
+    @FXML
+    private Button sendButton;
 
     @FXML
     private TextArea textArea;
@@ -87,7 +97,7 @@ public class ChatController implements Initializable {
 
     @FXML
     public void changeUsername () {
-        TextInputDialog dialog = new TextInputDialog("");
+        TextInputDialog dialog = new TextInputDialog(username.getText());
         dialog.setTitle("Changer de nom d'utilisateur");
         dialog.setHeaderText("Changement de nom d'utilisateur");
         dialog.setContentText("Entrer un nouveau nom d'utilisateur : ");
@@ -103,13 +113,20 @@ public class ChatController implements Initializable {
     @FXML
     public void userClicked () {
         distantUser.setOpacity(1);
+        textArea.setOpacity(1);
+        closeDiscussionButton.setOpacity(1);
+        fileButton.setOpacity(1);
+        sendButton.setOpacity(1);
         distantUser.setText((String) userList.getSelectionModel().getSelectedItem());
     }
 
     @FXML
     public void closeDiscussion () {
-        System.out.println("toto");
         distantUser.setOpacity(0);
+        textArea.setOpacity(0);
+        closeDiscussionButton.setOpacity(0);
+        fileButton.setOpacity(0);
+        sendButton.setOpacity(0);
 
     }
 }

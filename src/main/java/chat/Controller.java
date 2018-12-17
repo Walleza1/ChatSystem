@@ -8,14 +8,12 @@ import chat.net.NetworkManager;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Scanner;
+import java.util.*;
 
 public class Controller implements Observer,Runnable {
     private User self;
     private User distant;
+    private ArrayList<User> userList;
     private NetworkManager myNet;
 
     private Controller(){
@@ -54,7 +52,13 @@ public class Controller implements Observer,Runnable {
         return self.getPseudo();
     }
 
-    public boolean isUsernameAvailable(String s){return true;}
+    public boolean isUsernameAvailable(String s){
+        this.setUsername(s);
+        Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
+        this.sendPacket(notifications);
+        System.out.println("hi");
+        return true;
+    }
 
     @Override
     public void update(Observable observable, Object o) {
