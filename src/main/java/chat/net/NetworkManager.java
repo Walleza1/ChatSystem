@@ -2,9 +2,14 @@ package chat.net;
 
 import chat.models.Notifications;
 import chat.models.Packet;
+import chat.models.User;
+import chat.models.UserListPacket;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,6 +20,9 @@ public class NetworkManager extends Observable implements Observer {
     public static int BROADCAST_PORT=6666;
     /** Static definition of our Unicast port**/
     public static int UNICAST_PORT=6667;
+
+    public static int USERLIST_PORT=6668;
+    public static int USERLIST_TIMEOUT_MS=1000;
 
     private DatagramSocket udpSocket;
     private ServerSocket tcpSocket;
@@ -99,6 +107,31 @@ public class NetworkManager extends Observable implements Observer {
         }else{
            this.unicastManager.sendPacket(p);
         }
+    }
+
+    public ArrayList<User> receiveList(){
+        ArrayList<User> ret;
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket=new ServerSocket(NetworkManager.USERLIST_PORT);
+            //timeout after 1s
+            serverSocket.setSoTimeout(NetworkManager.USERLIST_TIMEOUT_MS);
+            Socket distant=serverSocket.accept();
+            ObjectInputStream in= new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
+            UserListPacket listPacket=(UserListPacket) in.readObject();
+            ret=listPacket.getUserList();
+            serverSocket.close();
+        } catch (IOException | ClassNotFoundException e) {
+           ret=new ArrayList<User>();
+           if (e instanceof SocketTimeoutException){
+               try {
+                   serverSocket.close();
+               } catch (IOException e1) {
+                   System.out.println("Server socket close failed. Userlist");
+               }
+           }
+        }
+        return ret;
     }
     /** If we receive a Packet, transmit it to our observers **/
     @Override

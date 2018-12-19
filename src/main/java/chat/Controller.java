@@ -68,18 +68,19 @@ public class Controller implements Observer,Runnable {
     }
 
     public boolean isUsernameAvailable(String s){
+        boolean retour=true;
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
         this.sendPacket(notifications);
 
-        long d = System.currentTimeMillis();
-        while(System.currentTimeMillis() < d + 1000){
-            if(!usernameOk){
-                System.out.println("NOK");
-                return false;
+        ArrayList<User> receivedList=NetworkManager.getInstance().receiveList();
+        for (User u:receivedList){
+            if (s.equals(u.getPseudo())){
+                retour=false;
             }
         }
         userList.add(getSelf());
+        System.out.println("Pseudo libre : "+retour);
         return true;
     }
 
@@ -105,11 +106,17 @@ public class Controller implements Observer,Runnable {
 
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
+                boolean alreadyIn=false;
+                System.out.println("newPseudoNotif received");
                 for (User u : userList){
                     if(u.getAddress() == p.getSource().getAddress()){
+                        alreadyIn=true;
                         u.setPseudo(p.getSource().getPseudo());
                         userList.notifyAll();
                     }
+                }
+                if (!alreadyIn){
+                    userList.add(p.getSource());
                 }
             }
         }else{

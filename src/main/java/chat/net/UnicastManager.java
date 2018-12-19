@@ -41,14 +41,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
             while(true) {
                 System.out.println("Unicast Server Ok");
                 Socket distant = this.socket.accept();
-                System.out.println("Connexion étalie");
-
-                /*ObjectInputStream in=new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
-                Packet p = (Packet) in.readObject();
-                this.setChanged();
-                notifyObservers(p);
-                this.clearChanged();
-                in.close();*/
+                System.out.println("Connexion établie");
                 Discussion discussion =new Discussion(distant);
                 discussion.addObserver(this);
                 chatRooms.put(distant.getInetAddress(), discussion);
