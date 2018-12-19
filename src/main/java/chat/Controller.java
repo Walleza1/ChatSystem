@@ -106,6 +106,7 @@ public class Controller implements Observer,Runnable {
                 }
                 UserListPacket pack=new UserListPacket(p.getDestination(),this.self,listUser);
 
+                NetworkManager.getInstance().sendUserList(pack);
                 this.userList.add(p.getSource());
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
