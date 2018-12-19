@@ -1,9 +1,6 @@
 package chat;
 
-import chat.models.Message;
-import chat.models.Notifications;
-import chat.models.Packet;
-import chat.models.User;
+import chat.models.*;
 import chat.net.NetworkManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -103,7 +100,13 @@ public class Controller implements Observer,Runnable {
             if (((Notifications) p).getType() == Notifications.NotificationType.newUser) {
                 //TODO
                 //Send list of users
+                ArrayList<User> listUser=new ArrayList<User>();
+                for (User u : this.userList){
+                    listUser.add(u);
+                }
+                UserListPacket pack=new UserListPacket(p.getDestination(),this.self,listUser);
 
+                this.userList.add(p.getSource());
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
                 boolean alreadyIn=false;

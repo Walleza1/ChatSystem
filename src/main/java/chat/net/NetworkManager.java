@@ -8,6 +8,7 @@ import chat.models.UserListPacket;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -109,6 +110,16 @@ public class NetworkManager extends Observable implements Observer {
         }
     }
 
+    public void sendUserList(UserListPacket p){
+        try {
+            Socket distant=new Socket(p.getDestination().getAddress(),NetworkManager.USERLIST_PORT);
+            ObjectOutputStream out=new ObjectOutputStream(distant.getOutputStream());
+            out.writeObject(p);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public ArrayList<User> receiveList(){
         ArrayList<User> ret;
         ServerSocket serverSocket = null;
