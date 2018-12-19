@@ -4,6 +4,7 @@ import chat.Controller;
 import chat.Main;
 import chat.models.Notifications;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,10 +19,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ChatController implements Initializable {
+public class ChatController implements Initializable, ListChangeListener {
 
     Controller controller = Controller.getInstance();
 
@@ -30,16 +33,18 @@ public class ChatController implements Initializable {
         userList.setStyle("-fx-background-insets: 0 ;");
         userList.setStyle("-fx-control-inner-background: #242A31;");
         userList.setFixedCellSize(50);
-        userList.getItems().add("Jean");
-        userList.getItems().add("Petit");
-        userList.getItems().add("Qui");
-        userList.getItems().add("Danse");
         username.setText(controller.getUsername());
         distantUser.setOpacity(0);
         textArea.setOpacity(0);
         closeDiscussionButton.setOpacity(0);
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
+        controller.userList.addListener(this);
+    }
+
+    @Override
+    public void onChanged (Change c){
+        System.out.println("Toto");
     }
 
     @FXML
@@ -108,6 +113,7 @@ public class ChatController implements Initializable {
             if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
                 controller.sendPacket(Notifications.createNewPseudoPaquet(controller.getSelf(),null));
+                controller.setUsername(result.get());
                 System.out.println("Sent new pseudo packet");
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

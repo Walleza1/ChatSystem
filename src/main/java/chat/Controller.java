@@ -5,6 +5,8 @@ import chat.models.Notifications;
 import chat.models.Packet;
 import chat.models.User;
 import chat.net.NetworkManager;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -13,7 +15,7 @@ import java.util.*;
 public class Controller implements Observer,Runnable {
     private User self;
     private User distant;
-    private ArrayList<User> userList = new ArrayList<User>();
+    public ObservableList<User> userList = FXCollections.observableArrayList();
     private NetworkManager myNet;
     private Boolean usernameOk = true;
 
@@ -61,6 +63,7 @@ public class Controller implements Observer,Runnable {
         long d = System.currentTimeMillis();
         while(System.currentTimeMillis() < d + 1000){
             if(!usernameOk){
+                System.out.println("NOK");
                 return false;
             }
         }
