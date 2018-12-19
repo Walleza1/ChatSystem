@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
 
 public class ChatController implements Initializable, ListChangeListener {
 
-    Controller controller = Controller.getInstance();
+    private Controller controller = Controller.getInstance();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -41,11 +41,12 @@ public class ChatController implements Initializable, ListChangeListener {
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
         controller.userList.addListener(this);
-        initializeView();
+        updateView();
 
     }
 
-    private void initializeView(){
+    private void updateView(){
+        userListView.getItems().clear();
         for (User u : controller.userList){
             userListView.getItems().add(u.getPseudo());
         }
@@ -53,7 +54,7 @@ public class ChatController implements Initializable, ListChangeListener {
 
     @Override
     public void onChanged (Change c){
-        System.out.println("Toto");
+        updateView();
     }
 
     @FXML
@@ -123,7 +124,7 @@ public class ChatController implements Initializable, ListChangeListener {
                 username.setText(result.get());
                 controller.sendPacket(Notifications.createNewPseudoPaquet(controller.getSelf(),null));
                 controller.setUsername(result.get());
-                System.out.println("Sent new pseudo packet");
+                onChanged(null);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Erreur");

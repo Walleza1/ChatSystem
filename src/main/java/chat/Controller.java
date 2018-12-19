@@ -16,6 +16,7 @@ public class Controller implements Observer,Runnable {
     private User self;
     private User distant;
     public ObservableList<User> userList = FXCollections.observableArrayList();
+
     private NetworkManager myNet;
     private Boolean usernameOk = true;
 
@@ -25,6 +26,7 @@ public class Controller implements Observer,Runnable {
             this.myNet.addObserver(this);
             this.self=new User("Moi", new Date(), myNet.getMyAddr());
             this.distant=new User("Lui",new Date(), InetAddress.getByName("10.32.0.83"));
+            this.userList.add(new User("Test",new Date(), InetAddress.getByName("1.1.1.1")));
         } catch (UnknownHostException e) {
             System.out.println("Distant failed");
         }
@@ -55,6 +57,16 @@ public class Controller implements Observer,Runnable {
         return self.getPseudo();
     }
 
+    public User getUserFromPseudo (String pseudo){
+        for(User u : userList){
+            if(pseudo.equals(u.getPseudo())){
+                return u;
+            }
+        }
+        System.out.println("user was not found with that pseudo");
+        return null;
+    }
+
     public boolean isUsernameAvailable(String s){
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
@@ -67,7 +79,6 @@ public class Controller implements Observer,Runnable {
                 return false;
             }
         }
-        System.out.println("OK");
         userList.add(getSelf());
         return true;
     }
@@ -94,10 +105,10 @@ public class Controller implements Observer,Runnable {
 
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
-                System.out.println("newPseudoNotif received");
                 for (User u : userList){
                     if(u.getAddress() == p.getSource().getAddress()){
                         u.setPseudo(p.getSource().getPseudo());
+                        userList.notifyAll();
                     }
                 }
             }
