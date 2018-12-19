@@ -98,7 +98,6 @@ public class Controller implements Observer,Runnable {
             System.out.println("Received Notifications "+((Notifications) p).getType().toString());
             //TYPE NEW USER
             if (((Notifications) p).getType() == Notifications.NotificationType.newUser) {
-                //TODO
                 //Send list of users
                 ArrayList<User> listUser=new ArrayList<User>();
                 for (User u : this.userList){
@@ -108,6 +107,7 @@ public class Controller implements Observer,Runnable {
 
                 NetworkManager.getInstance().sendUserList(pack);
                 this.userList.add(p.getSource());
+                System.out.println("Packet send");
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
                 boolean alreadyIn=false;

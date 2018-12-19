@@ -125,15 +125,18 @@ public class NetworkManager extends Observable implements Observer {
         ServerSocket serverSocket = null;
         try {
             serverSocket=new ServerSocket(NetworkManager.USERLIST_PORT);
+            System.out.println("Serveur userList Ok");
             //timeout after 1s
             serverSocket.setSoTimeout(NetworkManager.USERLIST_TIMEOUT_MS);
             Socket distant=serverSocket.accept();
+            System.out.println("Connect received");
             ObjectInputStream in= new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
             UserListPacket listPacket=(UserListPacket) in.readObject();
             ret=listPacket.getUserList();
             serverSocket.close();
         } catch (IOException | ClassNotFoundException e) {
            ret=new ArrayList<User>();
+           System.out.println("Connection failed");
            if (e instanceof SocketTimeoutException){
                try {
                    serverSocket.close();
