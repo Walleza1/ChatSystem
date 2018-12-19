@@ -25,6 +25,7 @@ public class Notifications extends Packet {
 	public static Notifications createNewPseudoPaquet(User source, User destination) {
 		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.newPseudo;
+		System.out.println(ret.type);
 		return ret;
 	}
 

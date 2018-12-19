@@ -75,7 +75,7 @@
                                     </Label>
                                  </children>
                               </AnchorPane>
-                              <ListView fx:id="userList" onMouseClicked="#userClicked" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31; -fx-border-color: #242A31; -fx-border-width: 0;" GridPane.rowIndex="1">
+                              <ListView fx:id="userListView" onMouseClicked="#userClicked" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31; -fx-border-color: #242A31; -fx-border-width: 0;" GridPane.rowIndex="1">
                                  <opaqueInsets>
                                     <Insets />
                                  </opaqueInsets>

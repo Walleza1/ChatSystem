@@ -3,6 +3,7 @@ package chat.view;
 import chat.Controller;
 import chat.Main;
 import chat.models.Notifications;
+import chat.models.User;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -30,9 +31,9 @@ public class ChatController implements Initializable, ListChangeListener {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        userList.setStyle("-fx-background-insets: 0 ;");
-        userList.setStyle("-fx-control-inner-background: #242A31;");
-        userList.setFixedCellSize(50);
+        userListView.setStyle("-fx-background-insets: 0 ;");
+        userListView.setStyle("-fx-control-inner-background: #242A31;");
+        userListView.setFixedCellSize(50);
         username.setText(controller.getUsername());
         distantUser.setOpacity(0);
         textArea.setOpacity(0);
@@ -40,6 +41,14 @@ public class ChatController implements Initializable, ListChangeListener {
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
         controller.userList.addListener(this);
+        initializeView();
+
+    }
+
+    private void initializeView(){
+        for (User u : controller.userList){
+            userListView.getItems().add(u.getPseudo());
+        }
     }
 
     @Override
@@ -60,7 +69,7 @@ public class ChatController implements Initializable, ListChangeListener {
     private ImageView changeUsernameIcon;
 
     @FXML
-    private ListView userList;
+    private ListView userListView;
 
     @FXML
     private TextField newUsername = null;
@@ -132,7 +141,7 @@ public class ChatController implements Initializable, ListChangeListener {
         closeDiscussionButton.setOpacity(1);
         fileButton.setOpacity(1);
         sendButton.setOpacity(1);
-        distantUser.setText((String) userList.getSelectionModel().getSelectedItem());
+        distantUser.setText((String) userListView.getSelectionModel().getSelectedItem());
     }
 
     @FXML

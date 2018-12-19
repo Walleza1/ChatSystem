@@ -2,6 +2,7 @@ package chat.view;
 
 import chat.Controller;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
