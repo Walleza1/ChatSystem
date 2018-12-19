@@ -5,6 +5,7 @@ import chat.Main;
 import chat.models.Notifications;
 import chat.models.User;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,10 +47,15 @@ public class ChatController implements Initializable, ListChangeListener {
     }
 
     private void updateView(){
-        userListView.getItems().clear();
-        for (User u : controller.userList){
-            userListView.getItems().add(u.getPseudo());
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                userListView.getItems().clear();
+                for (User u : controller.userList){
+                    userListView.getItems().add(u.getPseudo());
+                }
+            }
+        });
     }
 
     @Override
