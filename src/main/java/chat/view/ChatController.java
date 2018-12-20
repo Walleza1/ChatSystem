@@ -2,7 +2,9 @@ package chat.view;
 
 import chat.Controller;
 import chat.Main;
+import chat.models.Message;
 import chat.models.Notifications;
+import chat.models.Packet;
 import chat.models.User;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
@@ -16,6 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -188,6 +192,26 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     @Override
     public void onChanged(MapChangeListener.Change change) {
         updateFeed();
+    }
+
+    @FXML
+    public void sendByClick () {
+        send();
+    }
+
+    @FXML
+    public void sendByEnter (KeyEvent event) throws IOException {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            event.consume();
+            send();
+        }
+    }
+
+    public void send (){
+        //Prendre le texte et l'envoyer
+        System.out.println(textArea.getText());
+        //controller.sendPacket(new Message(0,controller.getSelf(),activeUser,textArea.getText()));
+        textArea.clear();
     }
 
 }
