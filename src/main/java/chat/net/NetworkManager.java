@@ -121,6 +121,7 @@ public class NetworkManager extends Observable implements Observer {
     public void sendUserList(UserListPacket p){
         try {
             System.out.println("Envois de la liste");
+            System.out.println(p.getDestination().getAddress().toString());
             Socket distant=new Socket(p.getDestination().getAddress(),NetworkManager.USERLIST_PORT);
             ObjectOutputStream out=new ObjectOutputStream(distant.getOutputStream());
             out.writeObject(p);

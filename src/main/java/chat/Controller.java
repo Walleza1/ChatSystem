@@ -138,7 +138,7 @@ public class Controller implements Observer,Runnable {
                 ArrayList<User> listUser=new ArrayList<>();
                 listUser.addAll(this.userList);
                 System.out.println("Taille de ma liste "+listUser.size());
-                UserListPacket pack=new UserListPacket(p.getDestination(),this.self,listUser);
+                UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 NetworkManager.getInstance().sendUserList(pack);
                 this.userList.add(p.getSource());
                 System.out.println("List send");
