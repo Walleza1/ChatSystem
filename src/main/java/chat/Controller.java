@@ -5,28 +5,19 @@ import chat.net.NetworkManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class Controller implements Observer,Runnable {
-    private User self;
-    private User distant;
-    public ObservableList<User> userList = FXCollections.observableArrayList();
 
+    private User self;
+    private ObservableList<User> userList = FXCollections.observableArrayList();
     private NetworkManager myNet;
-    private Boolean usernameOk = true;
+
 
     private Controller(){
-        try {
-            this.myNet=NetworkManager.getInstance();
-            this.myNet.addObserver(this);
-            this.self=new User("Moi", new Date(), myNet.getMyAddr());
-            this.distant=new User("Lui",new Date(), InetAddress.getByName("10.32.0.83"));
-            this.userList.add(new User("Test",new Date(), InetAddress.getByName("1.1.1.1")));
-        } catch (UnknownHostException e) {
-            System.out.println("Distant failed");
-        }
+        this.myNet=NetworkManager.getInstance();
+        this.myNet.addObserver(this);
+        this.self=new User("Moi", new Date(), myNet.getMyAddr());
     }
 
     private static Controller INSTANCE = null;
@@ -42,6 +33,9 @@ public class Controller implements Observer,Runnable {
         return self;
     }
 
+    public ObservableList<User> getList () {
+        return userList;
+    }
     public void setSelf (User u) {
         this.self = u;
     }
@@ -67,7 +61,7 @@ public class Controller implements Observer,Runnable {
     public boolean isUsernameAvailable(String s){
         boolean retour=true;
         this.setUsername(s);
-        Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
+        Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
         this.sendPacket(notifications);
 
         ArrayList<User> receivedList=NetworkManager.getInstance().receiveList();
@@ -141,7 +135,7 @@ public class Controller implements Observer,Runnable {
         Boolean close=false;
         Message msg=null;
         System.out.println("My address "+this.myNet.getMyAddr());
-        Notifications notifications=Notifications.createNewUserPaquet(this.self,this.distant);
+        Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
         this.sendPacket(notifications);
         while(!close){
             String str = scan.nextLine();
@@ -149,8 +143,6 @@ public class Controller implements Observer,Runnable {
                 close=true;
                 continue;
             }
-            msg=new Message(1,this.self,this.distant,str);
-            this.sendPacket(msg);
         }
     }
 
@@ -158,5 +150,6 @@ public class Controller implements Observer,Runnable {
         //TODO
         //Deletes all user data, resetting the app as if it was launched for the first time
         INSTANCE = new Controller();
+
     }
 }

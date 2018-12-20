@@ -41,7 +41,7 @@ public class ChatController implements Initializable, ListChangeListener {
         closeDiscussionButton.setOpacity(0);
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
-        controller.userList.addListener(this);
+        controller.getList().addListener(this);
         updateView();
 
     }
@@ -51,7 +51,7 @@ public class ChatController implements Initializable, ListChangeListener {
             @Override
             public void run() {
                 userListView.getItems().clear();
-                for (User u : controller.userList){
+                for (User u : controller.getList()){
                     userListView.getItems().add(u.getPseudo());
                 }
             }
