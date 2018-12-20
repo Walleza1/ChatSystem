@@ -15,6 +15,7 @@ public class UserListManager extends Observable implements Runnable {
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private ArrayList<User> userList;
+
     public UserListManager(ServerSocket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
         userList=new ArrayList<User>();
@@ -29,12 +30,13 @@ public class UserListManager extends Observable implements Runnable {
         ArrayList<User> ret = new ArrayList<User>();
         ServerSocket serverSocket = null;
         try {
+            System.out.println("UserListManager lancé");
             while(!this.serverSocket.isClosed()) {
-                System.out.println("UserListManager lancé");
                 Socket distant = this.serverSocket.accept();
                 System.out.println("Connect received");
                 ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
                 UserListPacket listPacket = (UserListPacket) in.readObject();
+                System.out.println("List Received");
                 ret = listPacket.getUserList();
                 this.setChanged();
                 notifyObservers(ret);

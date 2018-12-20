@@ -137,11 +137,11 @@ public class Controller implements Observer,Runnable {
                 //Send list of users
                 ArrayList<User> listUser=new ArrayList<>();
                 listUser.addAll(this.userList);
+                System.out.println("Taille de ma liste "+listUser.size());
                 UserListPacket pack=new UserListPacket(p.getDestination(),this.self,listUser);
-
                 NetworkManager.getInstance().sendUserList(pack);
                 this.userList.add(p.getSource());
-                System.out.println("Packet send");
+                System.out.println("List send");
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
                 boolean alreadyIn=false;

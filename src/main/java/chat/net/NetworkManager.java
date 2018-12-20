@@ -62,6 +62,7 @@ public class NetworkManager extends Observable implements Observer {
         this.broadcastManager.addObserver(this);
         this.unicastManager.addObserver(this);
         this.userListManager.addObserver(this);
+
         b.start();
         c.start();
         d.start();
@@ -119,10 +120,12 @@ public class NetworkManager extends Observable implements Observer {
 
     public void sendUserList(UserListPacket p){
         try {
+            System.out.println("Envois de la liste");
             Socket distant=new Socket(p.getDestination().getAddress(),NetworkManager.USERLIST_PORT);
             ObjectOutputStream out=new ObjectOutputStream(distant.getOutputStream());
             out.writeObject(p);
             out.close();
+            System.out.println("Liste envoyé");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,7 +137,11 @@ public class NetworkManager extends Observable implements Observer {
         this.setChanged();
         if (observable instanceof UserListManager){
             System.out.println("UserList received");
-        }else {
+        }else if(observable instanceof BroadcastManager) {
+            System.out.println("Br received");
+            notifyObservers(o);
+        }else if(observable instanceof UnicastManager){
+            System.out.println("Uni received");
             notifyObservers(o);
         }
         this.clearChanged();
