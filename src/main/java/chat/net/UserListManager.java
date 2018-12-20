@@ -39,7 +39,7 @@ public class UserListManager extends Observable implements Runnable {
                 System.out.println("List Received");
                 ret = listPacket.getUserList();
                 this.setChanged();
-                notifyObservers(ret);
+                notifyObservers(listPacket);
                 this.clearChanged();
                 distant.close();
             }

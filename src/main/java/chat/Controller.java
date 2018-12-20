@@ -111,8 +111,8 @@ public class Controller implements Observer,Runnable {
             if (s.equals(u.getPseudo())){
                 retour=false;
             }
-        }*/
-        userList.add(getSelf());
+        }
+        userList.add(getSelf());*/
         System.out.println("Pseudo libre : "+retour);
         return retour;
     }
@@ -135,7 +135,7 @@ public class Controller implements Observer,Runnable {
             //TYPE NEW USER
             if (((Notifications) p).getType() == Notifications.NotificationType.newUser) {
                 //Send list of users
-                ArrayList<User> listUser=new ArrayList<>();
+                ArrayList<User> listUser = new ArrayList<>();
                 listUser.addAll(this.userList);
                 System.out.println("Taille de ma liste "+listUser.size());
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
@@ -161,6 +161,10 @@ public class Controller implements Observer,Runnable {
             if (p instanceof Message) {
                 Message m=(Message) p;
                 System.out.println("From " + ((Packet) o).getSource().getPseudo() + " : " + m.getContenu());
+            }
+            else if(p instanceof UserListPacket){
+                UserListPacket userListPacket=(UserListPacket) p;
+                userList.addAll(userListPacket.getUserList());
             }
         }
     }

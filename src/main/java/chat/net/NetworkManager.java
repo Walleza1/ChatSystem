@@ -137,7 +137,8 @@ public class NetworkManager extends Observable implements Observer {
     public void update(Observable observable, Object o) {
         this.setChanged();
         if (observable instanceof UserListManager){
-            System.out.println("UserList received");
+            System.out.println("UserList on ");
+            notifyObservers(o);
         }else if(observable instanceof BroadcastManager) {
             System.out.println("Br received");
             notifyObservers(o);
