@@ -7,6 +7,7 @@ import chat.models.User;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -26,9 +27,11 @@ import java.util.Observer;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ChatController implements Initializable, ListChangeListener {
+public class ChatController implements Initializable, ListChangeListener, MapChangeListener {
 
     private Controller controller = Controller.getInstance();
+
+    private User activeUser = null;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -42,6 +45,7 @@ public class ChatController implements Initializable, ListChangeListener {
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
         controller.getList().addListener(this);
+        controller.getMap().addListener(this);
         updateView();
 
     }
@@ -52,15 +56,24 @@ public class ChatController implements Initializable, ListChangeListener {
             public void run() {
                 userListView.getItems().clear();
                 for (User u : controller.getList()){
-                    userListView.getItems().add(u.getPseudo());
+                    if (u != controller.getSelf()) {
+                        userListView.getItems().add(u.getPseudo());
+                    }
                 }
             }
         });
     }
 
-    @Override
-    public void onChanged (Change c){
-        updateView();
+    private void updateFeed(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (activeUser != null) {
+                    messageFeed.getItems().clear();
+                    messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
+                }
+            }
+        });
     }
 
     @FXML
@@ -92,6 +105,9 @@ public class ChatController implements Initializable, ListChangeListener {
 
     @FXML
     private TextArea textArea;
+
+    @FXML
+    private ListView messageFeed;
 
     @FXML
     public void logOut (MouseEvent event) throws IOException {
@@ -130,7 +146,7 @@ public class ChatController implements Initializable, ListChangeListener {
                 username.setText(result.get());
                 controller.sendPacket(Notifications.createNewPseudoPaquet(controller.getSelf(),null));
                 controller.setUsername(result.get());
-                onChanged(null);
+                onChanged((ListChangeListener.Change) null);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Erreur");
@@ -149,6 +165,8 @@ public class ChatController implements Initializable, ListChangeListener {
         fileButton.setOpacity(1);
         sendButton.setOpacity(1);
         distantUser.setText((String) userListView.getSelectionModel().getSelectedItem());
+        activeUser = controller.getUserFromPseudo((String) userListView.getSelectionModel().getSelectedItem());
+        updateFeed();
     }
 
     @FXML
@@ -158,6 +176,18 @@ public class ChatController implements Initializable, ListChangeListener {
         closeDiscussionButton.setOpacity(0);
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
+        messageFeed.getItems().clear();
 
     }
+
+    @Override
+    public void onChanged(ListChangeListener.Change c) {
+        updateView();
+    }
+
+    @Override
+    public void onChanged(MapChangeListener.Change change) {
+        updateFeed();
+    }
+
 }

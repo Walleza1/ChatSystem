@@ -4,7 +4,10 @@ import chat.models.*;
 import chat.net.NetworkManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.*;
 
 public class Controller implements Observer,Runnable {
@@ -12,12 +15,25 @@ public class Controller implements Observer,Runnable {
     private User self;
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private NetworkManager myNet;
-
+    private ObservableMap<User,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
+    private User test;
 
     private Controller(){
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.self=new User("Moi", new Date(), myNet.getMyAddr());
+        try {
+            this.test = new User("Test", new Date(), InetAddress.getByName("1.1.1.1"));
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        this.getList().add(test);
+        ArrayList<Message> msgtest = new ArrayList<>();
+        msgtest.add(new Message(0,self,test,"Coucou"));
+        msgtest.add(new Message(1,self,test,"ça va ?"));
+        msgtest.add(new Message(1,test,self,"Oui ça va"));
+        messageLog.put(test,msgtest);
+
     }
 
     private static Controller INSTANCE = null;
@@ -36,6 +52,24 @@ public class Controller implements Observer,Runnable {
     public ObservableList<User> getList () {
         return userList;
     }
+
+    public ObservableMap<User,ArrayList<Message>> getMap () {
+        return messageLog;
+    }
+
+    public ArrayList<String> getHistoryFromUser (User u) {
+        ArrayList<String> res = new ArrayList<>();
+        for (Message m : messageLog.get(u)){
+            if (m.getSource().equals(self)){
+                res.add("Moi : " + m.getContenu());
+            } else {
+                res.add(m.getSource().getPseudo() + " : " + m.getContenu());
+            }
+
+        }
+        return res;
+    }
+
     public void setSelf (User u) {
         this.self = u;
     }
@@ -93,10 +127,8 @@ public class Controller implements Observer,Runnable {
             //TYPE NEW USER
             if (((Notifications) p).getType() == Notifications.NotificationType.newUser) {
                 //Send list of users
-                ArrayList<User> listUser=new ArrayList<User>();
-                for (User u : this.userList){
-                    listUser.add(u);
-                }
+                ArrayList<User> listUser=new ArrayList<>();
+                listUser.addAll(this.userList);
                 UserListPacket pack=new UserListPacket(p.getDestination(),this.self,listUser);
 
                 NetworkManager.getInstance().sendUserList(pack);
@@ -132,8 +164,7 @@ public class Controller implements Observer,Runnable {
     @Override
     public void run() {
         Scanner scan=new Scanner(System.in);
-        Boolean close=false;
-        Message msg=null;
+        boolean close=false;
         System.out.println("My address "+this.myNet.getMyAddr());
         Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
         this.sendPacket(notifications);
@@ -141,7 +172,6 @@ public class Controller implements Observer,Runnable {
             String str = scan.nextLine();
             if (str.equals("close")){
                 close=true;
-                continue;
             }
         }
     }
