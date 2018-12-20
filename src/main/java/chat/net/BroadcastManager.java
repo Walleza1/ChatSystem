@@ -73,6 +73,8 @@ public class BroadcastManager extends Observable implements Runnable{
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, NetworkManager.broadcastAddr, NetworkManager.BROADCAST_PORT);
             senderSocket.send(sendPacket);
             senderSocket.close();
+            System.out.println("Envois d'un packet udp broadcast");
+
         } catch (IOException e) {
             System.out.println("Envois d'un packet udp broadcast raté");
         }

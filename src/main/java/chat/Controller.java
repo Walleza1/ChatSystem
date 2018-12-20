@@ -97,16 +97,24 @@ public class Controller implements Observer,Runnable {
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
         this.sendPacket(notifications);
-
-        ArrayList<User> receivedList=NetworkManager.getInstance().receiveList();
+        /*ArrayList<User> receivedList;
+        try {
+            UserListManager manager=new UserListManager(new ServerSocket(NetworkManager.USERLIST_PORT),NetworkManager.USERLIST_TIMEOUT_MS);
+            Thread getList=new Thread(manager);
+            getList.start();
+            getList.join();
+            receivedList=manager.getUserList();
+        } catch (IOException | InterruptedException e) {
+            receivedList=new ArrayList<User>();
+        }
         for (User u:receivedList){
             if (s.equals(u.getPseudo())){
                 retour=false;
             }
-        }
+        }*/
         userList.add(getSelf());
         System.out.println("Pseudo libre : "+retour);
-        return true;
+        return retour;
     }
 
     public boolean usernameInList(String s){

@@ -23,16 +23,17 @@ public class NetworkManager extends Observable implements Observer {
     public static int UNICAST_PORT=6667;
 
     public static int USERLIST_PORT=6668;
-    public static int USERLIST_TIMEOUT_MS=1000;
+    public static int USERLIST_TIMEOUT_MS=10000;
 
     private DatagramSocket udpSocket;
     private ServerSocket tcpSocket;
+    private ServerSocket userSocket;
     private InetAddress myAddr;
     public static InetAddress broadcastAddr;
 
     private BroadcastManager broadcastManager;
     private UnicastManager unicastManager;
-
+    private UserListManager userListManager;
 
     /**
      * Create our NetworkManager
@@ -45,20 +46,26 @@ public class NetworkManager extends Observable implements Observer {
             this.udpSocket=new DatagramSocket(BROADCAST_PORT);
             this.udpSocket.setBroadcast(true);
             this.tcpSocket=new ServerSocket(UNICAST_PORT);
+            this.userSocket=new ServerSocket(USERLIST_PORT);
+
             this.broadcastManager =new BroadcastManager(udpSocket);
             this.unicastManager =new UnicastManager(tcpSocket);
+            this.userListManager=new UserListManager(userSocket);
 
         } catch (IOException e) {
             System.out.println("Error lors création socket");
         }
         Thread b=new Thread(broadcastManager);
         Thread c=new Thread(unicastManager);
+        Thread d=new Thread(userListManager);
 
         this.broadcastManager.addObserver(this);
         this.unicastManager.addObserver(this);
-
+        this.userListManager.addObserver(this);
         b.start();
         c.start();
+        d.start();
+
 
         //Get our routable InetAddress
         try(final DatagramSocket socket = new DatagramSocket()){
@@ -120,38 +127,16 @@ public class NetworkManager extends Observable implements Observer {
             e.printStackTrace();
         }
     }
-    public ArrayList<User> receiveList(){
-        ArrayList<User> ret;
-        ServerSocket serverSocket = null;
-        try {
-            serverSocket=new ServerSocket(NetworkManager.USERLIST_PORT);
-            System.out.println("Serveur userList Ok");
-            //timeout after 1s
-            serverSocket.setSoTimeout(NetworkManager.USERLIST_TIMEOUT_MS);
-            Socket distant=serverSocket.accept();
-            System.out.println("Connect received");
-            ObjectInputStream in= new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
-            UserListPacket listPacket=(UserListPacket) in.readObject();
-            ret=listPacket.getUserList();
-            serverSocket.close();
-        } catch (IOException | ClassNotFoundException e) {
-           ret=new ArrayList<User>();
-           System.out.println("Connection failed");
-           if (e instanceof SocketTimeoutException){
-               try {
-                   serverSocket.close();
-               } catch (IOException e1) {
-                   System.out.println("Server socket close failed. Userlist");
-               }
-           }
-        }
-        return ret;
-    }
+
     /** If we receive a Packet, transmit it to our observers **/
     @Override
     public void update(Observable observable, Object o) {
         this.setChanged();
-        notifyObservers(o);
+        if (observable instanceof UserListManager){
+            System.out.println("UserList received");
+        }else {
+            notifyObservers(o);
+        }
         this.clearChanged();
     }
 }
