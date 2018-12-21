@@ -2,11 +2,14 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
+import chat.net.UserListManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.*;
 
@@ -92,33 +95,26 @@ public class Controller implements Observer,Runnable {
         return null;
     }
 
+    /**
+     * Send a notification to notify my presence. Then wait for a UserListPacket.
+     * @param s
+     * @return
+     */
     public boolean isUsernameAvailable(String s){
         boolean retour=true;
         this.setUsername(s);
-        Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
+        Notifications notifications=Notifications.createNewUserPacket(this.self,null);
         this.sendPacket(notifications);
-        /*
-        TODO: try this. With a Timeout handle
-        ArrayList<User> receivedList;
-        try {
-            UserListManager manager=new UserListManager(new ServerSocket(NetworkManager.USERLIST_PORT),NetworkManager.USERLIST_TIMEOUT_MS);
-            Thread getList=new Thread(manager);
-            getList.start();
-            getList.join();
-            receivedList=manager.getUserList();
-        } catch (IOException | InterruptedException e) {
-            receivedList=new ArrayList<User>();
-        }
-        for (User u:receivedList){
-            if (s.equals(u.getPseudo())){
-                retour=false;
-            }
-        }
-        userList.add(getSelf());*/
+        userList.add(getSelf());
         System.out.println("Pseudo libre : "+retour);
         return retour;
     }
 
+    /**
+     * Verify if username is in userlist.
+     * @param s
+     * @return
+     */
     public boolean usernameInList(String s){
         boolean res = false;
         for (User u : userList){
@@ -129,6 +125,11 @@ public class Controller implements Observer,Runnable {
         return res;
     }
 
+    /**
+     * Main method to handle packet.
+     * @param observable
+     * @param o
+     */
     @Override
     public void update(Observable observable, Object o) {
         Packet p=(Packet)o;
@@ -180,6 +181,10 @@ public class Controller implements Observer,Runnable {
         }
     }
 
+    /**
+     * Give a packet to networkManger
+     * @param p Packet to send
+     */
     public void sendPacket(Packet p){
         this.myNet.sendPacket(p);
     }
@@ -189,7 +194,7 @@ public class Controller implements Observer,Runnable {
         Scanner scan=new Scanner(System.in);
         boolean close=false;
         System.out.println("My address "+this.myNet.getMyAddr());
-        Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
+        Notifications notifications=Notifications.createNewUserPacket(this.self,null);
         this.sendPacket(notifications);
         while(!close){
             String str = scan.nextLine();
@@ -199,8 +204,12 @@ public class Controller implements Observer,Runnable {
         }
     }
 
+    /**
+     * LogOut method :
+     * Send Notification when I logout. And start a New Controller.
+     */
     public void logout () {
-        Notifications notifications=Notifications.createLogOutPaquet(this.self,null);
+        Notifications notifications=Notifications.createLogOutPacket(this.self,null);
         this.sendPacket(notifications);
         System.out.println("Logout send");
         //Deletes all user data, resetting the app as if it was launched for the first time

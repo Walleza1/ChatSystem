@@ -19,12 +19,17 @@ public class UserListManager extends Observable implements Runnable {
     public UserListManager(ServerSocket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
         userList=new ArrayList<User>();
-    }
 
+    }
+    /** Get UserList return after run method*/
     public ArrayList<User> getUserList() {
         return userList;
     }
 
+    /**Listen to a port, and wait for a userListPacket.
+     * if received before timeout ok
+     * if not, return empty list
+     * */
     @Override
     public void run() {
         ArrayList<User> ret = new ArrayList<User>();

@@ -118,6 +118,10 @@ public class NetworkManager extends Observable implements Observer {
         }
     }
 
+    /**
+     * Method to send a UserListPacket
+     * @param p Packet to send
+     */
     public void sendUserList(UserListPacket p){
         try {
             System.out.println("Envois de la liste");

@@ -22,20 +22,38 @@ public class Notifications extends Packet {
 		return type;
 	}
 
-	public static Notifications createNewPseudoPaquet(User source, User destination) {
+	/**
+	 * Create a newPseudoPacket
+	 * @param source User Sender
+	 * @param destination User Dest
+	 * @return Notifications NewPseudoPacket
+	 */
+	public static Notifications createNewPseudoPacket(User source, User destination) {
 		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.newPseudo;
 		System.out.println(ret.type);
 		return ret;
 	}
 
-	public static Notifications createNewUserPaquet(User source, User destination) {
+	/**
+	 * Create NewUserPacket
+	 * @param source User Sender
+	 * @param destination User Dest
+	 * @return Notifications NewUserPacket
+	 */
+	public static Notifications createNewUserPacket(User source, User destination) {
 		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.newUser;
 		return ret;
 	}
 
-	public static Notifications createLogOutPaquet(User source, User destination) {
+	/**
+	 * Create LogOutPacket
+	 * @param source User Sender
+	 * @param destination User Dest
+	 * @return Notifications LogOutPacket
+	 */
+	public static Notifications createLogOutPacket(User source, User destination) {
 		Notifications ret = new Notifications(source, destination);
 		ret.type = NotificationType.logout;
 		return ret;
