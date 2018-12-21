@@ -161,7 +161,10 @@ public class Controller implements Observer {
 
                     if(p.getSource().getAddress().equals(u.getAddress())){
                         alreadyIn=true;
-                        u.setPseudo(p.getSource().getPseudo());
+                        User tmp = u;
+                        tmp.setPseudo(p.getSource().getPseudo());
+                        userList.remove(u);
+                        userList.add(tmp);
                     }
                 }
                 if (!alreadyIn){
