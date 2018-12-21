@@ -50,7 +50,7 @@ public class Discussion extends Observable implements Runnable{
     @Override
     public void run() {
         try {
-            while (in.available() > 0) {
+            while(!this.distant.isClosed()) {
                 Packet p = (Packet) in.readObject();
                 this.setChanged();
                 ObserverFlag observerFlag = new ObserverFlag(ObserverFlag.Flag.packetReceived, p);

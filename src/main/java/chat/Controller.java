@@ -157,7 +157,7 @@ public class Controller implements Observer,Runnable {
         }else{
             if (p instanceof Message) {
                 Message m=(Message) p;
-                System.out.println("From " + ((Packet) o).getSource().getPseudo() + " : " + m.getContenu());
+                System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
                 getMessageListFromUser(p.getSource()).add(m);
                 messageLog.notifyAll();
             }
@@ -167,6 +167,8 @@ public class Controller implements Observer,Runnable {
                     if (!userList.contains(u)) {
                         userList.add(u);
                         messageLog.put(u, new ArrayList<Message>());
+                    }else{
+                        System.out.println("USer en doublon oublie");
                     }
                 }
             }else if (p instanceof File){
