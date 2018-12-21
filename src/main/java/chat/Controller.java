@@ -9,7 +9,7 @@ import javafx.collections.ObservableMap;
 import java.net.InetAddress;
 import java.util.*;
 
-public class Controller implements Observer,Runnable {
+public class Controller implements Observer {
 
     private User self;
     private ObservableList<User> userList = FXCollections.observableArrayList();
@@ -157,7 +157,7 @@ public class Controller implements Observer,Runnable {
                     if(p.getSource().getPseudo().equals(u.getPseudo())){
                         alreadyIn=true;
                         u.setPseudo(p.getSource().getPseudo());
-                        userList.notify();
+                        userList.notifyAll();
                     }
                 }
                 if (!alreadyIn){
@@ -170,7 +170,7 @@ public class Controller implements Observer,Runnable {
                 System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
                 getMessageListFromUser(p.getSource()).add(m);
                 getMessageListFromUser(p.getSource());
-                messageLog.notify();
+                messageLog.notifyAll();
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
@@ -194,21 +194,6 @@ public class Controller implements Observer,Runnable {
      */
     public void sendPacket(Packet p){
         this.myNet.sendPacket(p);
-    }
-
-    @Override
-    public void run() {
-        Scanner scan=new Scanner(System.in);
-        boolean close=false;
-        System.out.println("My address "+this.myNet.getMyAddr());
-        Notifications notifications=Notifications.createNewUserPacket(this.self,null);
-        this.sendPacket(notifications);
-        while(!close){
-            String str = scan.nextLine();
-            if (str.equals("close")){
-                close=true;
-            }
-        }
     }
 
     /**
