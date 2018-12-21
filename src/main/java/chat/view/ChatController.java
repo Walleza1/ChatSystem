@@ -191,6 +191,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @Override
     public void onChanged(MapChangeListener.Change change) {
+        System.out.println("coucou");
         updateFeed();
     }
 
@@ -216,5 +217,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         textArea.clear();
         updateFeed();
     }
+
 
 }

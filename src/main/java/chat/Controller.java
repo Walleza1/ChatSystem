@@ -174,11 +174,11 @@ public class Controller implements Observer {
             if (p instanceof Message) {
                 Message m=(Message) p;
                 System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
-                getMessageListFromUser(p.getSource()).add(m);
-                getMessageListFromUser(p.getSource());
-                synchronized (messageLog) {
-                    messageLog.notifyAll();
-                }
+                ArrayList<Message> tmp = new ArrayList<>();
+                tmp.addAll(getMessageListFromUser(p.getSource()));
+                tmp.add(m);
+                this.messageLog.remove(p.getSource().getAddress());
+                this.messageLog.put(p.getSource().getAddress(),tmp);
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
