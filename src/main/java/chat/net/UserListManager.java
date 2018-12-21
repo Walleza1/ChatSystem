@@ -12,9 +12,8 @@ import java.util.Observable;
 
 public class UserListManager extends Observable implements Runnable {
     private ServerSocket serverSocket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
     private ArrayList<User> userList;
+
 
     public UserListManager(ServerSocket serverSocket) throws IOException {
         this.serverSocket = serverSocket;
@@ -24,6 +23,17 @@ public class UserListManager extends Observable implements Runnable {
     /** Get UserList return after run method*/
     public ArrayList<User> getUserList() {
         return userList;
+    }
+
+    /**
+     * Stop my runnable.
+     */
+    public void stop(){
+        try {
+            this.serverSocket.close();
+        } catch (IOException e) {
+            System.out.println("Already Closed");
+        }
     }
 
     /**Listen to a port, and wait for a userListPacket.

@@ -40,6 +40,14 @@ public class Discussion extends Observable implements Runnable{
         }
     }
 
+
+    public void stop(){
+        try {
+            this.distant.close();
+        } catch (IOException e) {
+            System.out.println("Is already stopped");
+        }
+    }
     /**
      * Socket en attente d'un packet.
      * Lorsque le Socket est fermé

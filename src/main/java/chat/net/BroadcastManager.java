@@ -19,15 +19,13 @@ public class BroadcastManager extends Observable implements Runnable{
      */
     public void run() {
         byte[] incomingData = new byte[1024];
-        while(true) {
+        while(!this.socket.isClosed()) {
             DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
             try {
                 socket.receive(incomingPacket);
                 byte[] data = incomingPacket.getData();
-
                 ByteArrayInputStream in = new ByteArrayInputStream(data);
                 ObjectInputStream is = new ObjectInputStream(in);
-
                 Packet p = (Packet) is.readObject();
                 if (!p.getSource().getAddress().equals(NetworkManager.getInstance().getMyAddr())){
                     managePacket(p);
@@ -45,6 +43,9 @@ public class BroadcastManager extends Observable implements Runnable{
         this.clearChanged();
     }
 
+    public void stop(){
+        this.socket.close();
+    }
     /**
      * What do our BroadcastManager do when it receive a packet.
      * Transmit it to our observers
@@ -74,7 +75,6 @@ public class BroadcastManager extends Observable implements Runnable{
             senderSocket.send(sendPacket);
             senderSocket.close();
             System.out.println("Envois d'un packet udp broadcast");
-
         } catch (IOException e) {
             System.out.println("Envois d'un packet udp broadcast raté");
         }

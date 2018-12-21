@@ -73,6 +73,16 @@ public class UnicastManager extends Observable implements Runnable, Observer {
         }
     }
 
+    public void stop(){
+        try {
+            for (Discussion dis : this.chatRooms.values()){
+                dis.stop();
+            }
+            this.socket.close();
+        } catch (IOException e) {
+            System.out.println("Is already closed");
+        }
+    }
     /**
      * Send a Packet in TCP.
      * If the destination is already in Discussion then use that discussion
@@ -81,6 +91,9 @@ public class UnicastManager extends Observable implements Runnable, Observer {
      */
     public void sendPacket(Packet p){
         InetAddress address=p.getDestination().getAddress();
+        if (this.socket.isClosed()){
+            return;
+        }
         if (chatRooms.containsKey(address)){
             chatRooms.get(address).sendMessage(p);
         }else{

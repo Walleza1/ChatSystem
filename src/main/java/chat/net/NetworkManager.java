@@ -98,6 +98,13 @@ public class NetworkManager extends Observable implements Observer {
         return uniqueInstance;
     }
 
+    /**
+     * Stop my runnable.
+     */
+    public void stop(){
+        this.unicastManager.stop();
+        this.broadcastManager.stop();
+    }
     /** Get actual InetAddress that is routable
      * @return InetAddress
      */
