@@ -146,7 +146,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         Optional<String> result = dialog.showAndWait();
 
         if (result.isPresent()){
-            if (!controller.isUsernameAvailable(result.get())) {
+            if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
                 controller.getSelf().setPseudo(result.get());
                 controller.sendPacket(Notifications.createNewPseudoPacket(controller.getSelf(),null));
