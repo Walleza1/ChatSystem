@@ -163,14 +163,16 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @FXML
     public void userClicked () {
-        distantUser.setOpacity(1);
-        textArea.setOpacity(1);
-        closeDiscussionButton.setOpacity(1);
-        fileButton.setOpacity(1);
-        sendButton.setOpacity(1);
-        distantUser.setText((String) userListView.getSelectionModel().getSelectedItem());
-        activeUser = controller.getUserFromPseudo((String) userListView.getSelectionModel().getSelectedItem());
-        updateFeed();
+        if (!userListView.getItems().isEmpty()) {
+            distantUser.setOpacity(1);
+            textArea.setOpacity(1);
+            closeDiscussionButton.setOpacity(1);
+            fileButton.setOpacity(1);
+            sendButton.setOpacity(1);
+            distantUser.setText((String) userListView.getSelectionModel().getSelectedItem());
+            activeUser = controller.getUserFromPseudo((String) userListView.getSelectionModel().getSelectedItem());
+            updateFeed();
+        }
     }
 
     @FXML
