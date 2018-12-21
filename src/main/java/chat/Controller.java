@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
 import java.net.InetAddress;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Controller implements Observer {
@@ -54,11 +55,12 @@ public class Controller implements Observer {
 
     public ArrayList<String> getHistoryFromUser (User u) {
         ArrayList<String> res = new ArrayList<>();
+        SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
         for (Message m : messageLog.get(u.getAddress())){
             if (m.getSource().equals(self)){
-                res.add("(" + m.getTimeStamp() + ") Moi : " + m.getContenu());
+                res.add("(" + formater.format(m.getTimeStamp()) + ") Moi : " + m.getContenu());
             } else {
-                res.add("(" + m.getTimeStamp() + ") " + m.getSource().getPseudo() + " : " + m.getContenu());
+                res.add("(" + formater.format(m.getTimeStamp()) + ") " + m.getSource().getPseudo() + " : " + m.getContenu());
             }
 
         }
