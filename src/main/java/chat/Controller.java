@@ -101,7 +101,9 @@ public class Controller implements Observer {
         boolean retour=true;
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
-        this.sendPacket(notifications);
+        for (int i=0;i<5;i++) {
+            this.sendPacket(notifications);
+        }
         userList.add(getSelf());
         System.out.println("Pseudo libre : "+retour);
         return retour;
