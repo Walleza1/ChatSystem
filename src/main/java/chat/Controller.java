@@ -106,8 +106,19 @@ public class Controller implements Observer {
         for (int i=0;i<5;i++) {
             this.sendPacket(notifications);
         }
-        userList.add(getSelf());
-        System.out.println("Pseudo libre : "+retour);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        for (User u : this.userList){
+            if (u.getPseudo().equals(getSelf().getPseudo())){
+                retour=false;
+            }
+        }
+        if (retour){
+            userList.add(getSelf());
+        }
         return retour;
     }
 
