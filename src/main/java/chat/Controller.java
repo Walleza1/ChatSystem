@@ -2,15 +2,10 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
-import chat.net.UserListManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.UnknownHostException;
 import java.util.*;
 
 public class Controller implements Observer,Runnable {
@@ -19,24 +14,11 @@ public class Controller implements Observer,Runnable {
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private NetworkManager myNet;
     private ObservableMap<User,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
-    private User test;
 
     private Controller(){
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.self=new User("Moi", new Date(), myNet.getMyAddr());
-        try {
-            this.test = new User("Test", new Date(), InetAddress.getByName("1.1.1.1"));
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        this.getList().add(test);
-        ArrayList<Message> msgtest = new ArrayList<>();
-        msgtest.add(new Message(0,self,test,"Coucou"));
-        msgtest.add(new Message(1,self,test,"ça va ?"));
-        msgtest.add(new Message(1,test,self,"Oui ça va"));
-        messageLog.put(test,msgtest);
-
     }
 
     private static Controller INSTANCE = null;
@@ -144,6 +126,7 @@ public class Controller implements Observer,Runnable {
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 NetworkManager.getInstance().sendUserList(pack);
                 this.userList.add(p.getSource());
+                this.messageLog.put(p.getSource(),new ArrayList<Message>());
                 System.out.println("List send");
                 //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
@@ -175,6 +158,9 @@ public class Controller implements Observer,Runnable {
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
                 userList.addAll(userListPacket.getUserList());
+                for (User u : userListPacket.getUserList()){
+                    messageLog.put(u,new ArrayList<Message>());
+                }
             }else if (p instanceof File){
                 System.out.println("File received");
             }
