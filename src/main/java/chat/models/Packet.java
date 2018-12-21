@@ -15,6 +15,7 @@ public abstract class Packet implements Serializable {
     public Packet(User source, User destination ){
         Source = source;
         Destination = destination;
+        timeStamp = new Date();
     }
 
     public static long getSerialVersionUID() {

@@ -56,9 +56,9 @@ public class Controller implements Observer {
         ArrayList<String> res = new ArrayList<>();
         for (Message m : messageLog.get(u.getAddress())){
             if (m.getSource().equals(self)){
-                res.add("Moi : " + m.getContenu());
+                res.add("(" + m.getTimeStamp() + ") Moi : " + m.getContenu());
             } else {
-                res.add(m.getSource().getPseudo() + " : " + m.getContenu());
+                res.add("(" + m.getTimeStamp() + ") " + m.getSource().getPseudo() + " : " + m.getContenu());
             }
 
         }
