@@ -141,8 +141,10 @@ public class Controller implements Observer {
                 listUser.addAll(this.userList);
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 NetworkManager.getInstance().sendUserList(pack);
-                this.userList.add(p.getSource());
-                this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
+                if (!this.userList.contains(p.getSource())){
+                    this.userList.add(p.getSource());
+                    this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
+                }
                 System.out.println("List send");
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
                 for (User u : userList){
