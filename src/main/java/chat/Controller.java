@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
+import java.net.InetAddress;
 import java.util.*;
 
 public class Controller implements Observer,Runnable {
@@ -13,7 +14,7 @@ public class Controller implements Observer,Runnable {
     private User self;
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private NetworkManager myNet;
-    private ObservableMap<User,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
+    private ObservableMap<InetAddress,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
 
     private Controller(){
         this.myNet=NetworkManager.getInstance();
@@ -38,13 +39,22 @@ public class Controller implements Observer,Runnable {
         return userList;
     }
 
-    public ObservableMap<User,ArrayList<Message>> getMap () {
+    public ObservableMap<InetAddress,ArrayList<Message>> getMap () {
         return messageLog;
+    }
+
+    public User getUserFromAddress (InetAddress addr) {
+        for (User u : userList){
+            if(u.getAddress().equals(addr)){
+                return u;
+            }
+        }
+        return null;
     }
 
     public ArrayList<String> getHistoryFromUser (User u) {
         ArrayList<String> res = new ArrayList<>();
-        for (Message m : messageLog.get(u)){
+        for (Message m : messageLog.get(u.getAddress())){
             if (m.getSource().equals(self)){
                 res.add("Moi : " + m.getContenu());
             } else {
@@ -56,7 +66,8 @@ public class Controller implements Observer,Runnable {
     }
 
     public ArrayList<Message> getMessageListFromUser(User u) {
-        return messageLog.get(u);
+        System.out.println(messageLog.get(u.getAddress()));
+        return messageLog.get(u.getAddress());
     }
 
     public void setSelf (User u) {
@@ -117,7 +128,7 @@ public class Controller implements Observer,Runnable {
      * @param o
      */
     @Override
-    public void update(Observable observable, Object o) {
+    synchronized public void update(Observable observable, Object o) {
         Packet p=(Packet)o;
         if (p instanceof Notifications) {
             System.out.println("Received Notifications "+((Notifications) p).getType().toString());
@@ -126,11 +137,10 @@ public class Controller implements Observer,Runnable {
                 //Send list of users
                 ArrayList<User> listUser = new ArrayList<>();
                 listUser.addAll(this.userList);
-                System.out.println("Taille de ma liste "+listUser.size());
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 NetworkManager.getInstance().sendUserList(pack);
                 this.userList.add(p.getSource());
-                this.messageLog.put(p.getSource(),new ArrayList<Message>());
+                this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
                 System.out.println("List send");
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
                 for (User u : userList){
@@ -147,7 +157,7 @@ public class Controller implements Observer,Runnable {
                     if(p.getSource().getPseudo().equals(u.getPseudo())){
                         alreadyIn=true;
                         u.setPseudo(p.getSource().getPseudo());
-                        userList.notifyAll();
+                        userList.notify();
                     }
                 }
                 if (!alreadyIn){
@@ -158,15 +168,16 @@ public class Controller implements Observer,Runnable {
             if (p instanceof Message) {
                 Message m=(Message) p;
                 System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
-                getMessageListFromUser(p.getSource()).add(m);
-                messageLog.notifyAll();
+                //getMessageListFromUser(p.getSource()).add(m);
+                //getMessageListFromUser(p.getSource());
+                //messageLog.notify();
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
                 for (User u : userListPacket.getUserList()){
                     if (!userList.contains(u)) {
                         userList.add(u);
-                        messageLog.put(u, new ArrayList<Message>());
+                        messageLog.put(u.getAddress(), new ArrayList<Message>());
                     }else{
                         System.out.println("USer en doublon oublie");
                     }
