@@ -168,9 +168,9 @@ public class Controller implements Observer,Runnable {
             if (p instanceof Message) {
                 Message m=(Message) p;
                 System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
-                //getMessageListFromUser(p.getSource()).add(m);
-                //getMessageListFromUser(p.getSource());
-                //messageLog.notify();
+                getMessageListFromUser(p.getSource()).add(m);
+                getMessageListFromUser(p.getSource());
+                messageLog.notify();
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
