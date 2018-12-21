@@ -82,11 +82,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
     public void sendPacket(Packet p){
         InetAddress address=p.getDestination().getAddress();
         if (chatRooms.containsKey(address)){
-            try {
-                chatRooms.get(address).sendMessage(p);
-            } catch (IOException e) {
-                System.out.println("Erreur à l'envois d'un msg à quelqu'un déjà existant");
-            }
+            chatRooms.get(address).sendMessage(p);
         }else{
             Socket distant= null;
             Discussion discussion = null;

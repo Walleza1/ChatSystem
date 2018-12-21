@@ -28,8 +28,16 @@ public class Discussion extends Observable implements Runnable{
      * @param p
      * @throws IOException
      */
-    public void sendMessage(Packet p) throws IOException {
-        out.writeObject(p);
+    public void sendMessage(Packet p){
+        try {
+            if (!this.distant.isClosed()){
+                out.writeObject(p);
+            }else{
+                System.out.println("Socket closed");
+            }
+        } catch (IOException e) {
+            System.out.println("Erreur à l'envois d'un msg à quelqu'un déjà existant");
+        }
     }
 
     /**
@@ -41,22 +49,18 @@ public class Discussion extends Observable implements Runnable{
      */
     @Override
     public void run() {
-        while(!this.distant.isClosed()){
-            try {
+        try {
+            while (in.available() > 0) {
                 Packet p = (Packet) in.readObject();
                 this.setChanged();
-                ObserverFlag observerFlag=new ObserverFlag(ObserverFlag.Flag.packetReceived,p);
+                ObserverFlag observerFlag = new ObserverFlag(ObserverFlag.Flag.packetReceived, p);
                 notifyObservers(observerFlag);
                 this.clearChanged();
-            }catch (Exception e) {
-                try {
-                    this.distant.close();
-                    ObserverFlag observerFlag=new ObserverFlag(ObserverFlag.Flag.close);
-                    notifyObservers(observerFlag);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
             }
+        }catch (IOException e){
+            System.out.println("InputStream closed");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
