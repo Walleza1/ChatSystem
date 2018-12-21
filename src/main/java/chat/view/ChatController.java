@@ -164,7 +164,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @FXML
     public void userClicked () {
-        if (!userListView.getItems().isEmpty()) {
+        if (!userListView.getItems().isEmpty() && ((String) userListView.getSelectionModel().getSelectedItem() != null)){
             distantUser.setOpacity(1);
             textArea.setOpacity(1);
             closeDiscussionButton.setOpacity(1);
