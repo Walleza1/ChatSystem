@@ -97,7 +97,9 @@ public class Controller implements Observer,Runnable {
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPaquet(this.self,null);
         this.sendPacket(notifications);
-        /*ArrayList<User> receivedList;
+        /*
+        TODO: try this. With a Timeout handle
+        ArrayList<User> receivedList;
         try {
             UserListManager manager=new UserListManager(new ServerSocket(NetworkManager.USERLIST_PORT),NetworkManager.USERLIST_TIMEOUT_MS);
             Thread getList=new Thread(manager);
@@ -143,7 +145,14 @@ public class Controller implements Observer,Runnable {
                 this.userList.add(p.getSource());
                 System.out.println("List send");
                 //TYPE NEW PSEUDO
-            } else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
+            } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
+                for (User u : userList){
+                    //When i received this packet i remove
+                    if (u.getAddress()==p.getSource().getAddress()){
+                        userList.remove(u);
+                    }
+                }
+            }else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
                 boolean alreadyIn=false;
                 System.out.println("newPseudoNotif received");
                 for (User u : userList){
@@ -165,6 +174,8 @@ public class Controller implements Observer,Runnable {
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
                 userList.addAll(userListPacket.getUserList());
+            }else if (p instanceof File){
+                System.out.println("File received");
             }
         }
     }
@@ -189,7 +200,9 @@ public class Controller implements Observer,Runnable {
     }
 
     public void logout () {
-        //TODO
+        Notifications notifications=Notifications.createLogOutPaquet(this.self,null);
+        this.sendPacket(notifications);
+        System.out.println("Logout send");
         //Deletes all user data, resetting the app as if it was launched for the first time
         INSTANCE = new Controller();
 
