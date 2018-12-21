@@ -39,4 +39,13 @@ public class User implements Serializable {
 
     public void setPseudo (String s){ this.pseudo = s;}
 
+    @Override
+    public boolean equals(Object o) {
+        boolean ret=false;
+        User B=(User) o;
+        if (B.getAddress().equals(this.getAddress())){
+            ret=true;
+        }
+        return ret;
+    }
 }

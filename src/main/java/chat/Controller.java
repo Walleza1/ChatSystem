@@ -157,9 +157,11 @@ public class Controller implements Observer,Runnable {
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
-                userList.addAll(userListPacket.getUserList());
                 for (User u : userListPacket.getUserList()){
-                    messageLog.put(u,new ArrayList<Message>());
+                    if (!userList.contains(u)) {
+                        userList.add(u);
+                        messageLog.put(u, new ArrayList<Message>());
+                    }
                 }
             }else if (p instanceof File){
                 System.out.println("File received");
