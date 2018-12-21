@@ -55,6 +55,10 @@ public class Controller implements Observer,Runnable {
         return res;
     }
 
+    public ArrayList<Message> getMessageListFromUser(User u) {
+        return messageLog.get(u);
+    }
+
     public void setSelf (User u) {
         this.self = u;
     }

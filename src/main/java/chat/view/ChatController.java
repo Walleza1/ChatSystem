@@ -210,7 +210,9 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     public void send (){
         //Prendre le texte et l'envoyer
         System.out.println(textArea.getText());
-        //controller.sendPacket(new Message(0,controller.getSelf(),activeUser,textArea.getText()));
+        Message toSend = new Message(0,controller.getSelf(),activeUser,textArea.getText());
+        controller.getMessageListFromUser(activeUser).add(toSend);
+        controller.sendPacket(toSend);
         textArea.clear();
         updateFeed();
     }
