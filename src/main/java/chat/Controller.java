@@ -132,7 +132,6 @@ public class Controller implements Observer,Runnable {
                 this.userList.add(p.getSource());
                 this.messageLog.put(p.getSource(),new ArrayList<Message>());
                 System.out.println("List send");
-                //TYPE NEW PSEUDO
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
                 for (User u : userList){
                     //When i received this packet i remove
@@ -140,11 +139,12 @@ public class Controller implements Observer,Runnable {
                         userList.remove(u);
                     }
                 }
+                //TYPE NEW PSEUDO
             }else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
                 boolean alreadyIn=false;
                 System.out.println("newPseudoNotif received");
                 for (User u : userList){
-                    if(u.getAddress() == p.getSource().getAddress()){
+                    if(p.getSource().getPseudo().equals(u.getPseudo())){
                         alreadyIn=true;
                         u.setPseudo(p.getSource().getPseudo());
                         userList.notifyAll();

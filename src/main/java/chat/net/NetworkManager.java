@@ -47,7 +47,6 @@ public class NetworkManager extends Observable implements Observer {
             this.udpSocket.setBroadcast(true);
             this.tcpSocket=new ServerSocket(UNICAST_PORT);
             this.userSocket=new ServerSocket(USERLIST_PORT);
-
             this.broadcastManager =new BroadcastManager(udpSocket);
             this.unicastManager =new UnicastManager(tcpSocket);
             this.userListManager=new UserListManager(userSocket);
