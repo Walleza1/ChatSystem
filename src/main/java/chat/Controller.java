@@ -158,6 +158,7 @@ public class Controller implements Observer {
                 boolean alreadyIn=false;
                 System.out.println("newPseudoNotif received");
                 for (User u : userList){
+
                     if(p.getSource().getAddress().equals(u.getAddress())){
                         alreadyIn=true;
                         u.setPseudo(p.getSource().getPseudo());
