@@ -130,7 +130,7 @@ public class Controller implements Observer {
      * @param o
      */
     @Override
-    synchronized public void update(Observable observable, Object o) {
+    public void update(Observable observable, Object o) {
         Packet p=(Packet)o;
         if (p instanceof Notifications) {
             System.out.println("Received Notifications "+((Notifications) p).getType().toString());
@@ -159,7 +159,9 @@ public class Controller implements Observer {
                     if(p.getSource().getPseudo().equals(u.getPseudo())){
                         alreadyIn=true;
                         u.setPseudo(p.getSource().getPseudo());
-                        userList.notifyAll();
+                        synchronized (userList) {
+                            userList.notifyAll();
+                        }
                     }
                 }
                 if (!alreadyIn){
@@ -172,7 +174,9 @@ public class Controller implements Observer {
                 System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
                 getMessageListFromUser(p.getSource()).add(m);
                 getMessageListFromUser(p.getSource());
-                messageLog.notifyAll();
+                synchronized (messageLog) {
+                    messageLog.notifyAll();
+                }
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
