@@ -1,5 +1,3 @@
-package chat;
-
 import chat.net.UserListManager;
 
 import java.io.IOException;

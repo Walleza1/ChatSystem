@@ -5,6 +5,7 @@ import chat.net.NetworkManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.collections.transformation.SortedList;
 
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
@@ -153,12 +154,23 @@ public class Controller implements Observer {
                 ArrayList<User> listUser = new ArrayList<>();
                 listUser.addAll(this.userList);
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
-                NetworkManager.getInstance().sendUserList(pack);
+                SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
+                    @Override
+                    public int compare(User user, User t1) {
+                        return user.getTimeStamp().compareTo(t1.getTimeStamp());
+                    }
+                });
+                //To verify
+                List<User> lastThreeUser= sortedListUser.subList(Math.max(sortedListUser.size()-3,0),sortedListUser.size());
+                if (lastThreeUser.contains(this.getSelf())){
+                    NetworkManager.getInstance().sendUserList(pack);
+                }
+                System.out.println("List send");
+
                 if (!this.userList.contains(p.getSource())){
                     this.userList.add(p.getSource());
                     this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
                 }
-                System.out.println("List send");
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
                 for (User u : userList){
                     //When i received this packet i remove
@@ -180,6 +192,7 @@ public class Controller implements Observer {
                         userList.add(tmp);
                     }
                 }
+                //TODO : update view
                 if (!alreadyIn){
                     userList.add(p.getSource());
                 }
@@ -201,7 +214,7 @@ public class Controller implements Observer {
                         userList.add(u);
                         messageLog.put(u.getAddress(), new ArrayList<Message>());
                     }else{
-                        System.out.println("USer en doublon oublie");
+                        System.out.println("User en doublon oublie");
                     }
                 }
             }else if (p instanceof File){
