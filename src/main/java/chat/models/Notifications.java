@@ -1,5 +1,4 @@
 package chat.models;
-
 public class Notifications extends Packet {
 	public enum NotificationType {
 		newPseudo, newUser, logout;
@@ -11,11 +10,6 @@ public class Notifications extends Packet {
 
 	public Notifications(User source, User destination) {
 		super(source, destination);
-	}
-
-	public Notifications(User source, User destination, NotificationType type) {
-		super(source, destination);
-		this.type = type;
 	}
 
 	public NotificationType getType() {

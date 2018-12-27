@@ -35,7 +35,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
     @Override
     public void run() {
         try {
-            while(true) {
+            while(!this.socket.isClosed()) {
                 System.out.println("Unicast Server Ok");
                 Socket distant = this.socket.accept();
                 System.out.println("Connexion établie");
@@ -45,7 +45,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
                 new Thread(discussion).start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Erreur socket unicast");
         }
     }
 

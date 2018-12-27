@@ -3,7 +3,8 @@ package chat.net;
 import chat.models.Packet;
 
 import java.io.*;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.Observable;
 
 public class BroadcastManager extends Observable implements Runnable{
@@ -31,7 +32,7 @@ public class BroadcastManager extends Observable implements Runnable{
                     managePacket(p);
                 }
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("Erreur socket broadcast");
             }
         }
     }

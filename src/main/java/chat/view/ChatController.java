@@ -1,12 +1,9 @@
 package chat.view;
 
 import chat.Controller;
-import chat.Main;
 import chat.models.Message;
 import chat.models.Notifications;
-import chat.models.Packet;
 import chat.models.User;
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
@@ -21,13 +18,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Optional;
 import java.util.ResourceBundle;
 

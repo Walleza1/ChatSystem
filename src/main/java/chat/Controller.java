@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Controller implements Observer {
-
     private User self;
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private NetworkManager myNet;
@@ -21,7 +20,7 @@ public class Controller implements Observer {
     private Controller(){
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
-        this.self=new User("Moi", new Date(), myNet.getMyAddr());
+        this.self=new User("Moi", myNet.getMyAddr());
     }
 
     private static Controller INSTANCE = null;
@@ -241,6 +240,10 @@ public class Controller implements Observer {
         System.out.println("Logout send");
         //Deletes all user data, resetting the app as if it was launched for the first time
         INSTANCE = new Controller();
+    }
 
+    void stop(){
+        System.out.println("Closing it");
+        this.myNet.stop();
     }
 }

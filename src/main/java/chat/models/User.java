@@ -13,12 +13,6 @@ public class User implements Serializable {
     private Date timeStamp;
     private InetAddress address;
 
-    public User(String pseudo, Date timeStamp, InetAddress address) {
-        this.pseudo = pseudo;
-        this.timeStamp = timeStamp;
-        this.address = address;
-    }
-
     public User(String pseudo, InetAddress address) {
         this.pseudo = pseudo;
         this.timeStamp=new Date();
@@ -42,9 +36,11 @@ public class User implements Serializable {
     @Override
     public boolean equals(Object o) {
         boolean ret=false;
-        User B=(User) o;
-        if (B.getAddress().equals(this.getAddress())){
-            ret=true;
+        if (o instanceof User){
+            User B=(User) o;
+            if (B.getAddress().equals(this.getAddress())){
+                ret=true;
+            }
         }
         return ret;
     }

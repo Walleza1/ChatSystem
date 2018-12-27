@@ -1,8 +1,5 @@
 package chat.models;
 
-import java.net.InetAddress;
-import java.util.Date;
-
 public class Message extends Packet {
 
 	private static final long serialVersionUID = 1L;

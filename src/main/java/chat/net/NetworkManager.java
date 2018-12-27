@@ -2,15 +2,11 @@ package chat.net;
 
 import chat.models.Notifications;
 import chat.models.Packet;
-import chat.models.User;
 import chat.models.UserListPacket;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -104,6 +100,7 @@ public class NetworkManager extends Observable implements Observer {
     public void stop(){
         this.unicastManager.stop();
         this.broadcastManager.stop();
+        this.userListManager.stop();
     }
     /** Get actual InetAddress that is routable
      * @return InetAddress

@@ -1,12 +1,11 @@
 package chat.models;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class UserListPacket extends Packet {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private ArrayList <User> UserList = new ArrayList <User> ();
 
 	public UserListPacket(User source, User destination, ArrayList<User> userList) {

@@ -3,7 +3,9 @@ package chat.net;
 import chat.models.User;
 import chat.models.UserListPacket;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -59,7 +61,7 @@ public class UserListManager extends Observable implements Runnable {
                 distant.close();
             }
         } catch (ClassNotFoundException|IOException e) {
-            System.out.println("Error");
+            System.out.println("Error userList receiver");
             if (e instanceof SocketTimeoutException){
                 System.out.println("Timed out");
             }

@@ -1,6 +1,9 @@
 package chat.models;
 
+/** Class design to handle communication between
+ * Discussion Thread and UnicastManager**/
 public class ObserverFlag {
+
     public enum Flag {
         close, packetReceived;
     }
