@@ -54,7 +54,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
             public void run() {
                 userListView.getItems().clear();
                 for (User u : controller.getList()){
-                    if (u != controller.getSelf()) {
+                    if (u.equals(controller.getSelf())) {
                         userListView.getItems().add(u.getPseudo());
                     }
                 }
