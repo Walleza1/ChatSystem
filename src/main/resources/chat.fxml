@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.*?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@chatstyle.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.ChatController">
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@chatstyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.ChatController">
    <children>
       <SplitPane dividerPositions="0.32629107981220656" prefHeight="720.0" prefWidth="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -58,12 +66,16 @@
                            <children>
                               <AnchorPane prefHeight="120.0" prefWidth="210.0" GridPane.vgrow="NEVER">
                                  <children>
-                                    <Circle fill="DODGERBLUE" layoutX="67.0" layoutY="69.0" radius="45.0" stroke="#ffffff00" strokeType="INSIDE" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
                                     <Label fx:id="username" layoutX="123.0" layoutY="37.0" maxWidth="500.0" prefHeight="46.0" prefWidth="208.0" text="Username" textFill="WHITE" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="0.0">
                                        <font>
                                           <Font name="Century Gothic" size="36.0" />
                                        </font>
                                     </Label>
+                                    <ImageView fitHeight="90.0" fitWidth="90.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
+                                       <image>
+                                          <Image url="@../../../img/userIcon.png" />
+                                       </image>
+                                    </ImageView>
                                  </children>
                               </AnchorPane>
                               <ListView fx:id="userListView" onMouseClicked="#userClicked" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #242A31; -fx-border-color: #242A31; -fx-border-width: 0;" GridPane.rowIndex="1">
