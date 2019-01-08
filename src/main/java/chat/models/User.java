@@ -43,7 +43,6 @@ public class User implements Serializable {
             if (B.getAddress().equals(this.getAddress())){
                 ret=true;
             }
-            System.out.println("Is same ? "+ret);
         }
         return ret;
     }

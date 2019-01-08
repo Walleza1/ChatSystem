@@ -197,8 +197,8 @@ public class Controller implements Observer {
                 List<User> lastThreeUser= sortedListUser.subList(Math.max(sortedListUser.size()-3,0),sortedListUser.size());
                 if (lastThreeUser.contains(this.getSelf())){
                     NetworkManager.getInstance().sendUserList(pack);
+                    System.out.println("List send");
                 }
-                System.out.println("List send");
 
                 if (!this.userList.contains(p.getSource())){
                     this.userList.add(p.getSource());
