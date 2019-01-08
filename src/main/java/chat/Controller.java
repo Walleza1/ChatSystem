@@ -138,8 +138,8 @@ public class Controller implements Observer {
             if (u.getPseudo().equals(getSelf().getPseudo())){
                 if (!u.getAddress().equals(getSelf().getAddress())){
                     System.out.println("Pseudo pas libre");
+                    available=false;
                 }
-                available=false;
             }
         }
         if (available){
