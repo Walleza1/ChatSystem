@@ -28,6 +28,9 @@ public class LoginController implements Initializable {
     private Button test;
 
     @FXML
+    private Button serverButton;
+
+    @FXML
     private TextField userTextField;
 
     public LoginController(){}
@@ -70,6 +73,15 @@ public class LoginController implements Initializable {
     @FXML
     public void handleHoverConnectDone(){
         test.setStyle("-fx-background-color:  #6ED9A0;");
+    }
+
+    @FXML
+    public void servon (){
+        if (serverButton.getText() == "Server on"){
+            serverButton.setText("Server off");
+        } else {
+            serverButton.setText("Server on");
+        }
     }
 
     @Override

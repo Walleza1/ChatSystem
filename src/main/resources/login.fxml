@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #242A31;" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #242A31;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="chat.view.LoginController">
    <children>
       <Line endX="300.0" rotate="90.0" startX="-300.0" stroke="#fbfcfc" />
       <GridPane>
@@ -90,7 +90,7 @@
                         </StackPane>
                         <StackPane GridPane.rowIndex="4">
                            <children>
-                              <Button mnemonicParsing="false" text="Button" />
+                              <Button fx:id="serverButton" mnemonicParsing="false" onMouseClicked="#servon" text="Server off" />
                            </children>
                         </StackPane>
                      </children>
