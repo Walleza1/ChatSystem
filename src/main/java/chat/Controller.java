@@ -10,10 +10,12 @@ import javafx.collections.transformation.SortedList;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class Controller implements Observer {
     private User self;
     private ObservableList<User> userList = FXCollections.observableArrayList();
+    private Semaphore userListSemaphore;
     private NetworkManager myNet;
     private ObservableMap<InetAddress,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
 
@@ -21,6 +23,7 @@ public class Controller implements Observer {
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.self=new User("Moi", myNet.getMyAddr());
+        this.userListSemaphore=new Semaphore(1);
     }
 
     private static Controller INSTANCE = null;
@@ -45,11 +48,17 @@ public class Controller implements Observer {
     }
 
     public User getUserFromAddress (InetAddress addr) {
+        try {
+            userListSemaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (User u : userList){
             if(u.getAddress().equals(addr)){
                 return u;
             }
         }
+            userListSemaphore.release();
         return null;
     }
 
@@ -85,13 +94,19 @@ public class Controller implements Observer {
     }
 
     public User getUserFromPseudo (String pseudo){
+        User ret=null;
+        try {
+            userListSemaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for(User u : userList){
             if(pseudo.equals(u.getPseudo())){
-                return u;
+                ret=u;
             }
         }
-        System.out.println("user was not found with that pseudo");
-        return null;
+        userListSemaphore.release();
+        return ret;
     }
 
     /**
@@ -111,15 +126,21 @@ public class Controller implements Observer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        try {
+            userListSemaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (User u : this.userList){
             if (u.getPseudo().equals(getSelf().getPseudo())){
                 retour=false;
             }
         }
+        userListSemaphore.release();
         if (retour){
             userList.add(getSelf());
         }
-        return retour;
+        return true;
     }
 
     /**
@@ -129,11 +150,17 @@ public class Controller implements Observer {
      */
     public boolean usernameInList(String s){
         boolean res = false;
+        try {
+            userListSemaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for (User u : userList){
             if (u.getPseudo().equals(s)){
                 res = true;
             }
         }
+        userListSemaphore.release();
         return res;
     }
 
@@ -151,6 +178,11 @@ public class Controller implements Observer {
             if (((Notifications) p).getType() == Notifications.NotificationType.newUser) {
                 //Send list of users
                 ArrayList<User> listUser = new ArrayList<>();
+                try {
+                    userListSemaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 listUser.addAll(this.userList);
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
@@ -170,19 +202,30 @@ public class Controller implements Observer {
                     this.userList.add(p.getSource());
                     this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
                 }
+                userListSemaphore.release();
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
+                try {
+                    userListSemaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 for (User u : userList){
                     //When i received this packet i remove
                     if (u.getAddress()==p.getSource().getAddress()){
                         userList.remove(u);
                     }
                 }
+                userListSemaphore.release();
                 //TYPE NEW PSEUDO
             }else if (((Notifications) p).getType() == Notifications.NotificationType.newPseudo){
                 boolean alreadyIn=false;
                 System.out.println("newPseudoNotif received");
+                try {
+                    userListSemaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 for (User u : userList){
-
                     if(p.getSource().getAddress().equals(u.getAddress())){
                         alreadyIn=true;
                         User tmp = u;
@@ -195,6 +238,7 @@ public class Controller implements Observer {
                 if (!alreadyIn){
                     userList.add(p.getSource());
                 }
+                userListSemaphore.release();
             }
         }else{
             if (p instanceof Message) {
@@ -208,6 +252,11 @@ public class Controller implements Observer {
             }
             else if(p instanceof UserListPacket){
                 UserListPacket userListPacket=(UserListPacket) p;
+                try {
+                    userListSemaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 for (User u : userListPacket.getUserList()){
                     if (!userList.contains(u)) {
                         userList.add(u);
@@ -216,6 +265,7 @@ public class Controller implements Observer {
                         System.out.println("User en doublon oublie");
                     }
                 }
+                userListSemaphore.release();
             }else if (p instanceof File){
                 System.out.println("File received");
             }

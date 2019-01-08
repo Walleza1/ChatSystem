@@ -38,9 +38,12 @@ public class User implements Serializable {
         boolean ret=false;
         if (o instanceof User){
             User B=(User) o;
+            System.out.println(B.getAddress());
+            System.out.println(this.getAddress());
             if (B.getAddress().equals(this.getAddress())){
                 ret=true;
             }
+            System.out.println("Is same ? "+ret);
         }
         return ret;
     }

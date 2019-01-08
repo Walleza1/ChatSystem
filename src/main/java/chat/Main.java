@@ -20,12 +20,7 @@ public class Main extends Application{
         Scene scene = new Scene (root);
         primaryStage.setTitle("Clavardage 1.0");
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent windowEvent) {
-                Controller.getInstance().stop();
-            }
-        });
+        primaryStage.setOnCloseRequest(windowEvent -> Controller.getInstance().stop());
         primaryStage.show();
     }
 
