@@ -115,7 +115,7 @@ public class Controller implements Observer {
      * @return
      */
     public boolean isUsernameAvailable(String s){
-        boolean retour=true;
+        boolean available=true;
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
         for (int i=0;i<5;i++) {
@@ -136,15 +136,17 @@ public class Controller implements Observer {
             if (u.getPseudo().equals(getSelf().getPseudo())){
                 if (!u.getAddress().equals(getSelf().getAddress())){
                     System.out.println("Pseudo pas libre");
-                    retour=false;
                 }
+                available=false;
             }
         }
-        if (retour){
+        if (available){
             userList.add(this.getSelf());
+        }else{
+            userList.clear();
         }
         userListSemaphore.release();
-        return retour;
+        return available;
     }
 
     /**
