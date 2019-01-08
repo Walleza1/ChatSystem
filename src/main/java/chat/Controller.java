@@ -228,13 +228,13 @@ public class Controller implements Observer {
                 for (User u : userList){
                     if(p.getSource().getAddress().equals(u.getAddress())){
                         alreadyIn=true;
-                        User tmp = u;
-                        tmp.setPseudo(p.getSource().getPseudo());
-                        userList.remove(u);
-                        userList.add(tmp);
+                        u.setPseudo(p.getSource().getPseudo());
                     }
                 }
-                //TODO : update view
+                User tmp = userList.get(0);
+                userList.remove(userList.get(0));
+                userList.add(tmp);
+                
                 if (!alreadyIn){
                     userList.add(p.getSource());
                 }
