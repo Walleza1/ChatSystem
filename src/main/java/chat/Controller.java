@@ -134,8 +134,10 @@ public class Controller implements Observer {
         System.out.println("End waited");
         for (User u : this.userList){
             if (u.getPseudo().equals(getSelf().getPseudo())){
-                System.out.println("Pseudo pas libre");
-                retour=false;
+                if (!u.getAddress().equals(getSelf().getAddress())){
+                    System.out.println("Pseudo pas libre");
+                    retour=false;
+                }
             }
         }
         if (retour){
