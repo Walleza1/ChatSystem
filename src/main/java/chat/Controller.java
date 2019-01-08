@@ -122,7 +122,7 @@ public class Controller implements Observer {
             this.sendPacket(notifications);
         }
         try {
-            Thread.sleep(1000);
+            Thread.sleep(200);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -137,7 +137,7 @@ public class Controller implements Observer {
             }
         }
         userListSemaphore.release();
-        return true;
+        return retour;
     }
 
     /**
@@ -182,7 +182,7 @@ public class Controller implements Observer {
                 }
                 listUser.addAll(this.userList);
                 listUser.add(this.getSelf());
-                
+
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
                     @Override
