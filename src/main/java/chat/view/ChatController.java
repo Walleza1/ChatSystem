@@ -69,6 +69,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                 if (activeUser != null) {
                     messageFeed.getItems().clear();
                     messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
+                    messageFeed.scrollTo(messageFeed.getItems().size() - 1);
                 }
             }
         });
