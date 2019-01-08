@@ -50,6 +50,12 @@ public class LoginController implements Initializable {
             Stage app_stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
             app_stage.setScene(chat_scene);
             app_stage.show();
+        } else if (!controller.isUsernameAvailable(userTextField.getText())){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Ce nom d'utilisateur est déjà pris. Recommencez.");
+            alert.showAndWait();
         }
     }
 
