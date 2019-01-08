@@ -137,9 +137,6 @@ public class Controller implements Observer {
             }
         }
         userListSemaphore.release();
-        if (retour){
-            userList.add(getSelf());
-        }
         return true;
     }
 
@@ -184,6 +181,8 @@ public class Controller implements Observer {
                     e.printStackTrace();
                 }
                 listUser.addAll(this.userList);
+                listUser.add(this.getSelf());
+                
                 UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
                 SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
                     @Override
