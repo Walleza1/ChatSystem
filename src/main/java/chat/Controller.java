@@ -2,6 +2,7 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -34,6 +35,7 @@ public class Controller implements Observer {
         }
         return INSTANCE;
     }
+
 
     public User getSelf () {
         return self;

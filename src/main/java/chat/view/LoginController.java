@@ -51,6 +51,7 @@ public class LoginController implements Initializable {
             app_stage.setScene(chat_scene);
             app_stage.show();
         } else if (!controller.isUsernameAvailable(userTextField.getText())){
+            controller.getList().clear();
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erreur");
             alert.setHeaderText(null);
