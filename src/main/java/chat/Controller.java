@@ -204,9 +204,17 @@ public class Controller implements Observer {
                 }
 
                 if (!this.userList.contains(p.getSource())){
-                    System.out.println("Ajout new User");
-                    this.userList.add(p.getSource());
-                    this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
+                    boolean isHisPseudoAvailable=true;
+                    for (User u : this.userList){
+                        if (u.getPseudo().equals(p.getSource().getPseudo())){
+                            isHisPseudoAvailable=false;
+                        }
+                    }
+                    if (isHisPseudoAvailable) {
+                        System.out.println("Ajout new User");
+                        this.userList.add(p.getSource());
+                        this.messageLog.put(p.getSource().getAddress(), new ArrayList<Message>());
+                    }
                 }
                 userListSemaphore.release();
             } else if (((Notifications) p).getType() == Notifications.NotificationType.logout){
