@@ -144,6 +144,13 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
             if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
                 controller.getSelf().setPseudo(result.get());
+
+                for (User u : controller.getList()){
+                    if(u.getAddress() == controller.getSelf().getAddress()){
+                        u.setPseudo(result.get());
+                    }
+                }
+
                 controller.sendPacket(Notifications.createNewPseudoPacket(controller.getSelf(),null));
                 controller.setUsername(result.get());
                 onChanged((ListChangeListener.Change) null);
