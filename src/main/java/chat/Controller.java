@@ -131,11 +131,14 @@ public class Controller implements Observer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("End waited");
         for (User u : this.userList){
             if (u.getPseudo().equals(getSelf().getPseudo())){
+                System.out.println("Pseudo pas libre");
                 retour=false;
             }
         }
+
         userListSemaphore.release();
         return retour;
     }
@@ -250,6 +253,7 @@ public class Controller implements Observer {
                 this.messageLog.put(p.getSource().getAddress(),tmp);
             }
             else if(p instanceof UserListPacket){
+                System.out.println("Received userlistPacket");
                 UserListPacket userListPacket=(UserListPacket) p;
                 try {
                     userListSemaphore.acquire();
