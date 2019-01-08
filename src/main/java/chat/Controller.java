@@ -202,6 +202,7 @@ public class Controller implements Observer {
                 }
 
                 if (!this.userList.contains(p.getSource())){
+                    System.out.println("Ajout new User");
                     this.userList.add(p.getSource());
                     this.messageLog.put(p.getSource().getAddress(),new ArrayList<Message>());
                 }
