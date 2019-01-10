@@ -52,10 +52,24 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+
                 userListView.getItems().clear();
                 for (User u : controller.getList()){
                     if (!u.equals(controller.getSelf())) {
                         userListView.getItems().add(u.getPseudo());
+                    }
+                }
+
+                if(activeUser != null) {
+                    boolean tmp = false ;
+                    for (User u : controller.getList()) {
+                        if (u.getAddress() == activeUser.getAddress()) {
+                            tmp = true;
+                        }
+                    }
+
+                    if (tmp == false) {
+                        closeDiscussion();
                     }
                 }
             }
@@ -167,6 +181,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     @FXML
     public void userClicked () {
         if (!userListView.getItems().isEmpty() && ((String) userListView.getSelectionModel().getSelectedItem() != null)){
+            textArea.setDisable(false);
             distantUser.setOpacity(1);
             textArea.setOpacity(1);
             closeDiscussionButton.setOpacity(1);
@@ -186,6 +201,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         fileButton.setOpacity(0);
         sendButton.setOpacity(0);
         messageFeed.getItems().clear();
+        textArea.setDisable(true);
 
     }
 
