@@ -2,3 +2,5 @@
 {
     -fx-font: 20pt "Century Gothic";
 }
+
+.list-view, .split-pane { -fx-background-insets: 0; -fx-padding: 0; }
