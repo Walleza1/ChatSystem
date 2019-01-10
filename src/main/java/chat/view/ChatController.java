@@ -68,6 +68,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
             public void run() {
                 if (activeUser != null) {
                     messageFeed.getItems().clear();
+                    //System.out.println(messageFeed.getItems());
                     messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
                     messageFeed.scrollTo(messageFeed.getItems().size() - 1);
                 }
@@ -75,7 +76,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         });
     }
 
-    @FXML
     private Button logout;
 
     @FXML
