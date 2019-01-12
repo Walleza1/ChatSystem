@@ -31,13 +31,6 @@ public class Controller implements Observer {
         this.myNet.addObserver(this);
         this.self=new User("Moi", myNet.getMyAddr());
         this.userListSemaphore=new Semaphore(1);
-
-        try {
-            this.userList.add(new User("Test",InetAddress.getByName("1.1.1.1")));
-            this.messageLog.put(InetAddress.getByName("1.1.1.1"), new ArrayList<Message>());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
     }
 
     private static Controller INSTANCE = null;

@@ -78,6 +78,9 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                         closeDiscussion();
                     }
                 }
+
+                String s = userListView.getItems().size()+ "";
+                usersOnline.setText(s);
             }
         });
     }
@@ -127,6 +130,12 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @FXML
     private ListView messageFeed;
+
+    @FXML
+    private Button nonbutton;
+
+    @FXML
+    private Label usersOnline;
 
     @FXML
     public void logOut (MouseEvent event) throws IOException {
