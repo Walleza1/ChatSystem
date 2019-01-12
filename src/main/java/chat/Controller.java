@@ -7,8 +7,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.SortedList;
+import javafx.geometry.Pos;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -25,6 +27,13 @@ public class Controller implements Observer {
         this.myNet.addObserver(this);
         this.self=new User("Moi", myNet.getMyAddr());
         this.userListSemaphore=new Semaphore(1);
+
+        try {
+            this.userList.add(new User("Test",InetAddress.getByName("1.1.1.1")));
+            this.messageLog.put(InetAddress.getByName("1.1.1.1"), new ArrayList<Message>());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Controller INSTANCE = null;
@@ -138,6 +147,7 @@ public class Controller implements Observer {
      * @return
      */
     public boolean usernameInList(String s){
+
         boolean res = false;
         try {
             userListSemaphore.acquire();
@@ -258,6 +268,7 @@ public class Controller implements Observer {
         }
         userList.removeIf(user -> user.equals(p.getSource()));
         userListSemaphore.release();
+
     }
 
     public void handlerNewPseudo(Packet p) {

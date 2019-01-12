@@ -10,6 +10,7 @@ import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -18,12 +19,16 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import static sun.plugin.javascript.navig.JSType.Window;
 
 public class ChatController implements Initializable, ListChangeListener, MapChangeListener {
 
@@ -155,7 +160,14 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         Optional<String> result = dialog.showAndWait();
 
         if (result.isPresent()){
-            if (!controller.usernameInList(result.get())) {
+            if(result.get().equals("")){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Le nom d'utilisateur ne doit pas être vide");
+                alert.showAndWait();
+            }
+            else if (!controller.usernameInList(result.get())) {
                 username.setText(result.get());
                 controller.getSelf().setPseudo(result.get());
 
@@ -164,10 +176,19 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                         u.setPseudo(result.get());
                     }
                 }
-
                 controller.sendPacket(Notifications.createNewPseudoPacket(controller.getSelf(),null));
                 controller.setUsername(result.get());
                 onChanged((ListChangeListener.Change) null);
+
+                //PUSH NOTIFICATION TEST
+                org.controlsfx.control.Notifications notif = org.controlsfx.control.Notifications.create()
+                        .title("Nouveau pseudo")
+                        .text("Vous avez changé de pseudo avec succès !")
+                        .graphic(null)
+                        .darkStyle()
+                        .position(Pos.BOTTOM_RIGHT);
+                notif.showInformation();
+
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Erreur");
