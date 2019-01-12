@@ -54,6 +54,8 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     }
 
+
+
     private void updateView(){
         Platform.runLater(new Runnable() {
             @Override

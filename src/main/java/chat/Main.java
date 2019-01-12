@@ -24,6 +24,11 @@ public class Main extends Application{
         Controller.getInstance().setStage(primaryStage);
     }
 
+    @Override
+    public void stop(){
+        Controller.getInstance().logout();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
