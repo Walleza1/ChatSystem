@@ -14,3 +14,22 @@
     -fx-background-color: #3a434f;
     -fx-text-fill: white;
 }
+
+.notification-bar>.pane {
+    -fx-background-color: #354149;
+    -fx-padding: 10 10 10 10;
+    -fx-background-insets: 2, 3, 2;
+}
+
+.notification-bar>.pane .title {
+    -fx-font-family: Roboto;
+    -fx-font-size: 12px; /*16px;*/
+    -fx-text-fill: #ffffff;
+}
+
+.notification-bar>.pane .label {
+    -fx-font-family: Roboto;
+    -fx-font-size: 18px; /*12px;*/
+    -fx-text-fill: #ffffff;
+    -fx-alignment: top-left;
+}

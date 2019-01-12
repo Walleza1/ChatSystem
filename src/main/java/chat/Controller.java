@@ -8,6 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -21,6 +24,7 @@ public class Controller implements Observer {
     private Semaphore userListSemaphore;
     private NetworkManager myNet;
     private ObservableMap<InetAddress,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
+    private Stage stage;
 
     private Controller(){
         this.myNet=NetworkManager.getInstance();
@@ -44,6 +48,7 @@ public class Controller implements Observer {
         }
         return INSTANCE;
     }
+
 
 
     public User getSelf () {
@@ -79,6 +84,14 @@ public class Controller implements Observer {
 
     public void setUsername (String s){
         self.setPseudo(s);
+    }
+
+    public void setStage (Stage s){
+        this.stage = s;
+    }
+
+    public Stage getStage (){
+        return this.stage;
     }
 
     public String getUsername (){
@@ -255,6 +268,13 @@ public class Controller implements Observer {
                 System.out.println("Ajout new User");
                 this.userList.add(p.getSource());
                 this.messageLog.put(p.getSource().getAddress(), new ArrayList<Message>());
+
+                //PUSH NOTIFICATION TEST
+                Image img = new Image("/new_user.png");
+                org.controlsfx.control.Notifications.create().owner(getStage())
+                        .title("Nouvel utilisateur").text(p.getSource().getPseudo() + "est en ligne.")
+                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+
             }
         }
         userListSemaphore.release();
@@ -267,6 +287,12 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
         userList.removeIf(user -> user.equals(p.getSource()));
+        //PUSH NOTIFICATION TEST
+        Image img = new Image("/user_leaving.png");
+        org.controlsfx.control.Notifications.create().owner(getStage())
+                .title("Déconnexion").text(p.getSource().getPseudo() + "est hors ligne.")
+                .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+
         userListSemaphore.release();
 
     }
@@ -282,6 +308,13 @@ public class Controller implements Observer {
         for (User u : userList){
             if(p.getSource().getAddress().equals(u.getAddress())){
                 alreadyIn=true;
+
+                //PUSH NOTIFICATION TEST
+                Image img = new Image("/new_username.png");
+                org.controlsfx.control.Notifications.create().owner(getStage())
+                        .title("Nouveau nom d'utilisateur").text(u.getPseudo() + "devient " + p.getSource().getPseudo())
+                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+
                 u.setPseudo(p.getSource().getPseudo());
             }
         }

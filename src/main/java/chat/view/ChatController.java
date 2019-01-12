@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -179,16 +180,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                 controller.sendPacket(Notifications.createNewPseudoPacket(controller.getSelf(),null));
                 controller.setUsername(result.get());
                 onChanged((ListChangeListener.Change) null);
-
-                //PUSH NOTIFICATION TEST
-                org.controlsfx.control.Notifications notif = org.controlsfx.control.Notifications.create()
-                        .title("Nouveau pseudo")
-                        .text("Vous avez changé de pseudo avec succès !")
-                        .graphic(null)
-                        .darkStyle()
-                        .position(Pos.BOTTOM_RIGHT);
-                notif.showInformation();
-
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Erreur");
