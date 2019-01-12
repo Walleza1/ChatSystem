@@ -22,7 +22,8 @@ public class Main extends Application{
         primaryStage.setTitle("Clavardage 1.1");
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(windowEvent -> Controller.getInstance().stop());
-        //primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream( "icon.png" )));
+        Image image = new Image("/icon2.png");
+        primaryStage.getIcons().add(image);
         primaryStage.show();
     }
 
