@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -86,6 +87,11 @@ public class Controller implements Observer {
         self.setPseudo(s);
     }
 
+    public void updateSelfUsername(User u){
+        System.out.println("Coucou");
+        db.updateSelfUsername(this.getSelf());
+    }
+
     void setStage(Stage s){
         this.stage = s;
     }
@@ -138,14 +144,44 @@ public class Controller implements Observer {
         for (User u : this.userList){
             if (u.getPseudo().equals(getSelf().getPseudo())){
                 if (!u.getAddress().equals(getSelf().getAddress())){
-                    System.out.println("Pseudo pas libre");
-                    available=false;
+                    if(!db.sameAsPreviousIP(u)){
+                        System.out.println("Pseudo pas libre");
+                        available = false;
+                    } else {
+                        available = true;
+                    }
                 }
             }
         }
         if (available){
-            userList.add(this.getSelf());
+            //DB TEST
+            if(!db.isSelfUsernameSet(this.getSelf())){
+                db.addSelfUsername(this.getSelf());
+                userList.add(this.getSelf());
+            } else {
+                if(!db.getSelf().equals(this.getSelf().getPseudo())){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Vous devez vous reconnecter avec le même " +
+                            "nom d'utilisateur que la dernière fois.");
+                    alert.showAndWait();
+                    userList.clear();
+                    userListSemaphore.release();
+                    return false;
+                } else {
+                    userList.add(this.getSelf());
+                    userListSemaphore.release();
+                    return true ;
+                }
+            }
+
         }else{
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Ce nom d'utilisateur est déjà pris. Recommencez.");
+            alert.showAndWait();
             userList.clear();
         }
         userListSemaphore.release();
@@ -215,6 +251,7 @@ public class Controller implements Observer {
      * Send Notification when I logout. And start a New Controller.
      */
     public void logout () {
+        db.saveIP(self.getAddress());
         Notifications notifications=Notifications.createLogOutPacket(this.self,null);
         this.sendPacket(notifications);
         System.out.println("Logout send");
@@ -260,6 +297,7 @@ public class Controller implements Observer {
             if (isHisPseudoAvailable) {
                 System.out.println("Ajout new User");
                 this.userList.add(p.getSource());
+                db.addUser(p.getSource());
                 this.messageLog.put(p.getSource().getAddress(), new ArrayList<Message>());
 
                 //PUSH NOTIFICATION TEST
@@ -301,7 +339,7 @@ public class Controller implements Observer {
         for (User u : userList){
             if(p.getSource().getAddress().equals(u.getAddress())){
                 alreadyIn=true;
-
+                db.updateUsername(p.getSource());
                 //PUSH NOTIFICATION TEST
                 Image img = new Image("/new_username.png");
                 org.controlsfx.control.Notifications.create().owner(getStage())
