@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -31,6 +32,12 @@ public class Controller implements Observer {
         this.self=new User("Moi", myNet.getMyAddr());
         this.userListSemaphore=new Semaphore(1);
         this.db = Database.getInstance();
+        try {
+            this.userList.add(new User("Test",InetAddress.getByName("1.1.1.1")));
+            this.messageLog.put(InetAddress.getByName("1.1.1.1"),new ArrayList<>());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Controller INSTANCE = null;

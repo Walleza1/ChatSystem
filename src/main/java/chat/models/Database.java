@@ -34,16 +34,25 @@ public class Database {
         }
 
         tryToCreateTables();
-        System.out.println("Created table in given database...");
+        System.out.println("Created tables in database...");
     }
 
     private void tryToCreateTables(){
         try {
             Statement stmt = con.createStatement();
-            String sql =  "CREATE TABLE IF NOT EXISTS Users (id INT NOT NULL);";
+            String sql =  "CREATE TABLE IF NOT EXISTS Users " +
+                    "(IP VARCHAR(20)," +
+                    "Username VARCHAR(50) NOT NULL);";
+            stmt.executeUpdate(sql);
+
+            sql =  "CREATE TABLE IF NOT EXISTS Messages " +
+                    "(IP VARCHAR(20) NOT NULL ," +
+                    "Content VARCHAR(280));";
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
 }
