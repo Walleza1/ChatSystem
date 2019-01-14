@@ -2,7 +2,6 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -13,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -25,12 +23,14 @@ public class Controller implements Observer {
     private NetworkManager myNet;
     private ObservableMap<InetAddress,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
     private Stage stage;
+    private Database db;
 
     private Controller(){
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.self=new User("Moi", myNet.getMyAddr());
         this.userListSemaphore=new Semaphore(1);
+        this.db = Database.getInstance();
     }
 
     private static Controller INSTANCE = null;
@@ -79,11 +79,11 @@ public class Controller implements Observer {
         self.setPseudo(s);
     }
 
-    public void setStage (Stage s){
+    void setStage(Stage s){
         this.stage = s;
     }
 
-    public Stage getStage (){
+    private Stage getStage(){
         return this.stage;
     }
 
@@ -109,8 +109,6 @@ public class Controller implements Observer {
 
     /**
      * Send a notification to notify my presence. Then wait for a UserListPacket.
-     * @param s
-     * @return
      */
     public boolean isUsernameAvailable(String s){
         boolean available=true;
@@ -149,8 +147,6 @@ public class Controller implements Observer {
 
     /**
      * Verify if username is in userlist.
-     * @param s
-     * @return
      */
     public boolean usernameInList(String s){
 
@@ -171,8 +167,6 @@ public class Controller implements Observer {
 
     /**
      * Main method to handle packet.
-     * @param observable
-     * @param o
      */
     @Override
     public void update(Observable observable, Object o) {
@@ -226,15 +220,14 @@ public class Controller implements Observer {
         this.myNet.stop();
     }
 
-    public void handlerNewUser(Packet p){
+    private void handlerNewUser(Packet p){
         //Send list of users
-        ArrayList<User> listUser = new ArrayList<>();
         try {
             userListSemaphore.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        listUser.addAll(this.userList);
+        ArrayList<User> listUser = new ArrayList<>(this.userList);
 
         UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
         SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
@@ -272,7 +265,7 @@ public class Controller implements Observer {
         }
         userListSemaphore.release();
     }
-    public void handlerLogOut(Packet p){
+    private void handlerLogOut(Packet p){
         System.out.println("LogOut received");
         try {
             userListSemaphore.acquire();
@@ -290,7 +283,7 @@ public class Controller implements Observer {
 
     }
 
-    public void handlerNewPseudo(Packet p) {
+    private void handlerNewPseudo(Packet p) {
         boolean alreadyIn=false;
         System.out.println("newPseudoNotif received");
         try {
@@ -321,17 +314,16 @@ public class Controller implements Observer {
         userListSemaphore.release();
     }
 
-    public void handlerMessage(Packet p){
+    private void handlerMessage(Packet p){
         Message m=(Message) p;
         System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
-        ArrayList<Message> tmp = new ArrayList<>();
-        tmp.addAll(getMessageListFromUser(p.getSource()));
+        ArrayList<Message> tmp = new ArrayList<>(getMessageListFromUser(p.getSource()));
         tmp.add(m);
         this.messageLog.remove(p.getSource().getAddress());
         this.messageLog.put(p.getSource().getAddress(),tmp);
     }
 
-    public void handlerListUser(Packet p){
+    private void handlerListUser(Packet p){
         System.out.println("Received userlistPacket");
         UserListPacket userListPacket=(UserListPacket) p;
         try {
@@ -342,7 +334,7 @@ public class Controller implements Observer {
         for (User u : userListPacket.getUserList()){
             if (!userList.contains(u)) {
                 userList.add(u);
-                messageLog.put(u.getAddress(), new ArrayList<Message>());
+                messageLog.put(u.getAddress(), new ArrayList<>());
             }else{
                 System.out.println("User en doublon oublie");
             }

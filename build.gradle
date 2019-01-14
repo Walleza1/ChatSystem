@@ -13,4 +13,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
+// https://mvnrepository.com/artifact/com.h2database/h2
+    compile group: 'com.h2database', name: 'h2', version: '1.4.195'
+
 }
