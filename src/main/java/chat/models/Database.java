@@ -1,6 +1,9 @@
 package chat.models;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Database {
@@ -40,19 +43,19 @@ public class Database {
             Statement stmt = con.createStatement();
             String sql =  "CREATE TABLE IF NOT EXISTS Users " +
                     "(UUID VARCHAR(32) PRIMARY KEY," +
-                    "Username VARCHAR(50) NOT NULL," +
-                    "Status VARCHAR(20));";
+                    "Username VARCHAR(50) NOT NULL);";
             stmt.executeUpdate(sql);
 
             sql =  "CREATE TABLE IF NOT EXISTS Messages " +
-                    "(UUID VARCHAR(32) PRIMARY KEY ," +
+                    "(SENDER VARCHAR(32), " +
+                    "RECEIVER VARCHAR(32), " +
                     "Content VARCHAR(280), " +
                     "Timestamp VARCHAR(10));";
 
             stmt.executeUpdate(sql);
 
             sql =  "CREATE TABLE IF NOT EXISTS Self " +
-                    "(UUID VARCHAR(32));";
+                    "(UUID VARCHAR(32) PRIMARY KEY);";
             stmt.executeUpdate(sql);
 
         } catch (SQLException e) {
@@ -70,6 +73,24 @@ public class Database {
                 tmp++;
             }
             return tmp != 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean UUIDinUsers(String s){
+        try {
+            String sql = "SELECT UUID FROM USERS WHERE UUID = '" + s + "';";
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            int tmp = 1;
+            while(rs.next()) {
+
+                tmp++;
+            }
+            return tmp != 1;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,7 +128,7 @@ public class Database {
     }
 
     public String getUUID(){
-        String ID = null;
+        String ID;
         if(UUIDisSet()){
             ID = UUIDfromDB();
         } else {
@@ -119,7 +140,7 @@ public class Database {
 
     public void addUser(User u){
         try {
-            String sql = "INSERT INTO USERS VALUES (?,?,'Online')";
+            String sql = "INSERT INTO USERS VALUES (?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, u.getUUID());
             ps.setString(2, u.getPseudo());
@@ -127,6 +148,39 @@ public class Database {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public void updateUsername(User u){
+        try {
+            String sql = "UPDATE USERS SET USERNAME = ? WHERE UUID = ?;";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, u.getPseudo());
+            ps.setString(2, u.getUUID());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<User> getUsers(){
+        try {
+        String sql = "SELECT * FROM USERS";
+        ResultSet rs = con.createStatement().executeQuery(sql);
+
+        ArrayList <User> users = new ArrayList<>();
+
+        while(rs.next()){
+            User u = new User(rs.getString("USERNAME"), InetAddress.getByName("1.1.1.1"),
+                    rs.getString("UUID"),"Offline");
+            users.add(u);
+        }
+            return users ;
+        } catch (SQLException | UnknownHostException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -144,17 +198,9 @@ public class Database {
         }
     }
 
-    public void updateUsername(User u){
-        try {
-            String sql = "UPDATE USERS SET USERNAME = ? WHERE UUID = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, u.getPseudo());
-            ps.setString(2, u.getUUID());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public ArrayList <Message> getConv(User u){
+        ArrayList <Message> messages = new ArrayList<>();
+        return messages ;
     }
 
 }

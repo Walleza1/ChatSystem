@@ -29,8 +29,6 @@ public class Main extends Application{
     @Override
     public void stop(){
         Controller.getInstance().logout();
-
-
     }
 
     public static void main(String[] args) {

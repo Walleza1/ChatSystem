@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -56,13 +57,22 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-
                 userListView.getItems().clear();
+                ArrayList<String> online = new ArrayList<>();
+                ArrayList<String> offline = new ArrayList<>();
+
                 for (User u : controller.getList()){
                     if (!u.equals(controller.getSelf())) {
-                        userListView.getItems().add(u.getPseudo());
+                        if(u.getStatus().equals("Offline")){
+                            offline.add(u.getPseudo() + " - Hors ligne");
+                        } else {
+                            online.add(u.getPseudo());
+                        }
                     }
                 }
+
+                userListView.getItems().addAll(online);
+                userListView.getItems().addAll(offline);
 
                 if(activeUser != null) {
                     boolean tmp = false ;
@@ -72,12 +82,12 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                         }
                     }
 
-                    if (tmp == false) {
+                    if (!tmp) {
                         closeDiscussion();
                     }
                 }
 
-                String s = userListView.getItems().size()+ "";
+                String s = online.size()+ "";
                 usersOnline.setText(s);
             }
         });
@@ -89,7 +99,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
             public void run() {
                 if (activeUser != null) {
                     messageFeed.getItems().clear();
-                    //System.out.println(messageFeed.getItems());
                     messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
                     messageFeed.scrollTo(messageFeed.getItems().size() - 1);
                 }

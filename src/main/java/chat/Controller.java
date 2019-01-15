@@ -12,8 +12,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
-import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -23,7 +21,7 @@ public class Controller implements Observer {
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private Semaphore userListSemaphore;
     private NetworkManager myNet;
-    private ObservableMap<InetAddress,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
+    private ObservableMap<String,ArrayList<Message>> messageLog = FXCollections.observableHashMap();
     private Stage stage;
     private Database db;
 
@@ -31,7 +29,7 @@ public class Controller implements Observer {
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.db = Database.getInstance();
-        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID());
+        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),"Online");
         this.userListSemaphore=new Semaphore(1);
 
     }
@@ -55,14 +53,14 @@ public class Controller implements Observer {
         return userList;
     }
 
-    public ObservableMap<InetAddress,ArrayList<Message>> getMap () {
+    public ObservableMap<String,ArrayList<Message>> getMap () {
         return messageLog;
     }
 
     public ArrayList<String> getHistoryFromUser (User u) {
         ArrayList<String> res = new ArrayList<>();
         SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
-        for (Message m : messageLog.get(u.getAddress())){
+        for (Message m : messageLog.get(u.getUUID())){
             if (m.getSource().equals(self)){
                 res.add("(" + formater.format(m.getTimeStamp()) + ") Moi : " + m.getContenu());
             } else {
@@ -74,8 +72,8 @@ public class Controller implements Observer {
     }
 
     public ArrayList<Message> getMessageListFromUser(User u) {
-        System.out.println(messageLog.get(u.getAddress()));
-        return messageLog.get(u.getAddress());
+        System.out.println(messageLog.get(u.getUUID()));
+        return messageLog.get(u.getUUID());
     }
 
     public void setUsername (String s){
@@ -102,7 +100,7 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
         for(User u : userList){
-            if(pseudo.equals(u.getPseudo())){
+            if(pseudo.equals(u.getPseudo()) && u.getUUID()!=getSelf().getUUID()){
                 ret=u;
             }
         }
@@ -130,10 +128,19 @@ public class Controller implements Observer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("End waited");
+
+        //You're alone ATM, else, DB will be handled in the list handler
+        if(this.userList.size() == 0){
+            for(User u : db.getUsers()){
+                u.setStatus("Offline");
+                userList.add(u);
+                messageLog.put(u.getUUID(),db.getConv(u));
+            }
+        }
+
         for (User u : this.userList){
-            if (u.getPseudo().equals(getSelf().getPseudo())){
-                if (!u.getAddress().equals(getSelf().getAddress())){
+            if (u.getPseudo().equals(getSelf().getPseudo()) && u.getStatus().equals("Online")){
+                if (!u.getUUID().equals(getSelf().getUUID())){
                    available = false;
                 }
             }
@@ -141,8 +148,9 @@ public class Controller implements Observer {
         if (available) {
             userList.add(this.getSelf());
             userListSemaphore.release();
+
             available = true;
-        }else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erreur");
             alert.setHeaderText(null);
@@ -150,7 +158,6 @@ public class Controller implements Observer {
             alert.showAndWait();
             userList.clear();
         }
-
         userListSemaphore.release();
         return available;
     }
@@ -237,7 +244,13 @@ public class Controller implements Observer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ArrayList<User> listUser = new ArrayList<>(this.userList);
+        ArrayList<User> listUser = new ArrayList<>();
+
+        for(User u : userList){
+            if(u.getStatus().equals("Online")){
+                listUser.add(u);
+            }
+        }
 
         UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
         SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
@@ -263,7 +276,14 @@ public class Controller implements Observer {
             if (isHisPseudoAvailable) {
                 System.out.println("Ajout new User");
                 this.userList.add(p.getSource());
-                this.messageLog.put(p.getSource().getAddress(), new ArrayList<Message>());
+                if(!db.UUIDinUsers(p.getSource().getUUID())){
+                    db.addUser(p.getSource());
+                    this.messageLog.put(p.getSource().getUUID(), new ArrayList<>());
+                } else {
+                    db.updateUsername(p.getSource());
+                    this.messageLog.put(p.getSource().getUUID(), db.getConv(p.getSource()));
+                }
+
 
                 Platform.runLater(new Runnable() {
                                       @Override
@@ -272,11 +292,9 @@ public class Controller implements Observer {
                 //PUSH NOTIFICATION TEST
                 Image img = new Image("/new_user.png");
                 org.controlsfx.control.Notifications.create().owner(getStage())
-                        .title("Nouvel utilisateur").text(p.getSource().getPseudo() + "est en ligne.")
-                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-                                      }
+                        .title("Nouvel utilisateur").text(p.getSource().getPseudo() + " est en ligne.")
+                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show(); }
                 });
-
             }
         }
         userListSemaphore.release();
@@ -348,8 +366,9 @@ public class Controller implements Observer {
         System.out.println("From " + p.getSource().getPseudo() + " : " + m.getContenu());
         ArrayList<Message> tmp = new ArrayList<>(getMessageListFromUser(p.getSource()));
         tmp.add(m);
-        this.messageLog.remove(p.getSource().getAddress());
-        this.messageLog.put(p.getSource().getAddress(),tmp);
+        this.messageLog.remove(p.getSource().getUUID());
+        this.messageLog.put(p.getSource().getUUID(),tmp);
+        db.addMessage(p.getSource(),m);
     }
 
     private void handlerListUser(Packet p){
@@ -360,12 +379,28 @@ public class Controller implements Observer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         for (User u : userListPacket.getUserList()){
             if (!userList.contains(u)) {
+                u.setStatus("Online");
                 userList.add(u);
-                messageLog.put(u.getAddress(), new ArrayList<>());
+                if(!db.UUIDinUsers(u.getUUID())){
+                    db.addUser(u);
+                    messageLog.put(u.getUUID(), new ArrayList<>());
+                }else {
+                    db.updateUsername(u);
+                    messageLog.put(u.getUUID(), db.getConv(u));
+                }
             }else{
                 System.out.println("User en doublon oublie");
+            }
+        }
+
+        for(User u : db.getUsers()){
+            if(!userList.contains(u)){
+                u.setStatus("Offline");
+                userList.add(u);
+                messageLog.put(u.getUUID(),db.getConv(u));
             }
         }
         userListSemaphore.release();

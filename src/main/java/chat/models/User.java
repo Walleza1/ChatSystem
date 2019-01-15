@@ -13,17 +13,19 @@ public class User implements Serializable {
     private String pseudo;
     private Date timeStamp;
     private InetAddress address;
+    private String status;
 
-    public User(String pseudo, InetAddress address, String ID) {
+    public User(String pseudo, InetAddress address, String ID, String s) {
         this.pseudo = pseudo;
         this.timeStamp=new Date();
         this.address = address;
         this.UUID = ID;
+        this.status = s;
     }
 
     public String getUUID() {return UUID;}
 
-    public void setUUID(String s) {UUID = s;}
+    public String getStatus() {return status;}
 
     public String getPseudo() {
         return pseudo;
@@ -39,12 +41,14 @@ public class User implements Serializable {
 
     public void setPseudo (String s){ this.pseudo = s;}
 
+    public void setStatus (String s){ this.status = s;}
+
     @Override
     public boolean equals(Object o) {
         boolean ret=false;
         if (o instanceof User){
             User B=(User) o;
-            if (B.getAddress().equals(this.getAddress())){
+            if (B.getUUID().equals(this.getUUID())){
                 ret=true;
             }
         }
