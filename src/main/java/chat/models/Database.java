@@ -1,7 +1,5 @@
 package chat.models;
 
-import org.h2.command.dml.NoOperation;
-
 import java.net.InetAddress;
 import java.sql.*;
 
@@ -46,7 +44,8 @@ public class Database {
             stmt.executeUpdate(sql);
 
             sql =  "CREATE TABLE IF NOT EXISTS Messages " +
-                    "(IP VARCHAR(20) NOT NULL ," +
+                    "(ID INT PRIMARY KEY ," +
+                    "IP VARCHAR(20) NOT NULL ," +
                     "Content VARCHAR(280));";
             stmt.executeUpdate(sql);
 
@@ -78,7 +77,7 @@ public class Database {
 
     public void addMessage(User distant,  String content){
         try {
-            String sql = "INSERT INTO MESSAGES VALUES (?,?)";
+            String sql = "INSERT INTO MESSAGES VALUES (?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, distant.getAddress().toString());
             ps.setString(2, content);
