@@ -8,7 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0fb08e69-1f0b-44a3-b111-c28e6012b7f6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/chat/models/Database.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/chat/models/Database.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/chat/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/chat/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/chat/view/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/chat/view/ChatController.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -45,13 +46,6 @@
         <item name="db" type="feb32156:DbDataSourceImpl" />
         <item name="DB: database" type="2aa06773:H2ImplModel$Database" />
         <item name="PUBLIC: schema" type="7f85d983:H2ImplModel$Schema" />
-      </path>
-      <path>
-        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
-        <item name="db" type="feb32156:DbDataSourceImpl" />
-        <item name="DB: database" type="2aa06773:H2ImplModel$Database" />
-        <item name="PUBLIC: schema" type="7f85d983:H2ImplModel$Schema" />
-        <item name="IPS: table" type="818c1b4a:H2ImplModel$Table" />
       </path>
       <path>
         <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
@@ -140,12 +134,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/chat/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5529">
-              <caret line="149" column="28" selection-start-line="149" selection-start-column="28" selection-end-line="149" selection-end-column="28" />
+            <state relative-caret-position="189">
+              <caret line="177" column="29" selection-start-line="177" selection-start-column="29" selection-end-line="177" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#7643#7644#0" expanded="true" />
-                <element signature="e#7683#7684#0" expanded="true" />
+                <element signature="e#7739#7740#0" expanded="true" />
+                <element signature="e#7779#7780#0" expanded="true" />
+                <element signature="e#9409#9410#0" expanded="true" />
+                <element signature="e#9496#9497#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -172,8 +168,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/chat/view/ChatController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4025">
-              <caret line="191" column="10" selection-start-line="191" selection-start-column="10" selection-end-line="191" selection-end-column="10" />
+            <state relative-caret-position="353">
+              <caret line="95" column="12" selection-start-line="95" selection-start-column="12" selection-end-line="96" selection-end-column="11" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -213,9 +212,9 @@
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/11fe6bbe-2a08-43e2-adff-bd949fb4f1be/console.sql" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/resources/chat.fxml" />
-        <option value="$PROJECT_DIR$/src/main/java/chat/view/ChatController.java" />
         <option value="$PROJECT_DIR$/src/main/java/chat/view/LoginController.java" />
         <option value="$PROJECT_DIR$/src/main/java/chat/models/Database.java" />
+        <option value="$PROJECT_DIR$/src/main/java/chat/view/ChatController.java" />
         <option value="$PROJECT_DIR$/src/main/java/chat/Controller.java" />
       </list>
     </option>
@@ -431,12 +430,12 @@
       <workItem from="1547471742022" duration="1640000" />
       <workItem from="1547475816337" duration="12815000" />
       <workItem from="1547499665947" duration="6858000" />
-      <workItem from="1547552366137" duration="484000" />
+      <workItem from="1547552366137" duration="2073000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="57805000" />
+    <option name="totallyTimeSpent" value="59394000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -471,7 +470,7 @@
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="right" id="Gradle" order="6" weight="0.32954547" />
-      <window_info anchor="right" id="Database" order="7" visible="true" weight="0.1621912" />
+      <window_info anchor="right" id="Database" order="7" visible="true" weight="0.16058002" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Theme Preview" order="9" />
       <window_info anchor="right" id="Bean Validation" order="10" />
@@ -684,13 +683,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/chat/view/ChatController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4025">
-          <caret line="191" column="10" selection-start-line="191" selection-start-column="10" selection-end-line="191" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="das://4ab5094d-f4f6-4581-aec3-d6ebdf82ffe5/database/DB/schema/PUBLIC/table/SELF">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
@@ -708,14 +700,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/chat/Controller.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/chat/view/ChatController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5529">
-          <caret line="149" column="28" selection-start-line="149" selection-start-column="28" selection-end-line="149" selection-end-column="28" />
+        <state relative-caret-position="353">
+          <caret line="95" column="12" selection-start-line="95" selection-start-column="12" selection-end-line="96" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7643#7644#0" expanded="true" />
-            <element signature="e#7683#7684#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/chat/Controller.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="177" column="29" selection-start-line="177" selection-start-column="29" selection-end-line="177" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#7739#7740#0" expanded="true" />
+            <element signature="e#7779#7780#0" expanded="true" />
+            <element signature="e#9409#9410#0" expanded="true" />
+            <element signature="e#9496#9497#0" expanded="true" />
           </folding>
         </state>
       </provider>

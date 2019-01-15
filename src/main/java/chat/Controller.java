@@ -2,6 +2,7 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -126,6 +127,19 @@ public class Controller implements Observer {
     public boolean isUsernameAvailable(String s){
         boolean available=true;
         this.setUsername(s);
+        if(db.isSelfUsernameSet(this.getSelf())){
+            if(!db.getSelf().equals(this.getSelf().getPseudo())){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous devez vous reconnecter avec le même " +
+                        "nom d'utilisateur que la dernière fois.");
+                alert.showAndWait();
+                userList.clear();
+                userListSemaphore.release();
+                return false;
+            }
+        }
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
         for (int i=0;i<5;i++) {
             this.sendPacket(notifications);
@@ -159,21 +173,9 @@ public class Controller implements Observer {
                 db.addSelfUsername(this.getSelf());
                 userList.add(this.getSelf());
             } else {
-                if(!db.getSelf().equals(this.getSelf().getPseudo())){
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Vous devez vous reconnecter avec le même " +
-                            "nom d'utilisateur que la dernière fois.");
-                    alert.showAndWait();
-                    userList.clear();
-                    userListSemaphore.release();
-                    return false;
-                } else {
-                    userList.add(this.getSelf());
-                    userListSemaphore.release();
-                    return true ;
-                }
+                userList.add(this.getSelf());
+                userListSemaphore.release();
+                return true ;
             }
 
         }else{
@@ -184,6 +186,7 @@ public class Controller implements Observer {
             alert.showAndWait();
             userList.clear();
         }
+
         userListSemaphore.release();
         return available;
     }
@@ -300,11 +303,17 @@ public class Controller implements Observer {
                 db.addUser(p.getSource());
                 this.messageLog.put(p.getSource().getAddress(), new ArrayList<Message>());
 
+                Platform.runLater(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          // Update UI here.
                 //PUSH NOTIFICATION TEST
                 Image img = new Image("/new_user.png");
                 org.controlsfx.control.Notifications.create().owner(getStage())
                         .title("Nouvel utilisateur").text(p.getSource().getPseudo() + "est en ligne.")
                         .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+                                      }
+                });
 
             }
         }
@@ -318,12 +327,18 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
         userList.removeIf(user -> user.equals(p.getSource()));
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                // Update UI here.
         //PUSH NOTIFICATION TEST
         Image img = new Image("/user_leaving.png");
         org.controlsfx.control.Notifications.create().owner(getStage())
                 .title("Déconnexion").text(p.getSource().getPseudo() + "est hors ligne.")
                 .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-
+            }
+        });
         userListSemaphore.release();
 
     }
@@ -340,6 +355,11 @@ public class Controller implements Observer {
             if(p.getSource().getAddress().equals(u.getAddress())){
                 alreadyIn=true;
                 db.updateUsername(p.getSource());
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Update UI here.
                 //PUSH NOTIFICATION TEST
                 Image img = new Image("/new_username.png");
                 org.controlsfx.control.Notifications.create().owner(getStage())
@@ -347,6 +367,8 @@ public class Controller implements Observer {
                         .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
 
                 u.setPseudo(p.getSource().getPseudo());
+            }
+        });
             }
         }
         User tmp = userList.get(0);
