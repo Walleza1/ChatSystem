@@ -1,7 +1,7 @@
 package chat.models;
 
-import java.net.InetAddress;
 import java.sql.*;
+import java.util.UUID;
 
 public class Database {
 
@@ -39,22 +39,20 @@ public class Database {
         try {
             Statement stmt = con.createStatement();
             String sql =  "CREATE TABLE IF NOT EXISTS Users " +
-                    "(IP VARCHAR(20)," +
-                    "Username VARCHAR(50) NOT NULL);";
+                    "(UUID VARCHAR(32) PRIMARY KEY," +
+                    "Username VARCHAR(50) NOT NULL," +
+                    "Status VARCHAR(20));";
             stmt.executeUpdate(sql);
 
             sql =  "CREATE TABLE IF NOT EXISTS Messages " +
-                    "(ID INT PRIMARY KEY ," +
-                    "IP VARCHAR(20) NOT NULL ," +
-                    "Content VARCHAR(280));";
+                    "(UUID VARCHAR(32) PRIMARY KEY ," +
+                    "Content VARCHAR(280), " +
+                    "Timestamp VARCHAR(10));";
+
             stmt.executeUpdate(sql);
 
             sql =  "CREATE TABLE IF NOT EXISTS Self " +
-                    "(USERNAME VARCHAR(50));";
-            stmt.executeUpdate(sql);
-
-            sql =  "CREATE TABLE IF NOT EXISTS IPS " +
-                    "(IP VARCHAR(20) PRIMARY KEY);";
+                    "(UUID VARCHAR(32));";
             stmt.executeUpdate(sql);
 
         } catch (SQLException e) {
@@ -62,102 +60,31 @@ public class Database {
         }
     }
 
-    public void addUser(User u){
+    private boolean UUIDisSet(){
         try {
-            String sql = "INSERT INTO USERS VALUES (?,?)";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, u.getAddress().toString());
-            ps.setString(2, u.getPseudo());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addMessage(User distant,  String content){
-        try {
-            String sql = "INSERT INTO MESSAGES VALUES (?,?,?)";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, distant.getAddress().toString());
-            ps.setString(2, content);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateUsername(User u){
-        try {
-            String sql = "UPDATE USERS SET USERNAME = ? WHERE IP = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, u.getPseudo());
-            ps.setString(2, u.getAddress().toString());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateIP(User u){
-        try {
-            String sql = "UPDATE USERS SET IP = ? WHERE USERNAME = ?;";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, u.getAddress().toString());
-            ps.setString(2, u.getPseudo());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void addSelfUsername(User u){
-        try {
-            String sql = "INSERT INTO SELF VALUES ( ? );";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, u.getPseudo());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Boolean isSelfUsernameSet(User u){
-        try {
-            String sql = "SELECT USERNAME FROM SELF;";
+            String sql = "SELECT UUID FROM SELF;";
             Statement s = con.createStatement();
             ResultSet rs = s.executeQuery(sql);
             int tmp = 0;
             while(rs.next()) {
-                System.out.println("test" + rs.getString("USERNAME"));
                 tmp++;
             }
             return tmp != 0;
 
         } catch (SQLException e) {
-            if(!e.getSQLState().equals("02000")){
-                e.printStackTrace();
-                return false;
-            }  else {
-                System.out.println("false");
-                return false;
-            }
-
+            e.printStackTrace();
+            return false;
         }
     }
 
-    public String getSelf(){
+    private String UUIDfromDB(){
         try {
-            String sql = "SELECT * FROM SELF;";
+            String sql = "SELECT UUID FROM SELF;";
             Statement s = con.createStatement();
             ResultSet rs = s.executeQuery(sql);
             String res=null;
             while(rs.next()) {
-                 res = rs.getString("USERNAME");
+                res = rs.getString("UUID");
             }
             return res;
 
@@ -167,49 +94,66 @@ public class Database {
         }
     }
 
-    public void updateSelfUsername(User u){
+    private void storeUUID(String ID){
         try {
-            String sql = "UPDATE SELF SET USERNAME = ?;";
+            String sql = "INSERT INTO SELF VALUES (?)";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, ID);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getUUID(){
+        String ID = null;
+        if(UUIDisSet()){
+            ID = UUIDfromDB();
+        } else {
+            ID = UUID.randomUUID().toString().replace("-","");
+            storeUUID(ID);
+        }
+        return ID;
+    }
+
+    public void addUser(User u){
+        try {
+            String sql = "INSERT INTO USERS VALUES (?,?,'Online')";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, u.getUUID());
+            ps.setString(2, u.getPseudo());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addMessage(User distant,  Message m){
+        try {
+            String sql = "INSERT INTO MESSAGES VALUES (?,?,?)";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, distant.getUUID());
+            ps.setString(2, m.getContenu());
+            ps.setString(3, m.getTimeStamp().toString());
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateUsername(User u){
+        try {
+            String sql = "UPDATE USERS SET USERNAME = ? WHERE UUID = ?;";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, u.getPseudo());
+            ps.setString(2, u.getUUID());
             ps.executeUpdate();
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    public boolean sameAsPreviousIP (User u){
-        try {
-            boolean res = false;
-            String sql = "SELECT * FROM IPS;";
-            Statement s = con.createStatement();
-            ResultSet rs = s.executeQuery(sql);
-            while(rs.next()) {
-                if(u.getAddress().toString().equals(rs.getString("IP"))){
-                    res = true;
-                }
-            }
-            return res;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public void saveIP (InetAddress addr){
-        try {
-            String sql = "INSERT INTO IPS VALUES ( ? );";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, addr.toString());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println(e.getSQLState());
-            if(!e.getSQLState().equals("23505")){
-                e.printStackTrace();
-            }
         }
     }
 

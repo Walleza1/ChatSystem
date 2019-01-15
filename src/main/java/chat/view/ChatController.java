@@ -186,7 +186,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                 }
                 controller.sendPacket(Notifications.createNewPseudoPacket(controller.getSelf(),null));
                 controller.setUsername(result.get());
-                controller.updateSelfUsername(controller.getSelf());
                 onChanged((ListChangeListener.Change) null);
             } else {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -254,7 +253,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         System.out.println(textArea.getText());
         Message toSend = new Message(0,controller.getSelf(),activeUser,textArea.getText());
         controller.getMessageListFromUser(activeUser).add(toSend);
-        db.addMessage(activeUser,toSend.getContenu());
+        db.addMessage(activeUser,toSend);
         controller.sendPacket(toSend);
         textArea.clear();
         updateFeed();

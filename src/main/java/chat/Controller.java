@@ -14,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -31,15 +30,10 @@ public class Controller implements Observer {
     private Controller(){
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
-        this.self=new User("Moi", myNet.getMyAddr());
-        this.userListSemaphore=new Semaphore(1);
         this.db = Database.getInstance();
-        try {
-            this.userList.add(new User("Test",InetAddress.getByName("1.1.1.1")));
-            this.messageLog.put(InetAddress.getByName("1.1.1.1"),new ArrayList<>());
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID());
+        this.userListSemaphore=new Semaphore(1);
+
     }
 
     private static Controller INSTANCE = null;
@@ -88,11 +82,6 @@ public class Controller implements Observer {
         self.setPseudo(s);
     }
 
-    public void updateSelfUsername(User u){
-        System.out.println("Coucou");
-        db.updateSelfUsername(this.getSelf());
-    }
-
     void setStage(Stage s){
         this.stage = s;
     }
@@ -127,19 +116,6 @@ public class Controller implements Observer {
     public boolean isUsernameAvailable(String s){
         boolean available=true;
         this.setUsername(s);
-        if(db.isSelfUsernameSet(this.getSelf())){
-            if(!db.getSelf().equals(this.getSelf().getPseudo())){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Vous devez vous reconnecter avec le même " +
-                        "nom d'utilisateur que la dernière fois.");
-                alert.showAndWait();
-                userList.clear();
-                userListSemaphore.release();
-                return false;
-            }
-        }
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
         for (int i=0;i<5;i++) {
             this.sendPacket(notifications);
@@ -158,26 +134,14 @@ public class Controller implements Observer {
         for (User u : this.userList){
             if (u.getPseudo().equals(getSelf().getPseudo())){
                 if (!u.getAddress().equals(getSelf().getAddress())){
-                    if(!db.sameAsPreviousIP(u)){
-                        System.out.println("Pseudo pas libre");
-                        available = false;
-                    } else {
-                        available = true;
-                    }
+                   available = false;
                 }
             }
         }
-        if (available){
-            //DB TEST
-            if(!db.isSelfUsernameSet(this.getSelf())){
-                db.addSelfUsername(this.getSelf());
-                userList.add(this.getSelf());
-            } else {
-                userList.add(this.getSelf());
-                userListSemaphore.release();
-                return true ;
-            }
-
+        if (available) {
+            userList.add(this.getSelf());
+            userListSemaphore.release();
+            available = true;
         }else{
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erreur");
@@ -254,7 +218,6 @@ public class Controller implements Observer {
      * Send Notification when I logout. And start a New Controller.
      */
     public void logout () {
-        db.saveIP(self.getAddress());
         Notifications notifications=Notifications.createLogOutPacket(this.self,null);
         this.sendPacket(notifications);
         System.out.println("Logout send");
@@ -300,7 +263,6 @@ public class Controller implements Observer {
             if (isHisPseudoAvailable) {
                 System.out.println("Ajout new User");
                 this.userList.add(p.getSource());
-                db.addUser(p.getSource());
                 this.messageLog.put(p.getSource().getAddress(), new ArrayList<Message>());
 
                 Platform.runLater(new Runnable() {
@@ -332,7 +294,7 @@ public class Controller implements Observer {
             @Override
             public void run() {
                 // Update UI here.
-        //PUSH NOTIFICATION TEST
+                //PUSH NOTIFICATION TEST
         Image img = new Image("/user_leaving.png");
         org.controlsfx.control.Notifications.create().owner(getStage())
                 .title("Déconnexion").text(p.getSource().getPseudo() + "est hors ligne.")
