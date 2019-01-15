@@ -209,14 +209,17 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     @FXML
     public void userClicked () {
         if (!userListView.getItems().isEmpty() && ((String) userListView.getSelectionModel().getSelectedItem() != null)){
-            textArea.setDisable(false);
+            activeUser = controller.getUserFromPseudo((String) ((String) userListView.getSelectionModel().getSelectedItem())
+                    .replace(" - Hors ligne",""));
+            if(activeUser.getStatus().equals("Online")){
+                textArea.setDisable(false);
+                fileButton.setOpacity(1);
+                sendButton.setOpacity(1);
+            }
             distantUser.setOpacity(1);
             textArea.setOpacity(1);
             closeDiscussionButton.setOpacity(1);
-            fileButton.setOpacity(1);
-            sendButton.setOpacity(1);
             distantUser.setText((String) userListView.getSelectionModel().getSelectedItem());
-            activeUser = controller.getUserFromPseudo((String) userListView.getSelectionModel().getSelectedItem());
             updateFeed();
         }
     }
@@ -262,7 +265,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         System.out.println(textArea.getText());
         Message toSend = new Message(0,controller.getSelf(),activeUser,textArea.getText());
         controller.getMessageListFromUser(activeUser).add(toSend);
-        db.addMessage(activeUser,toSend);
+        db.addMessage(controller.getSelf(),activeUser,toSend);
         controller.sendPacket(toSend);
         textArea.clear();
         updateFeed();

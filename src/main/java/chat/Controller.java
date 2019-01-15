@@ -61,7 +61,7 @@ public class Controller implements Observer {
         ArrayList<String> res = new ArrayList<>();
         SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
         for (Message m : messageLog.get(u.getUUID())){
-            if (m.getSource().equals(self)){
+            if (m.getSource() == null || m.getSource().getUUID().equals(self.getUUID())){
                 res.add("(" + formater.format(m.getTimeStamp()) + ") Moi : " + m.getContenu());
             } else {
                 res.add("(" + formater.format(m.getTimeStamp()) + ") " + m.getSource().getPseudo() + " : " + m.getContenu());
@@ -100,7 +100,7 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
         for(User u : userList){
-            if(pseudo.equals(u.getPseudo()) && u.getUUID()!=getSelf().getUUID()){
+            if(pseudo.equals(u.getPseudo()) && !u.getUUID().equals(getSelf().getUUID())){
                 ret=u;
             }
         }
@@ -134,7 +134,7 @@ public class Controller implements Observer {
             for(User u : db.getUsers()){
                 u.setStatus("Offline");
                 userList.add(u);
-                messageLog.put(u.getUUID(),db.getConv(u));
+                messageLog.put(u.getUUID(),db.getConv(self,u));
             }
         }
 
@@ -276,12 +276,12 @@ public class Controller implements Observer {
             if (isHisPseudoAvailable) {
                 System.out.println("Ajout new User");
                 this.userList.add(p.getSource());
-                if(!db.UUIDinUsers(p.getSource().getUUID())){
+                if(db.UUIDNotInUsers(p.getSource().getUUID())){
                     db.addUser(p.getSource());
                     this.messageLog.put(p.getSource().getUUID(), new ArrayList<>());
                 } else {
                     db.updateUsername(p.getSource());
-                    this.messageLog.put(p.getSource().getUUID(), db.getConv(p.getSource()));
+                    this.messageLog.put(p.getSource().getUUID(), db.getConv(self,p.getSource()));
                 }
 
 
@@ -368,7 +368,7 @@ public class Controller implements Observer {
         tmp.add(m);
         this.messageLog.remove(p.getSource().getUUID());
         this.messageLog.put(p.getSource().getUUID(),tmp);
-        db.addMessage(p.getSource(),m);
+        db.addMessage(p.getSource(),getSelf(),m);
     }
 
     private void handlerListUser(Packet p){
@@ -384,12 +384,12 @@ public class Controller implements Observer {
             if (!userList.contains(u)) {
                 u.setStatus("Online");
                 userList.add(u);
-                if(!db.UUIDinUsers(u.getUUID())){
+                if(db.UUIDNotInUsers(u.getUUID())){
                     db.addUser(u);
                     messageLog.put(u.getUUID(), new ArrayList<>());
                 }else {
                     db.updateUsername(u);
-                    messageLog.put(u.getUUID(), db.getConv(u));
+                    messageLog.put(u.getUUID(), db.getConv(self,u));
                 }
             }else{
                 System.out.println("User en doublon oublie");
@@ -400,7 +400,7 @@ public class Controller implements Observer {
             if(!userList.contains(u)){
                 u.setStatus("Offline");
                 userList.add(u);
-                messageLog.put(u.getUUID(),db.getConv(u));
+                messageLog.put(u.getUUID(),db.getConv(self,u));
             }
         }
         userListSemaphore.release();

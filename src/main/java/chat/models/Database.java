@@ -50,7 +50,7 @@ public class Database {
                     "(SENDER VARCHAR(32), " +
                     "RECEIVER VARCHAR(32), " +
                     "Content VARCHAR(280), " +
-                    "Timestamp VARCHAR(10));";
+                    "Timestamp TIME);";
 
             stmt.executeUpdate(sql);
 
@@ -80,7 +80,7 @@ public class Database {
         }
     }
 
-    public boolean UUIDinUsers(String s){
+    public boolean UUIDNotInUsers(String s){
         try {
             String sql = "SELECT UUID FROM USERS WHERE UUID = '" + s + "';";
             Statement st = con.createStatement();
@@ -90,11 +90,11 @@ public class Database {
 
                 tmp++;
             }
-            return tmp != 1;
+            return tmp == 1;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return true;
         }
     }
 
@@ -184,13 +184,32 @@ public class Database {
         }
     }
 
-    public void addMessage(User distant,  Message m){
+    private User getUserFromUUID(String ID){
         try {
-            String sql = "INSERT INTO MESSAGES VALUES (?,?,?)";
+            String sql = "SELECT * FROM USERS " +
+                    "WHERE UUID = '" + ID + "';";
+
+            ResultSet rs = con.createStatement().executeQuery(sql);
+            User u = null;
+            while(rs.next()){
+                u = new User(rs.getString("USERNAME"), InetAddress.getByName("1.1.1.1"),
+                        rs.getString("UUID"),"Online");
+            }
+            return u;
+        } catch (SQLException | UnknownHostException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void addMessage(User send, User dest,  Message m){
+        try {
+            String sql = "INSERT INTO MESSAGES VALUES (?,?,?,?)";
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, distant.getUUID());
-            ps.setString(2, m.getContenu());
-            ps.setString(3, m.getTimeStamp().toString());
+            ps.setString(1, send.getUUID());
+            ps.setString(2, dest.getUUID());
+            ps.setString(3, m.getContenu());
+            ps.setTimestamp(4, new Timestamp(m.getTimeStamp().getTime()));
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -198,9 +217,35 @@ public class Database {
         }
     }
 
-    public ArrayList <Message> getConv(User u){
-        ArrayList <Message> messages = new ArrayList<>();
-        return messages ;
+    public ArrayList <Message> getConv(User self, User u){
+        try {
+        String sql = "SELECT * FROM MESSAGES WHERE " +
+                "(SENDER = ? AND RECEIVER = ?) OR (RECEIVER = ? AND SENDER = ?) " +
+                "ORDER BY TIMESTAMP ASC";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, self.getUUID());
+        ps.setString(2, u.getUUID());
+        ps.setString(3, self.getUUID());
+        ps.setString(4, u.getUUID());
+        ResultSet rs;
+
+            rs = ps.executeQuery();
+
+        ArrayList<Message> messages = new ArrayList<>();
+
+        while (rs.next()) {
+
+            Message m = new Message(0,getUserFromUUID(rs.getString("SENDER")),
+                    getUserFromUUID(rs.getString("RECEIVER")),
+                    rs.getString("CONTENT"), rs.getTimestamp("TIMESTAMP"));
+            messages.add(m);
+        }
+        return messages;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
