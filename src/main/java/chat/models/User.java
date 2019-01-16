@@ -13,9 +13,12 @@ public class User implements Serializable {
     private String pseudo;
     private Date timeStamp;
     private InetAddress address;
-    private String status;
+    public enum Status {
+        online, offline;
+    }
+    private Status status;
 
-    public User(String pseudo, InetAddress address, String ID, String s) {
+    public User(String pseudo, InetAddress address, String ID, Status s) {
         this.pseudo = pseudo;
         this.timeStamp=new Date();
         this.address = address;
@@ -25,7 +28,7 @@ public class User implements Serializable {
 
     public String getUUID() {return UUID;}
 
-    public String getStatus() {return status;}
+    public Status getStatus() {return status;}
 
     public String getPseudo() {
         return pseudo;
@@ -41,7 +44,7 @@ public class User implements Serializable {
 
     public void setPseudo (String s){ this.pseudo = s;}
 
-    public void setStatus (String s){ this.status = s;}
+    public void setStatus (Status s){ this.status = s;}
 
     @Override
     public boolean equals(Object o) {

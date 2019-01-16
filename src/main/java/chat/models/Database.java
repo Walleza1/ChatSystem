@@ -174,7 +174,7 @@ public class Database {
 
         while(rs.next()){
             User u = new User(rs.getString("USERNAME"), InetAddress.getByName("1.1.1.1"),
-                    rs.getString("UUID"),"Offline");
+                    rs.getString("UUID"),User.Status.offline);
             users.add(u);
         }
             return users ;
@@ -193,7 +193,7 @@ public class Database {
             User u = null;
             while(rs.next()){
                 u = new User(rs.getString("USERNAME"), InetAddress.getByName("1.1.1.1"),
-                        rs.getString("UUID"),"Online");
+                        rs.getString("UUID"),User.Status.online);
             }
             return u;
         } catch (SQLException | UnknownHostException e) {

@@ -63,7 +63,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
                 for (User u : controller.getList()){
                     if (!u.equals(controller.getSelf())) {
-                        if(u.getStatus().equals("Offline")){
+                        if(u.getStatus().equals(User.Status.offline)){
                             offline.add(u.getPseudo() + " - Hors ligne");
                         } else {
                             online.add(u.getPseudo());
@@ -211,7 +211,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         if (!userListView.getItems().isEmpty() && ((String) userListView.getSelectionModel().getSelectedItem() != null)){
             activeUser = controller.getUserFromPseudo((String) ((String) userListView.getSelectionModel().getSelectedItem())
                     .replace(" - Hors ligne",""));
-            if(activeUser.getStatus().equals("Online")){
+            if(activeUser.getStatus().equals(User.Status.online)){
                 textArea.setDisable(false);
                 fileButton.setOpacity(1);
                 sendButton.setOpacity(1);

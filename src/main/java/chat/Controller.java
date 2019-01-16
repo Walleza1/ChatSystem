@@ -29,7 +29,7 @@ public class Controller implements Observer {
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.db = Database.getInstance();
-        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),"Online");
+        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
         this.userListSemaphore=new Semaphore(1);
 
     }
@@ -132,14 +132,14 @@ public class Controller implements Observer {
         //You're alone ATM, else, DB will be handled in the list handler
         if(this.userList.size() == 0){
             for(User u : db.getUsers()){
-                u.setStatus("Offline");
+                u.setStatus(User.Status.offline);
                 userList.add(u);
                 messageLog.put(u.getUUID(),db.getConv(self,u));
             }
         }
 
         for (User u : this.userList){
-            if (u.getPseudo().equals(getSelf().getPseudo()) && u.getStatus().equals("Online")){
+            if (u.getPseudo().equals(getSelf().getPseudo()) && u.getStatus().equals(User.Status.online)){
                 if (!u.getUUID().equals(getSelf().getUUID())){
                    available = false;
                 }
@@ -247,7 +247,7 @@ public class Controller implements Observer {
         ArrayList<User> listUser = new ArrayList<>();
 
         for(User u : userList){
-            if(u.getStatus().equals("Online")){
+            if(u.getStatus().equals(User.Status.online)){
                 listUser.add(u);
             }
         }
@@ -382,7 +382,7 @@ public class Controller implements Observer {
 
         for (User u : userListPacket.getUserList()){
             if (!userList.contains(u)) {
-                u.setStatus("Online");
+                u.setStatus(User.Status.online);
                 userList.add(u);
                 if(db.UUIDNotInUsers(u.getUUID())){
                     db.addUser(u);
@@ -398,7 +398,7 @@ public class Controller implements Observer {
 
         for(User u : db.getUsers()){
             if(!userList.contains(u)){
-                u.setStatus("Offline");
+                u.setStatus(User.Status.offline);
                 userList.add(u);
                 messageLog.put(u.getUUID(),db.getConv(self,u));
             }
