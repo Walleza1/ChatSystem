@@ -5,10 +5,22 @@ Système de conversation au sein d'un réseau local permettant l'échange de tex
 ## Déploiement
 
 ### Pré-requis
+Windows, Linux, MacOS supportés.  
+Java 1.8.0 ou supérieur (1.8.0_191 recommandé).
 
 ### Installation
+Aller sur les [tags du projet](https://github.com/Walleza1/ChatSystem/releases), puis télécharger le fichier JAR de la release la plus récente.
 
 ### Exécution
+Une fois le JAR télécharger, se placer dans le dossier courant du fichier, puis exécuter la commande suivante : 
+```
+java -jar chatsystem.jar
+```
+Le programme devrait se lancer.
+
+## Utilisation
+Entrer un nom d'utilisateur pour se connecter et échanger avec les autres utilisateurs en ligne. Plus de détails sur les consignes d'utilisation seront fournies dans le manuel d'utilisateur (voir sources).
+
 
 
 ## Learning Sources
