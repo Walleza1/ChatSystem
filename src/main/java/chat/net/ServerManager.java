@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Base64;
 
 public class ServerManager  {
@@ -28,7 +29,13 @@ public class ServerManager  {
             connection.setDoOutput(true);
 
             OutputStreamWriter writer=new OutputStreamWriter(connection.getOutputStream());
-            writer.write(serialize(notifications));
+            String serialNotif=serialize(notifications);
+
+            StringBuilder builder=new StringBuilder();
+            builder.append(URLEncoder.encode("packet","UTF-8"));
+            builder.append("=");
+            builder.append(URLEncoder.encode(serialNotif,"UTF-8"));
+            writer.write(builder.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

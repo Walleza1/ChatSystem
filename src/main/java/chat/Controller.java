@@ -321,7 +321,6 @@ public class Controller implements Observer {
                 .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
         });
         userListSemaphore.release();
-
     }
 
     private void handlerNewPseudo(Packet p) {
