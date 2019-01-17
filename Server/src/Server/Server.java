@@ -3,6 +3,7 @@ package Server;
 import chat.models.Notifications;
 import chat.models.User;
 import chat.models.UserListPacket;
+import chat.net.NetworkManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -91,9 +94,18 @@ public class Server extends HttpServlet {
             default:
                 break;
         }
+
         for (User u : to_notify){
             UserListPacket userListPacket=new UserListPacket(null,u,to_notify);
-            System.out.println("Notify user "+u.getPseudo());
+
+            Socket distant=new Socket(u.getAddress(), NetworkManager.USERLIST_PORT);
+            ObjectOutputStream out=new ObjectOutputStream(distant.getOutputStream());
+
+            out.writeObject(userListPacket);
+            out.flush();
+            out.close();
+
+            System.out.println("Notified user "+u.getPseudo());
         }
     }
 
