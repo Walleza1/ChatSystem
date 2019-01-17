@@ -184,7 +184,7 @@ public class Database {
         }
     }
 
-    private User getUserFromUUID(String ID){
+    public User getUserFromUUID(String ID){
         try {
             String sql = "SELECT * FROM USERS " +
                     "WHERE UUID = '" + ID + "';";
