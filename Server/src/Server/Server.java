@@ -8,8 +8,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -28,7 +31,7 @@ public class Server extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Setting up the content type of web page
         //get notifications packet
-        Notifications notifications= createNewUserPacket(null,null);
+        Notifications notifications=(Notifications) deserialize(request.getParameter("packet"));
         ArrayList<User> to_notify=new ArrayList<User>();
 
         switch (notifications.getType()){
@@ -94,5 +97,19 @@ public class Server extends HttpServlet {
     {
         // Leaving empty. Use this if you want to perform
         //something at the end of Servlet life cycle.
+    }
+
+    private Object deserialize(String serializedObject){
+        byte[] bytes= Base64.getDecoder().decode(serializedObject.getBytes());
+        ByteArrayInputStream inputStream=new ByteArrayInputStream(bytes);
+        ObjectInputStream objectInputStream;
+        Object ret=null;
+        try {
+            objectInputStream=new ObjectInputStream(inputStream);
+            ret=objectInputStream.readObject();
+        }catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        return ret;
     }
 }

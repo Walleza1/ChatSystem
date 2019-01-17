@@ -81,9 +81,12 @@ public class LoginController implements Initializable {
     @FXML
     public void servon (){
         if (serverButton.getText() == "Server on"){
-
+            //eteint
+            Controller.getInstance().initBroadcast();
             serverButton.setText("Server off");
-        } else {
+        }else {
+            //allumé
+            Controller.getInstance().initServer();
             serverButton.setText("Server on");
         }
     }
@@ -91,6 +94,4 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
-
-
 }

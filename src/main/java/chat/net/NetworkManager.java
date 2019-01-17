@@ -1,5 +1,6 @@
 package chat.net;
 
+import chat.Controller;
 import chat.models.Notifications;
 import chat.models.Packet;
 import chat.models.UserListPacket;
@@ -27,6 +28,7 @@ public class NetworkManager extends Observable implements Observer {
     private InetAddress myAddr;
     public static InetAddress broadcastAddr;
 
+    private ServerManager serverManager;
     private BroadcastManager broadcastManager;
     private UnicastManager unicastManager;
     private UserListManager userListManager;
@@ -39,26 +41,20 @@ public class NetworkManager extends Observable implements Observer {
      */
     private NetworkManager() {
         try {
-            this.udpSocket=new DatagramSocket(BROADCAST_PORT);
-            this.udpSocket.setBroadcast(true);
             this.tcpSocket=new ServerSocket(UNICAST_PORT);
             this.userSocket=new ServerSocket(USERLIST_PORT);
-            this.broadcastManager =new BroadcastManager(udpSocket);
             this.unicastManager =new UnicastManager(tcpSocket);
             this.userListManager=new UserListManager(userSocket);
 
         } catch (IOException e) {
             System.out.println("Error lors création socket");
         }
-        Thread b=new Thread(broadcastManager);
         Thread c=new Thread(unicastManager);
         Thread d=new Thread(userListManager);
 
-        this.broadcastManager.addObserver(this);
         this.unicastManager.addObserver(this);
         this.userListManager.addObserver(this);
 
-        b.start();
         c.start();
         d.start();
 
@@ -84,8 +80,30 @@ public class NetworkManager extends Observable implements Observer {
                 broadcastAddr=ni.getInterfaceAddresses().get(i).getBroadcast();
             }
         }
+
+        initBroadcast();
     }
 
+    public void initBroadcast(){
+        try {
+            this.udpSocket=new DatagramSocket(BROADCAST_PORT);
+            this.udpSocket.setBroadcast(true);
+            this.broadcastManager =new BroadcastManager(udpSocket);
+            Thread b=new Thread(broadcastManager);
+            this.broadcastManager.addObserver(this);
+            b.start();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        this.serverManager=null;
+    }
+
+    public void initServer(String urlServer){
+        this.serverManager=new ServerManager(urlServer);
+        this.broadcastManager.stop();
+        this.udpSocket=null;
+        this.broadcastManager=null;
+    }
     /** Singleton Instance **/
     public static NetworkManager getInstance() {
         if (uniqueInstance==null){
@@ -115,7 +133,11 @@ public class NetworkManager extends Observable implements Observer {
      * **/
     public void sendPacket(Packet p){
         if (p instanceof Notifications){
-            this.broadcastManager.sendPacket(p);
+            if (Controller.getInstance().isServerless()) {
+                this.broadcastManager.sendPacket(p);
+            }else{
+                this.serverManager.sendPacket((Notifications) p);
+            }
         }else{
            this.unicastManager.sendPacket(p);
         }

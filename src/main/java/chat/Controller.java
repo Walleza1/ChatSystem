@@ -25,15 +25,20 @@ public class Controller implements Observer {
     private Stage stage;
     private Database db;
 
+    private String urlServer;
+
+    private boolean isServerless=true;
+
     private Controller(){
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.db = Database.getInstance();
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
         this.userListSemaphore=new Semaphore(1);
+
         String timeStamp = new SimpleDateFormat("dd/MM HH:mm").format(new Date());
         System.out.println(timeStamp);
-
+        this.urlServer="http://10.32.3.102:8080/Server_Web_exploded/usr";
     }
 
     private static Controller INSTANCE = null;
@@ -44,8 +49,6 @@ public class Controller implements Observer {
         }
         return INSTANCE;
     }
-
-
 
     public User getSelf () {
         return self;
@@ -80,6 +83,10 @@ public class Controller implements Observer {
 
     public void setUsername (String s){
         self.setPseudo(s);
+    }
+
+    public boolean isServerless() {
+        return isServerless;
     }
 
     void setStage(Stage s){
@@ -394,5 +401,14 @@ public class Controller implements Observer {
             }
         }
         userListSemaphore.release();
+    }
+
+    public void initServer(){
+        NetworkManager.getInstance().initServer(this.urlServer);
+        this.isServerless=false;
+    }
+    public void initBroadcast(){
+        NetworkManager.getInstance().initBroadcast();
+        this.isServerless=true;
     }
 }
