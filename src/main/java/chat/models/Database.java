@@ -235,7 +235,7 @@ public class Database {
 
         while (rs.next()) {
 
-            Message m = new Message(0,getUserFromUUID(rs.getString("SENDER")),
+            Message m = new Message(getUserFromUUID(rs.getString("SENDER")),
                     getUserFromUUID(rs.getString("RECEIVER")),
                     rs.getString("CONTENT"), rs.getString("TIMESTAMP"));
             messages.add(m);

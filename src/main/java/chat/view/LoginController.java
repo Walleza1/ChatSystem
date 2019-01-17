@@ -81,6 +81,7 @@ public class LoginController implements Initializable {
     @FXML
     public void servon (){
         if (serverButton.getText() == "Server on"){
+
             serverButton.setText("Server off");
         } else {
             serverButton.setText("Server on");
