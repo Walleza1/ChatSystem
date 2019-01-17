@@ -2,14 +2,13 @@ package chat.net;
 
 import chat.models.Notifications;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServerManager  {
     private String urlServer;
@@ -20,22 +19,35 @@ public class ServerManager  {
 
     public void sendPacket(Notifications notifications){
         try {
-            HttpURLConnection connection=(HttpURLConnection) (new URL(urlServer).openConnection());
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Acceptcharset","en-us");
-            connection.setRequestProperty("Accept-Language","en-US,en;q=0.5");
-            connection.setRequestProperty("charset","EN-US");
-            connection.setRequestProperty("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
-            connection.setDoOutput(true);
+            URL url=new URL(urlServer);
 
-            OutputStreamWriter writer=new OutputStreamWriter(connection.getOutputStream());
-            String serialNotif=serialize(notifications);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Acceptcharset", "en-us");
+            conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+            conn.setRequestProperty("charset", "EN-US");
+            conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            conn.setDoOutput(true);
 
-            StringBuilder builder=new StringBuilder();
-            builder.append(URLEncoder.encode("packet","UTF-8"));
-            builder.append("=");
-            builder.append(URLEncoder.encode(serialNotif,"UTF-8"));
-            writer.write(builder.toString());
+            System.out.println(url);
+
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+
+            //define argument
+            HashMap<String , String> params = new HashMap<>();
+            params.put("packet", serialize(notifications));
+            //format it
+            StringBuilder result = new StringBuilder();
+            for(Map.Entry<String, String> entry : params.entrySet()){
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            }
+            wr.write(result.toString());
+            wr.flush();
+            wr.close();
+            System.out.println(conn.getResponseCode());
+            conn.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
         }

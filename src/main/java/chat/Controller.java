@@ -36,6 +36,7 @@ public class Controller implements Observer {
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
         this.userListSemaphore=new Semaphore(1);
         this.urlServer="http://192.168.43.241:8080/Server_Web_exploded/usr";
+        this.urlServer="http://localhost:8080/Server_Web_exploded/usr";
     }
 
     private static Controller INSTANCE = null;

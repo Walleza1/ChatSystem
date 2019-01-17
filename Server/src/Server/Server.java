@@ -28,10 +28,12 @@ public class Server extends HttpServlet {
         this.userListSemaphore=new Semaphore(1);
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Setting up the content type of web page
         //get notifications packet
-        Notifications notifications=(Notifications) deserialize(request.getParameter("packet"));
+        Notifications notifications=(Notifications) deserialize(req.getParameter("packet"));
+        System.out.println("Packet received");
         ArrayList<User> to_notify=new ArrayList<User>();
 
         switch (notifications.getType()){
@@ -81,9 +83,9 @@ public class Server extends HttpServlet {
                 }
                 userListSemaphore.release();
                 for (User u:listUser){
-                   if (!u.equals(notifications.getSource())){
-                       to_notify.add(u);
-                   }
+                    if (!u.equals(notifications.getSource())){
+                        to_notify.add(u);
+                    }
                 }
                 break;
             default:
@@ -91,8 +93,10 @@ public class Server extends HttpServlet {
         }
         for (User u : to_notify){
             UserListPacket userListPacket=new UserListPacket(null,u,to_notify);
+            System.out.println("Notify user "+u.getPseudo());
         }
     }
+
     public void destroy()
     {
         // Leaving empty. Use this if you want to perform

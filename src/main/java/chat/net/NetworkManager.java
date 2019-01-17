@@ -112,7 +112,9 @@ public class NetworkManager extends Observable implements Observer {
      */
     public void stop(){
         this.unicastManager.stop();
-        this.broadcastManager.stop();
+        if (this.broadcastManager != null){
+            this.broadcastManager.stop();
+        }
         this.userListManager.stop();
     }
     /** Get actual InetAddress that is routable
