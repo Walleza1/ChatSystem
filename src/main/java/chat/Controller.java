@@ -307,6 +307,7 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
         userList.removeIf(user -> user.equals(p.getSource()));
+        db.updateUsername(p.getSource());
         User u = db.getUserFromUUID(p.getSource().getUUID());
         u.setStatus(User.Status.offline);
         userList.add(u);

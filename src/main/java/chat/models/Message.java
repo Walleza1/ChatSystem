@@ -16,7 +16,7 @@ public class Message extends Packet {
 		this.contenu = contenu;
 	}
 
-	public Message(int idMessage, User source, User destination, String contenu, Date ts) {
+	Message(int idMessage, User source, User destination, String contenu, Date ts) {
 		super(source, destination);
 		this.idMessage = idMessage;
 		this.contenu = contenu;
