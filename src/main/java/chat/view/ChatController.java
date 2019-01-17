@@ -22,8 +22,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -100,6 +102,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                 if (activeUser != null) {
                     messageFeed.getItems().clear();
                     messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
+
                     messageFeed.scrollTo(messageFeed.getItems().size() - 1);
                 }
             }
@@ -148,7 +151,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     public void logOut (MouseEvent event) throws IOException {
         controller.logout();
         //call controller method Delete all data
-        Parent chat_parent = FXMLLoader.load(getClass().getResource("/login.fxml"));
+        Parent chat_parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/login.fxml")));
         Scene chat_scene = new Scene(chat_parent);
         Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         app_stage.setScene(chat_scene);
@@ -215,6 +218,8 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                 textArea.setDisable(false);
                 fileButton.setOpacity(1);
                 sendButton.setOpacity(1);
+            } else {
+                textArea.setDisable(true);
             }
             distantUser.setOpacity(1);
             textArea.setOpacity(1);
