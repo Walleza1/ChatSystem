@@ -58,15 +58,10 @@ public class NetworkManager extends Observable implements Observer {
         c.start();
         d.start();
 
-
-        //Get our routable InetAddress
-        try(final DatagramSocket socket = new DatagramSocket()){
-            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-            this.myAddr =socket.getLocalAddress();
+        try {
+            this.myAddr=InetAddress.getLocalHost();
         } catch (UnknownHostException e) {
-            System.out.println("No Internet");
-        } catch (SocketException e) {
-            e.printStackTrace();
+            System.out.println("Addresse locale non trouvée");
         }
         // Get our local network broadcast InetAddress.
         NetworkInterface ni= null;
