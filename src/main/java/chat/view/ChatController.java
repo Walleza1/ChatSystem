@@ -21,8 +21,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -258,7 +258,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     }
 
     @FXML
-    public void sendByEnter (KeyEvent event) throws IOException {
+    public void sendByEnter (KeyEvent event){
         if (event.getCode().equals(KeyCode.ENTER)) {
             event.consume();
             send();
@@ -276,5 +276,10 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         updateFeed();
     }
 
+    @FXML
+    public void sendFile() {
+        System.out.println("hi");
+        JFileChooser choice = new JFileChooser();
+    }
 
 }
