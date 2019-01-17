@@ -36,7 +36,6 @@ Pour tout problème d'utilisation, vous pouvez contacter [Vincent Erb](erb@etud.
 ### Manuel d'utilisateur
 Joint à ce projet, un manuel d'utilisateur reprenant les points suivants : 
 * **Architecture du système**
-* **Hypothèses de travail**
 * **Fonctionnalités du système**
 * **Limites d'utilisation**
 
