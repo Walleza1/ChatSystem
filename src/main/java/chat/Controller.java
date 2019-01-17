@@ -284,24 +284,18 @@ public class Controller implements Observer {
                     db.updateUsername(p.getSource());
                     this.messageLog.put(p.getSource().getUUID(), db.getConv(self,p.getSource()));
                 }
-
-
-                Platform.runLater(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                          // Update UI here.
-                //PUSH NOTIFICATION TEST
-                Image img = new Image("/new_user.png");
-                org.controlsfx.control.Notifications.create().owner(getStage())
-                        .title("Nouvel utilisateur").text(p.getSource().getPseudo() + " est en ligne.")
-                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show(); }
-                });
             }
         }else {
             System.out.println("User already in Userlist");
             userList.removeIf(user -> user.equals(p.getSource()));
             userList.add(p.getSource());
         }
+        Platform.runLater(() -> { // Update UI here.
+            //PUSH NOTIFICATION TEST
+            Image img = new Image("/new_user.png");
+            org.controlsfx.control.Notifications.create().owner(getStage())
+                    .title("Nouvel utilisateur").text(p.getSource().getPseudo() + " est en ligne.")
+                    .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show(); });
         userListSemaphore.release();
     }
     private void handlerLogOut(Packet p){
@@ -317,16 +311,13 @@ public class Controller implements Observer {
         u.setStatus(User.Status.offline);
         userList.add(u);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
+        Platform.runLater(() -> {
                 // Update UI here.
                 //PUSH NOTIFICATION TEST
-        Image img = new Image("/user_leaving.png");
-        org.controlsfx.control.Notifications.create().owner(getStage())
+                Image img = new Image("/user_leaving.png");
+                org.controlsfx.control.Notifications.create().owner(getStage())
                 .title("Déconnexion").text(p.getSource().getPseudo() + "est hors ligne.")
                 .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-            }
         });
         userListSemaphore.release();
 
@@ -345,17 +336,14 @@ public class Controller implements Observer {
                 alreadyIn=true;
                 db.updateUsername(p.getSource());
 
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Update UI here.
-                        //PUSH NOTIFICATION TEST
-                        Image img = new Image("/new_username.png");
-                        org.controlsfx.control.Notifications.create().owner(getStage())
-                            .title("Nouveau nom d'utilisateur").text(u.getPseudo() + "devient " + p.getSource().getPseudo())
-                            .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-                        u.setPseudo(p.getSource().getPseudo());
-                    }
+                Platform.runLater(() -> {
+                    // Update UI here.
+                    //PUSH NOTIFICATION TEST
+                    Image img = new Image("/new_username.png");
+                    org.controlsfx.control.Notifications.create().owner(getStage())
+                        .title("Nouveau nom d'utilisateur").text(u.getPseudo() + "devient " + p.getSource().getPseudo())
+                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+                    u.setPseudo(p.getSource().getPseudo());
                 });
             }
         }
