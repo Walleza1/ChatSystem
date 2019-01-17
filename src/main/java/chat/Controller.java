@@ -2,6 +2,7 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +13,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -35,9 +35,6 @@ public class Controller implements Observer {
         this.db = Database.getInstance();
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
         this.userListSemaphore=new Semaphore(1);
-
-        String timeStamp = new SimpleDateFormat("dd/MM HH:mm").format(new Date());
-        System.out.println(timeStamp);
         this.urlServer="http://192.168.43.241:8080/Server_Web_exploded/usr";
     }
 
@@ -64,7 +61,6 @@ public class Controller implements Observer {
 
     public ArrayList<String> getHistoryFromUser (User u) {
         ArrayList<String> res = new ArrayList<>();
-        SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
         for (Message m : messageLog.get(u.getUUID())){
             if (m.getSource() == null || m.getSource().getUUID().equals(self.getUUID())){
                 res.add("(" + m.getTimeStamp() + ") Moi : " + m.getContenu());
@@ -124,7 +120,10 @@ public class Controller implements Observer {
         boolean available=true;
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
-        this.sendPacket(notifications);
+        for(int i = 0;i < 5;i++){
+            this.sendPacket(notifications);
+        }
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -378,7 +377,8 @@ public class Controller implements Observer {
                     + f.getContent().getName())
                     .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
         });
-        //TODO
+        Boolean newName = f.getContent().renameTo(new java.io.File("./"));
+        System.out.println(newName);
     }
 
     private void handlerListUser(Packet p){

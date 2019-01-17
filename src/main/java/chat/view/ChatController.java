@@ -15,14 +15,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -98,20 +95,15 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     }
 
     private void updateFeed(){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                if (activeUser != null) {
-                    messageFeed.getItems().clear();
-                    messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
+        Platform.runLater(() -> {
+            if (activeUser != null) {
+                messageFeed.getItems().clear();
+                messageFeed.getItems().addAll(controller.getHistoryFromUser(activeUser));
 
-                    messageFeed.scrollTo(messageFeed.getItems().size() - 1);
-                }
+                messageFeed.scrollTo(messageFeed.getItems().size() - 1);
             }
         });
     }
-
-    private Button logout;
 
     @FXML
     private Label username;
@@ -120,13 +112,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     private Label distantUser;
 
     @FXML
-    private ImageView changeUsernameIcon;
-
-    @FXML
     private ListView userListView;
-
-    @FXML
-    private TextField newUsername = null;
 
     @FXML
     private Button closeDiscussionButton;
@@ -142,9 +128,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @FXML
     private ListView messageFeed;
-
-    @FXML
-    private Button nonbutton;
 
     @FXML
     private Label usersOnline;
@@ -213,8 +196,8 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @FXML
     public void userClicked () {
-        if (!userListView.getItems().isEmpty() && ((String) userListView.getSelectionModel().getSelectedItem() != null)){
-            activeUser = controller.getUserFromPseudo((String) ((String) userListView.getSelectionModel().getSelectedItem())
+        if (!userListView.getItems().isEmpty() && (userListView.getSelectionModel().getSelectedItem() != null)){
+            activeUser = controller.getUserFromPseudo(((String) userListView.getSelectionModel().getSelectedItem())
                     .replace(" - Hors ligne",""));
             if(activeUser.getStatus().equals(User.Status.online)){
                 textArea.setDisable(false);
@@ -285,7 +268,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     }
 
     @FXML
-    public void sendFile(MouseEvent event) throws IOException  {
+    public void sendFile(MouseEvent event){
         System.out.println("hi");
         FileChooser choice = new FileChooser();
         Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
