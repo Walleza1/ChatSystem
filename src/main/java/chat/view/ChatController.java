@@ -19,9 +19,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -216,10 +218,16 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                     .replace(" - Hors ligne",""));
             if(activeUser.getStatus().equals(User.Status.online)){
                 textArea.setDisable(false);
+                fileButton.setDisable(false);
+                sendButton.setDisable(false);
                 fileButton.setOpacity(1);
                 sendButton.setOpacity(1);
             } else {
                 textArea.setDisable(true);
+                fileButton.setDisable(true);
+                sendButton.setDisable(true);
+                fileButton.setOpacity(0);
+                sendButton.setOpacity(0);
             }
             distantUser.setOpacity(1);
             textArea.setOpacity(1);
@@ -277,9 +285,18 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
     }
 
     @FXML
-    public void sendFile() {
+    public void sendFile(MouseEvent event) throws IOException  {
         System.out.println("hi");
-        JFileChooser choice = new JFileChooser();
+        FileChooser choice = new FileChooser();
+        Stage app_stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        File selectedFile = choice.showOpenDialog(app_stage);
+        if(selectedFile != null){
+            chat.models.File toSend = new chat.models.File(controller.getSelf(),
+                    activeUser, selectedFile);
+            controller.sendPacket(toSend);
+            System.out.println("File sent");
+        }
+
     }
 
 }

@@ -12,6 +12,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -165,7 +168,14 @@ public class Controller implements Observer {
             alert.showAndWait();
             userList.clear();
         }
-        userListSemaphore.release();
+        try {
+            User u = new User("TestUser", InetAddress.getByName("1.1.1.1"),"RANDOMID", User.Status.online);
+            userList.add(u);
+            messageLog.put(u.getUUID(),new ArrayList<>());
+            userListSemaphore.release();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         return available;
     }
 
@@ -212,6 +222,7 @@ public class Controller implements Observer {
                 handlerListUser(p);
             }else if (p instanceof File){
                 System.out.println("File received");
+                handlerFile(p);
             }
         }
     }
@@ -365,6 +376,11 @@ public class Controller implements Observer {
         this.messageLog.remove(p.getSource().getUUID());
         this.messageLog.put(p.getSource().getUUID(),tmp);
         db.addMessage(p.getSource(),getSelf(),m);
+    }
+
+    private void handlerFile(Packet p){
+        File f=(File) p;
+        //TODO
     }
 
     private void handlerListUser(Packet p){
