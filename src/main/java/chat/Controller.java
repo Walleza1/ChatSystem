@@ -267,6 +267,7 @@ public class Controller implements Observer {
         }
 
         if (!this.userList.contains(p.getSource())){
+            System.out.println("User isn't in list");
             boolean isHisPseudoAvailable=true;
             for (User u : this.userList){
                 if (u.getPseudo().equals(p.getSource().getPseudo())){
@@ -296,6 +297,10 @@ public class Controller implements Observer {
                         .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show(); }
                 });
             }
+        }else {
+            System.out.println("User already in Userlist");
+            userList.removeIf(user -> user.equals(p.getSource()));
+            userList.add(p.getSource());
         }
         userListSemaphore.release();
     }
@@ -344,15 +349,14 @@ public class Controller implements Observer {
                     @Override
                     public void run() {
                         // Update UI here.
-                //PUSH NOTIFICATION TEST
-                Image img = new Image("/new_username.png");
-                org.controlsfx.control.Notifications.create().owner(getStage())
-                        .title("Nouveau nom d'utilisateur").text(u.getPseudo() + "devient " + p.getSource().getPseudo())
-                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-
-                u.setPseudo(p.getSource().getPseudo());
-            }
-        });
+                        //PUSH NOTIFICATION TEST
+                        Image img = new Image("/new_username.png");
+                        org.controlsfx.control.Notifications.create().owner(getStage())
+                            .title("Nouveau nom d'utilisateur").text(u.getPseudo() + "devient " + p.getSource().getPseudo())
+                            .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+                        u.setPseudo(p.getSource().getPseudo());
+                    }
+                });
             }
         }
         User tmp = userList.get(0);
