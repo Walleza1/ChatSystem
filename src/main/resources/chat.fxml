@@ -38,7 +38,7 @@
                                  <children>
                                     <ImageView fx:id="changeUsernameIcon" fitHeight="150.0" fitWidth="50.0" onMouseClicked="#changeUsername" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
                                        <image>
-                                          <Image url="@../../../img/5ed9d6f25cc4b49fba68d5cd133f11fa.png" />
+                                          <Image url="@/5ed9d6f25cc4b49fba68d5cd133f11fa.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -81,7 +81,7 @@
                                     </Label>
                                     <ImageView fitHeight="90.0" fitWidth="90.0" layoutX="14.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0">
                                        <image>
-                                          <Image url="@../../../img/userIcon.png" />
+                                          <Image url="@/userIcon.png" />
                                        </image>
                                     </ImageView>
                                  </children>
