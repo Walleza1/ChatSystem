@@ -48,13 +48,7 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        boolean ret=false;
-        if (o instanceof User){
-            User B=(User) o;
-            if (B.getUUID().equals(this.getUUID())){
-                ret=true;
-            }
-        }
-        return ret;
+        User u=(User) o;
+        return u.getUUID().equals(this.getUUID());
     }
 }
