@@ -1,10 +1,14 @@
-# ChatSystem
+# Clavardage v2.1
 
-We'll implement a decentrialize chat system. For that use, we'll use JavaFx & Gradle.
+Système de conversation au sein d'un réseau local permettant l'échange de texte et de fichiers avec persistence des données en local.
 
-## Requirements 
-- Java 8 
-- JavaFX.
+## Déploiement
+
+### Pré-requis
+
+### Installation
+
+### Exécution
 
 
 ## Learning Sources
