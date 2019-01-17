@@ -12,9 +12,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -41,7 +38,7 @@ public class Controller implements Observer {
 
         String timeStamp = new SimpleDateFormat("dd/MM HH:mm").format(new Date());
         System.out.println(timeStamp);
-        this.urlServer="http://10.32.3.102:8080/Server_Web_exploded/usr";
+        this.urlServer="http://192.168.43.241:8080/Server_Web_exploded/usr";
     }
 
     private static Controller INSTANCE = null;
@@ -167,14 +164,6 @@ public class Controller implements Observer {
             alert.setContentText("Ce nom d'utilisateur est déjà pris. Recommencez.");
             alert.showAndWait();
             userList.clear();
-        }
-        try {
-            User u = new User("TestUser", InetAddress.getByName("1.1.1.1"),"RANDOMID", User.Status.online);
-            userList.add(u);
-            messageLog.put(u.getUUID(),new ArrayList<>());
-            userListSemaphore.release();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         }
         return available;
     }
@@ -380,6 +369,15 @@ public class Controller implements Observer {
 
     private void handlerFile(Packet p){
         File f=(File) p;
+        Platform.runLater(() -> {
+            // Update UI here.
+            //PUSH NOTIFICATION TEST
+            Image img = new Image("/new_username.png");
+            org.controlsfx.control.Notifications.create().owner(getStage())
+                    .title("Fichier reçu").text(p.getSource().getPseudo() + " vous a envoyé  "
+                    + f.getContent().getName())
+                    .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+        });
         //TODO
     }
 
