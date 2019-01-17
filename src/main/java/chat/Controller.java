@@ -115,9 +115,7 @@ public class Controller implements Observer {
         boolean available=true;
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
-        for (int i=0;i<5;i++) {
-            this.sendPacket(notifications);
-        }
+        this.sendPacket(notifications);
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -166,7 +164,6 @@ public class Controller implements Observer {
      * Verify if username is in userlist.
      */
     public boolean usernameInList(String s){
-
         boolean res = false;
         try {
             userListSemaphore.acquire();
@@ -253,12 +250,7 @@ public class Controller implements Observer {
         }
 
         UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
-        SortedList<User> sortedListUser=this.userList.sorted(new Comparator<User>() {
-            @Override
-            public int compare(User user, User t1) {
-                return user.getTimeStamp().compareTo(t1.getTimeStamp());
-            }
-        });
+        SortedList<User> sortedListUser=this.userList.sorted((user, t1) -> user.getTimeStamp().compareTo(t1.getTimeStamp()));
         //To verify
         List<User> lastThreeUser= sortedListUser.subList(Math.max(sortedListUser.size()-3,0),sortedListUser.size());
         if (lastThreeUser.contains(this.getSelf())){
