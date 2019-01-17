@@ -38,7 +38,7 @@ Joint à ce projet, un manuel d'utilisateur reprenant les points suivants :
 * **Architecture du système**
 * **Hypothèses de travail**
 * **Fonctionnalités du système**
-* **Limites d'utilisation **
+* **Limites d'utilisation **  
 
 ### Rapport de conception
 Les diagrammes UML de différents types créés lors de la conception sont disponibles [ici](futur link vers les diagrammes).
