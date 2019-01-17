@@ -50,7 +50,7 @@ public class Database {
                     "(SENDER VARCHAR(32), " +
                     "RECEIVER VARCHAR(32), " +
                     "Content VARCHAR(280), " +
-                    "Timestamp TIME);";
+                    "Timestamp VARCHAR(12));";
 
             stmt.executeUpdate(sql);
 
@@ -209,7 +209,7 @@ public class Database {
             ps.setString(1, send.getUUID());
             ps.setString(2, dest.getUUID());
             ps.setString(3, m.getContenu());
-            ps.setTimestamp(4, new Timestamp(m.getTimeStamp().getTime()));
+            ps.setString(4,m.getTimeStamp());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -237,7 +237,7 @@ public class Database {
 
             Message m = new Message(0,getUserFromUUID(rs.getString("SENDER")),
                     getUserFromUUID(rs.getString("RECEIVER")),
-                    rs.getString("CONTENT"), rs.getTimestamp("TIMESTAMP"));
+                    rs.getString("CONTENT"), rs.getString("TIMESTAMP"));
             messages.add(m);
         }
         return messages;

@@ -31,6 +31,8 @@ public class Controller implements Observer {
         this.db = Database.getInstance();
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
         this.userListSemaphore=new Semaphore(1);
+        String timeStamp = new SimpleDateFormat("dd/MM HH:mm").format(new Date());
+        System.out.println(timeStamp);
 
     }
 
@@ -62,9 +64,9 @@ public class Controller implements Observer {
         SimpleDateFormat formater = new SimpleDateFormat("dd/MM hh:mm");
         for (Message m : messageLog.get(u.getUUID())){
             if (m.getSource() == null || m.getSource().getUUID().equals(self.getUUID())){
-                res.add("(" + formater.format(m.getTimeStamp()) + ") Moi : " + m.getContenu());
+                res.add("(" + m.getTimeStamp() + ") Moi : " + m.getContenu());
             } else {
-                res.add("(" + formater.format(m.getTimeStamp()) + ") " + m.getSource().getPseudo() + " : " + m.getContenu());
+                res.add("(" + m.getTimeStamp() + ") " + m.getSource().getPseudo() + " : " + m.getContenu());
             }
 
         }
