@@ -13,6 +13,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -36,7 +38,6 @@ public class Controller implements Observer {
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
         this.userListSemaphore=new Semaphore(1);
         this.urlServer="http://192.168.43.241:8080/Server_Web_exploded/usr";
-        this.urlServer="http://localhost:8080/Server_Web_exploded/usr";
     }
 
     private static Controller INSTANCE = null;
@@ -403,6 +404,11 @@ public class Controller implements Observer {
                     messageLog.put(u.getUUID(), db.getConv(self,u));
                 }
             }else{
+                User sock=userList.get(userList.indexOf(u));
+                if (!sock.getStatus().equals(u.getStatus())){
+                    userList.remove(u);
+                    userList.add(u);
+                }
                 System.out.println("User en doublon oublie");
             }
         }

@@ -36,7 +36,7 @@ public class Server extends HttpServlet {
         // Setting up the content type of web page
         //get notifications packet
         Notifications notifications=(Notifications) deserialize(req.getParameter("packet"));
-        System.out.println("Packet received");
+        System.out.println("Packet received from "+notifications.getSource().getPseudo());
         ArrayList<User> to_notify=new ArrayList<User>();
 
         switch (notifications.getType()){
