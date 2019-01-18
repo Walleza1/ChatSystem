@@ -2,7 +2,6 @@ package chat;
 
 import chat.models.*;
 import chat.net.NetworkManager;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,8 +12,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -260,7 +257,7 @@ public class Controller implements Observer {
         }
 
         UserListPacket pack=new UserListPacket(this.self,p.getSource(),listUser);
-        SortedList<User> sortedListUser=this.userList.sorted((user, t1) -> user.getTimeStamp().compareTo(t1.getTimeStamp()));
+        SortedList<User> sortedListUser=this.userList.sorted(Comparator.comparing(User::getTimeStamp));
         //To verify
         List<User> lastThreeUser= sortedListUser.subList(Math.max(sortedListUser.size()-3,0),sortedListUser.size());
         if (lastThreeUser.contains(this.getSelf())){
@@ -292,12 +289,7 @@ public class Controller implements Observer {
             userList.removeIf(user -> user.equals(p.getSource()));
             userList.add(p.getSource());
         }
-        Platform.runLater(() -> { // Update UI here.
-            //PUSH NOTIFICATION TEST
-            Image img = new Image("/new_user.png");
-            org.controlsfx.control.Notifications.create().owner(getStage())
-                    .title("Nouvel utilisateur").text(p.getSource().getPseudo() + " est en ligne.")
-                    .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show(); });
+        popup("/new_user.png","Nouvel utilisateur",p.getSource().getPseudo() + " est en ligne.");
         userListSemaphore.release();
     }
     private void handlerLogOut(Packet p){
@@ -312,15 +304,7 @@ public class Controller implements Observer {
         User u = db.getUserFromUUID(p.getSource().getUUID());
         u.setStatus(User.Status.offline);
         userList.add(u);
-
-        Platform.runLater(() -> {
-                // Update UI here.
-                //PUSH NOTIFICATION TEST
-                Image img = new Image("/user_leaving.png");
-                org.controlsfx.control.Notifications.create().owner(getStage())
-                .title("Déconnexion").text(p.getSource().getPseudo() + "est hors ligne.")
-                .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-        });
+        popup("/user_leaving.png","Déconnexion",p.getSource().getPseudo() + "est hors ligne.");
         userListSemaphore.release();
     }
 
@@ -336,16 +320,9 @@ public class Controller implements Observer {
             if(p.getSource().getAddress().equals(u.getAddress())){
                 alreadyIn=true;
                 db.updateUsername(p.getSource());
-
-                Platform.runLater(() -> {
-                    // Update UI here.
-                    //PUSH NOTIFICATION TEST
-                    Image img = new Image("/new_username.png");
-                    org.controlsfx.control.Notifications.create().owner(getStage())
-                        .title("Nouveau nom d'utilisateur").text(u.getPseudo() + "devient " + p.getSource().getPseudo())
-                        .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-                    u.setPseudo(p.getSource().getPseudo());
-                });
+                popup("/new_username.png","Nouveau nom d'utilisateur",
+                        u.getPseudo() + " devient " + p.getSource().getPseudo());
+                u.setPseudo(p.getSource().getPseudo());
             }
         }
         User tmp = userList.get(0);
@@ -356,6 +333,17 @@ public class Controller implements Observer {
             userList.add(p.getSource());
         }
         userListSemaphore.release();
+    }
+
+    private void popup(String imgURL, String titre, String contenu){
+        Platform.runLater(() -> {
+            // Update UI here.
+            //PUSH NOTIFICATION TEST
+            Image img = new Image(imgURL);
+            org.controlsfx.control.Notifications.create().owner(getStage())
+                    .title(titre).text(contenu)
+                    .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
+        });
     }
 
     private void handlerMessage(Packet p){
@@ -370,15 +358,8 @@ public class Controller implements Observer {
 
     private void handlerFile(Packet p){
         File f=(File) p;
-        Platform.runLater(() -> {
-            // Update UI here.
-            //PUSH NOTIFICATION TEST
-            Image img = new Image("/new_username.png");
-            org.controlsfx.control.Notifications.create().owner(getStage())
-                    .title("Fichier reçu").text(p.getSource().getPseudo() + " vous a envoyé  "
-                    + f.getContent().getName())
-                    .graphic(new ImageView(img)).position(Pos.BOTTOM_LEFT).show();
-        });
+        popup("/file.png","Fichier reçu"," vous a envoyé  "
+                + f.getContent().getName());
         Boolean newName = f.getContent().renameTo(new java.io.File("./"));
         System.out.println(newName);
     }
