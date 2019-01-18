@@ -1,6 +1,7 @@
 package chat;
 
 import chat.models.*;
+import chat.models.User.Status;
 import chat.net.NetworkManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,6 +15,8 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import static chat.models.User.Status.*;
 
 public class Controller implements Observer {
     private User self;
@@ -32,9 +35,9 @@ public class Controller implements Observer {
         this.myNet=NetworkManager.getInstance();
         this.myNet.addObserver(this);
         this.db = Database.getInstance();
-        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(),User.Status.online);
+        this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(), online);
         this.userListSemaphore=new Semaphore(1);
-        this.urlServer="http://192.168.43.241:8080/Server_Web_exploded/usr";
+        this.urlServer="http://10.32.0.83:8080/Server_Web_exploded/usr";
     }
 
     private static Controller INSTANCE = null;
@@ -137,14 +140,14 @@ public class Controller implements Observer {
         //You're alone ATM, else, DB will be handled in the list handler
         if(this.userList.size() == 0){
             for(User u : db.getUsers()){
-                u.setStatus(User.Status.offline);
+                u.setStatus(offline);
                 userList.add(u);
                 messageLog.put(u.getUUID(),db.getConv(self,u));
             }
         }
 
         for (User u : this.userList){
-            if (u.getPseudo().equals(getSelf().getPseudo()) && u.getStatus().equals(User.Status.online)){
+            if (u.getPseudo().equals(getSelf().getPseudo()) && u.getStatus().equals(online)){
                 if (!u.getUUID().equals(getSelf().getUUID())){
                    available = false;
                 }
@@ -251,7 +254,7 @@ public class Controller implements Observer {
         ArrayList<User> listUser = new ArrayList<>();
 
         for(User u : userList){
-            if(u.getStatus().equals(User.Status.online)){
+            if(u.getStatus().equals(online)){
                 listUser.add(u);
             }
         }
@@ -302,7 +305,7 @@ public class Controller implements Observer {
         userList.removeIf(user -> user.equals(p.getSource()));
         db.updateUsername(p.getSource());
         User u = db.getUserFromUUID(p.getSource().getUUID());
-        u.setStatus(User.Status.offline);
+        u.setStatus(offline);
         userList.add(u);
         popup("/user_leaving.png","Déconnexion",p.getSource().getPseudo() + "est hors ligne.");
         userListSemaphore.release();
@@ -373,30 +376,25 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
 
-        for (User u : userListPacket.getUserList()){
+        for (User u : userListPacket.getUserList())
             if (!userList.contains(u)) {
-                u.setStatus(User.Status.online);
+                u.setStatus(online);
                 userList.add(u);
-                if(db.UUIDNotInUsers(u.getUUID())){
+                if (db.UUIDNotInUsers(u.getUUID())) {
                     db.addUser(u);
                     messageLog.put(u.getUUID(), new ArrayList<>());
-                }else {
+                } else {
                     db.updateUsername(u);
-                    messageLog.put(u.getUUID(), db.getConv(self,u));
+                    messageLog.put(u.getUUID(), db.getConv(self, u));
                 }
-            }else{
-                User sock=userList.get(userList.indexOf(u));
-                if (!sock.getStatus().equals(u.getStatus())){
-                    userList.remove(u);
-                    userList.add(u);
-                }
-                System.out.println("User en doublon oublie");
+            } else {
+                userList.removeIf(user -> user.equals(u));
+                userList.add(u);
             }
-        }
 
         for(User u : db.getUsers()){
             if(!userList.contains(u)){
-                u.setStatus(User.Status.offline);
+                u.setStatus(offline);
                 userList.add(u);
                 messageLog.put(u.getUUID(),db.getConv(self,u));
             }

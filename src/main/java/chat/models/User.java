@@ -51,4 +51,15 @@ public class User implements Serializable {
         User u=(User) o;
         return u.getUUID().equals(this.getUUID());
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "UUID='" + UUID + '\'' +
+                ", pseudo='" + pseudo + '\'' +
+                ", timeStamp=" + timeStamp +
+                ", address=" + address +
+                ", status=" + status +
+                '}';
+    }
 }
