@@ -5,7 +5,6 @@ import chat.models.User;
 import chat.models.UserListPacket;
 import chat.net.NetworkManager;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,28 +18,26 @@ import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import static chat.models.Notifications.createNewUserPacket;
-
 public class Server extends HttpServlet {
-    private String mymsg;
     private List<User> listUser;
     private Semaphore userListSemaphore;
 
     public Server(){
-        this.listUser=new ArrayList<User>();
+        this.listUser= new ArrayList<>();
         this.userListSemaphore=new Semaphore(1);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // Setting up the content type of web page
         //get notifications packet
         Notifications notifications=(Notifications) deserialize(req.getParameter("packet"));
         System.out.println("Packet received from "+notifications.getSource().getPseudo());
-        ArrayList<User> to_notify=new ArrayList<User>();
+        ArrayList<User> to_notify= new ArrayList<>();
 
         switch (notifications.getType()){
             case newUser:
+                System.out.println("NewUser received");
                 try {
                     userListSemaphore.acquire();
                 } catch (InterruptedException e) {
@@ -60,6 +57,7 @@ public class Server extends HttpServlet {
                 } catch (InterruptedException e) {
                     System.out.println("Thread stopped");
                 }
+                System.out.println("NewPseudo received");
                 if (listUser.contains(notifications.getSource())){
                     listUser.get(listUser.indexOf(notifications.getSource())).setPseudo(notifications.getSource().getPseudo());
                 }else{
@@ -73,6 +71,7 @@ public class Server extends HttpServlet {
                 userListSemaphore.release();
                 break;
             case logout:
+                System.out.println("Logout received");
                 try {
                     userListSemaphore.acquire();
                 } catch (InterruptedException e) {
@@ -94,13 +93,12 @@ public class Server extends HttpServlet {
             default:
                 break;
         }
-
+        ArrayList<User> tosend=new ArrayList<User>();
+        tosend.addAll(listUser);
         for (User u : to_notify){
-            UserListPacket userListPacket=new UserListPacket(null,u,to_notify);
-
+            UserListPacket userListPacket=new UserListPacket(null,u,tosend);
             Socket distant=new Socket(u.getAddress(), NetworkManager.USERLIST_PORT);
             ObjectOutputStream out=new ObjectOutputStream(distant.getOutputStream());
-
             out.writeObject(userListPacket);
             out.flush();
             out.close();

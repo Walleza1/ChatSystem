@@ -376,6 +376,8 @@ public class Controller implements Observer {
             e.printStackTrace();
         }
 
+        System.out.println("List begin");
+        System.out.println(userListPacket.getUserList());
         for (User u : userListPacket.getUserList())
             if (!userList.contains(u)) {
                 u.setStatus(online);

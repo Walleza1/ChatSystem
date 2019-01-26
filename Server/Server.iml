@@ -20,6 +20,6 @@
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 9.0.14" level="application_server_libraries" />
-    <orderEntry type="module" module-name="chatsystem" exported="" />
+    <orderEntry type="module" module-name="chatsystem.main" exported="" />
   </component>
 </module>
