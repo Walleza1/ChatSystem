@@ -10,14 +10,14 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerManager  {
+class ServerManager  {
     private String urlServer;
     //http://localhost:8080/Server_Web_exploded/usr
-    public ServerManager(String urlServer){
+    ServerManager(String urlServer){
         this.urlServer=urlServer;
     }
 
-    public void sendPacket(Notifications notifications){
+    void sendPacket(Notifications notifications){
         try {
             URL url=new URL(urlServer);
 
@@ -54,7 +54,7 @@ public class ServerManager  {
     }
     private String serialize(Object obj) {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
-        ObjectOutputStream so = null;
+        ObjectOutputStream so;
         try {
             so = new ObjectOutputStream(bo);
             so.writeObject(obj);

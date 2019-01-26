@@ -15,18 +15,16 @@ public class NetworkManager extends Observable implements Observer {
     private static NetworkManager uniqueInstance=null;
 
     /** Static definition of our Broadcast port**/
-    public static int BROADCAST_PORT=6666;
+    static int BROADCAST_PORT=6666;
     /** Static definition of our Unicast port**/
-    public static int UNICAST_PORT=6667;
+    static int UNICAST_PORT=6667;
 
     public static int USERLIST_PORT=6668;
     public static int USERLIST_TIMEOUT_MS=10000;
 
     private DatagramSocket udpSocket;
-    private ServerSocket tcpSocket;
-    private ServerSocket userSocket;
     private InetAddress myAddr;
-    public static InetAddress broadcastAddr;
+    static InetAddress broadcastAddr;
 
     private ServerManager serverManager;
     private BroadcastManager broadcastManager;
@@ -37,12 +35,11 @@ public class NetworkManager extends Observable implements Observer {
      * Create our NetworkManager
      * Initialize BroadcastManager and UnicastManager
      * Search our routable InetAddress and the broadcast InetAddress
-     * @throws SocketException
      */
     private NetworkManager() {
         try {
-            this.tcpSocket=new ServerSocket(UNICAST_PORT);
-            this.userSocket=new ServerSocket(USERLIST_PORT);
+            ServerSocket tcpSocket = new ServerSocket(UNICAST_PORT);
+            ServerSocket userSocket = new ServerSocket(USERLIST_PORT);
             this.unicastManager =new UnicastManager(tcpSocket);
             this.userListManager=new UserListManager(userSocket);
 
@@ -51,9 +48,12 @@ public class NetworkManager extends Observable implements Observer {
         }
         Thread c=new Thread(unicastManager);
         Thread d=new Thread(userListManager);
-
-        this.unicastManager.addObserver(this);
-        this.userListManager.addObserver(this);
+        if (this.unicastManager != null) {
+            this.unicastManager.addObserver(this);
+        }
+        if (this.userListManager != null) {
+            this.userListManager.addObserver(this);
+        }
 
         c.start();
         d.start();
@@ -66,13 +66,17 @@ public class NetworkManager extends Observable implements Observer {
         // Get our local network broadcast InetAddress.
         NetworkInterface ni= null;
         try {
-            ni = NetworkInterface.getByInetAddress(this.myAddr);
+            if (this.myAddr != null) {
+                ni = NetworkInterface.getByInetAddress(this.myAddr);
+            }
         } catch (SocketException e) {
             e.printStackTrace();
         }
-        for (int i=0;i<ni.getInterfaceAddresses().size();i++){
-            if (ni.getInterfaceAddresses().get(i).getBroadcast() != null){
-                broadcastAddr=ni.getInterfaceAddresses().get(i).getBroadcast();
+        if (ni != null) {
+            for (int i=0;i<ni.getInterfaceAddresses().size();i++){
+                if (ni.getInterfaceAddresses().get(i).getBroadcast() != null){
+                    broadcastAddr=ni.getInterfaceAddresses().get(i).getBroadcast();
+                }
             }
         }
 
@@ -130,10 +134,12 @@ public class NetworkManager extends Observable implements Observer {
      * **/
     public void sendPacket(Packet p){
         if (p instanceof Notifications){
-            if (Controller.getInstance().isServerless()) {
+            if (Controller.getInstance().isServerless() && this.broadcastManager != null) {
                 this.broadcastManager.sendPacket(p);
             }else{
-                this.serverManager.sendPacket((Notifications) p);
+                if (this.serverManager != null) {
+                    this.serverManager.sendPacket((Notifications) p);
+                }
             }
         }else{
            this.unicastManager.sendPacket(p);

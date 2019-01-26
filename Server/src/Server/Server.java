@@ -34,7 +34,6 @@ public class Server extends HttpServlet {
         Notifications notifications=(Notifications) deserialize(req.getParameter("packet"));
         System.out.println("Packet received from "+notifications.getSource().getPseudo());
         ArrayList<User> to_notify= new ArrayList<>();
-
         switch (notifications.getType()){
             case newUser:
                 System.out.println("NewUser received");
@@ -45,6 +44,9 @@ public class Server extends HttpServlet {
                 }
                 if (listUser.contains(notifications.getSource())){
                     listUser.get(listUser.indexOf(notifications.getSource())).setStatus(User.Status.online);
+                    if (!listUser.get(listUser.indexOf(notifications.getSource())).getPseudo().equals(notifications.getSource().getPseudo())){
+                        listUser.get(listUser.indexOf(notifications.getSource())).setPseudo(notifications.getSource().getPseudo());
+                    }
                 }else{
                     listUser.add(notifications.getSource());
                 }
@@ -93,8 +95,8 @@ public class Server extends HttpServlet {
             default:
                 break;
         }
-        ArrayList<User> tosend=new ArrayList<User>();
-        tosend.addAll(listUser);
+        ArrayList<User> tosend = new ArrayList<>(listUser);
+        System.out.println(this.listUser);
         for (User u : to_notify){
             UserListPacket userListPacket=new UserListPacket(null,u,tosend);
             Socket distant=new Socket(u.getAddress(), NetworkManager.USERLIST_PORT);

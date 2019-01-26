@@ -12,13 +12,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class UnicastManager extends Observable implements Runnable, Observer {
-    public ServerSocket socket;
+    private ServerSocket socket;
 
     private HashMap<InetAddress, Discussion> chatRooms;
 
-    public UnicastManager(ServerSocket socket) {
+    UnicastManager(ServerSocket socket) {
         this.socket=socket;
-        this.chatRooms=new HashMap<InetAddress, Discussion>();
+        this.chatRooms= new HashMap<>();
     }
 
     @Override
@@ -52,8 +52,8 @@ public class UnicastManager extends Observable implements Runnable, Observer {
     /**
      * If we receive a flag close by one of our discussion, remove it from the list
      * Else notify observers that we received a packet
-     * @param observable
-     * @param o
+     * @param observable Which Discussion notify us
+     * @param o Data received by our discussion.
      */
     @Override
     public void update(Observable observable, Object o) {
@@ -73,7 +73,7 @@ public class UnicastManager extends Observable implements Runnable, Observer {
         }
     }
 
-    public void stop(){
+    void stop(){
         try {
             for (Discussion dis : this.chatRooms.values()){
                 dis.stop();
@@ -87,9 +87,9 @@ public class UnicastManager extends Observable implements Runnable, Observer {
      * Send a Packet in TCP.
      * If the destination is already in Discussion then use that discussion
      * Else create the discussion.
-     * @param p
+     * @param p Packet to send
      */
-    public void sendPacket(Packet p){
+    void sendPacket(Packet p){
         InetAddress address=p.getDestination().getAddress();
         if (this.socket.isClosed()){
             return;
@@ -97,8 +97,8 @@ public class UnicastManager extends Observable implements Runnable, Observer {
         if (chatRooms.containsKey(address)){
             chatRooms.get(address).sendMessage(p);
         }else{
-            Socket distant= null;
-            Discussion discussion = null;
+            Socket distant;
+            Discussion discussion;
             try {
                 distant = new Socket(address, NetworkManager.UNICAST_PORT);
                 discussion = new Discussion(distant);

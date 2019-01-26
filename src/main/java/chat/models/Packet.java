@@ -8,19 +8,15 @@ public abstract class Packet implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	protected User Source;
-    protected User Destination;
-    protected String timeStamp;
+	private User Source;
+    private User Destination;
+    String timeStamp;
 
 
     public Packet(User source, User destination ){
         Source = source;
         Destination = destination;
         timeStamp = new SimpleDateFormat("dd/MM HH:mm").format(new Date());
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
     }
 
     public String getTimeStamp() {
@@ -31,15 +27,7 @@ public abstract class Packet implements Serializable {
         return Source;
     }
 
-    public void setSource(User source) {
-        Source = source;
-    }
-
     public User getDestination() {
         return Destination;
-    }
-
-    public void setDestination(User destination) {
-        Destination = destination;
     }
 }

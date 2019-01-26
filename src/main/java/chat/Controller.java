@@ -1,7 +1,6 @@
 package chat;
 
 import chat.models.*;
-import chat.models.User.Status;
 import chat.net.NetworkManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,10 +12,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-import static chat.models.User.Status.*;
+import static chat.models.User.Status.offline;
+import static chat.models.User.Status.online;
 
 public class Controller implements Observer {
     private User self;
@@ -37,7 +38,7 @@ public class Controller implements Observer {
         this.db = Database.getInstance();
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(), online);
         this.userListSemaphore=new Semaphore(1);
-        this.urlServer="http://10.32.0.83:8080/Server_Web_exploded/usr";
+        this.urlServer="http://localhost:8080/Server_Web_exploded/usr";
     }
 
     private static Controller INSTANCE = null;
@@ -122,12 +123,12 @@ public class Controller implements Observer {
         boolean available=true;
         this.setUsername(s);
         Notifications notifications=Notifications.createNewUserPacket(this.self,null);
-        for(int i = 0;i < 5;i++){
+        //for(int i = 0;i < 5;i++){
             this.sendPacket(notifications);
-        }
+        //}
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(NetworkManager.USERLIST_TIMEOUT_MS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

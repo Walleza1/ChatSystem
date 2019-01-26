@@ -11,16 +11,16 @@ import java.net.Socket;
 import java.util.Observable;
 
 public class Discussion extends Observable implements Runnable{
-    public Socket distant;
+    Socket distant;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
     /**
      * Représentation d'une discussion en tcp.
-     * @param distant
-     * @throws IOException
+     * @param distant Socket distant
+     * @throws IOException Raise exception when socket creation failed.
      */
-    public Discussion(Socket distant) throws IOException {
+    Discussion(Socket distant) throws IOException {
         this.distant = distant;
         this.out = new ObjectOutputStream(distant.getOutputStream());
         this.in = new ObjectInputStream(new BufferedInputStream(distant.getInputStream()));
@@ -28,10 +28,9 @@ public class Discussion extends Observable implements Runnable{
 
     /** Envois d'un packet
      * Lorsqu'un packet est envoyé, il est envoyé en objet serialized.
-     * @param p
-     * @throws IOException
+     * @param p Packet
      */
-    public void sendMessage(Packet p){
+    void sendMessage(Packet p){
         try {
             if (!this.distant.isClosed()){
                 out.writeObject(p);
@@ -44,7 +43,7 @@ public class Discussion extends Observable implements Runnable{
     }
 
 
-    public void stop(){
+    void stop(){
         try {
             this.distant.close();
         } catch (IOException e) {
@@ -68,10 +67,10 @@ public class Discussion extends Observable implements Runnable{
                 notifyObservers(observerFlag);
                 this.clearChanged();
             }
-        }catch (IOException e){
-            System.out.println("InputStream closed");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        }catch (IOException | ClassNotFoundException e){
+            this.setChanged();
+            ObserverFlag observerFlag = new ObserverFlag(ObserverFlag.Flag.close, null);
+            notifyObservers(observerFlag);
         }
     }
 }

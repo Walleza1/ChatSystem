@@ -1,14 +1,14 @@
 package chat.models;
 public class Notifications extends Packet {
 	public enum NotificationType {
-		newPseudo, newUser, logout;
+		newPseudo, newUser, logout
 	}
 
 	private static final long serialVersionUID = 1L;
 	private NotificationType type;
 
 
-	public Notifications(User source, User destination) {
+	private Notifications(User source, User destination) {
 		super(source, destination);
 	}
 

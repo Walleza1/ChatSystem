@@ -8,9 +8,9 @@ import java.net.DatagramSocket;
 import java.util.Observable;
 
 public class BroadcastManager extends Observable implements Runnable{
-    protected DatagramSocket socket;
+    private DatagramSocket socket;
 
-    public BroadcastManager(DatagramSocket socket) {
+    BroadcastManager(DatagramSocket socket) {
         this.socket = socket;
     }
 
@@ -44,15 +44,15 @@ public class BroadcastManager extends Observable implements Runnable{
         this.clearChanged();
     }
 
-    public void stop(){
+    void stop(){
         this.socket.close();
     }
     /**
      * What do our BroadcastManager do when it receive a packet.
      * Transmit it to our observers
-     * @param p
+     * @param p Packet
      */
-    protected void managePacket(Packet p) {
+    private void managePacket(Packet p) {
         String received=p.getClass().toString();
         System.out.println("Broadcast : "+received);
         notifyObservers(p);
@@ -60,9 +60,9 @@ public class BroadcastManager extends Observable implements Runnable{
 
     /** Send Packet
      * Broadcast a UDP Packet thru local network.
-     * @param p
+     * @param p Packet
      */
-    public void sendPacket(Packet p){
+    void sendPacket(Packet p){
         try {
             DatagramSocket senderSocket=new DatagramSocket();
             senderSocket.setBroadcast(true);

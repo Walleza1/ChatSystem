@@ -1,6 +1,3 @@
-/**
- * @author : Jérôme Kompé
- */
 package chat.models;
 
 import java.io.Serializable;
@@ -14,7 +11,7 @@ public class User implements Serializable {
     private Date timeStamp;
     private InetAddress address;
     public enum Status {
-        online, offline;
+        online, offline
     }
     private Status status;
 
@@ -48,8 +45,12 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        User u=(User) o;
-        return u.getUUID().equals(this.getUUID());
+        if (o instanceof User) {
+            User u = (User) o;
+            return u.getUUID().equals(this.getUUID());
+        }else{
+            return false;
+        }
     }
 
     @Override
