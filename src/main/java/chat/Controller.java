@@ -368,9 +368,9 @@ public class Controller implements Observer {
         System.out.println(newName);
     }
 
-    private void handlerListUser(Packet p){
+    private void handlerListUser(Packet p) {
         System.out.println("Received userlistPacket");
-        UserListPacket userListPacket=(UserListPacket) p;
+        UserListPacket userListPacket = (UserListPacket) p;
         try {
             userListSemaphore.acquire();
         } catch (InterruptedException e) {
@@ -379,9 +379,8 @@ public class Controller implements Observer {
 
         System.out.println("List begin");
         System.out.println(userListPacket.getUserList());
-        for (User u : userListPacket.getUserList())
+        for (User u : userListPacket.getUserList()){
             if (!userList.contains(u)) {
-                u.setStatus(online);
                 userList.add(u);
                 if (db.UUIDNotInUsers(u.getUUID())) {
                     db.addUser(u);
@@ -394,7 +393,7 @@ public class Controller implements Observer {
                 userList.removeIf(user -> user.equals(u));
                 userList.add(u);
             }
-
+        }
         for(User u : db.getUsers()){
             if(!userList.contains(u)){
                 u.setStatus(offline);

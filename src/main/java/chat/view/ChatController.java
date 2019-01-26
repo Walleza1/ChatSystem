@@ -41,56 +41,56 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         userListView.setStyle("-fx-control-inner-background: #242A31;");
         userListView.setFixedCellSize(50);
         username.setText(controller.getUsername());
-        distantUser.setOpacity(0);
-        textArea.setOpacity(0);
-        closeDiscussionButton.setOpacity(0);
-        fileButton.setOpacity(0);
-        sendButton.setOpacity(0);
+        hideDistant();
         controller.getList().addListener(this);
         controller.getMap().addListener(this);
         updateView();
 
     }
 
+    private void hideDistant() {
+        distantUser.setOpacity(0);
+        textArea.setOpacity(0);
+        closeDiscussionButton.setOpacity(0);
+        fileButton.setOpacity(0);
+        sendButton.setOpacity(0);
+    }
 
 
     private void updateView(){
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                userListView.getItems().clear();
-                ArrayList<String> online = new ArrayList<>();
-                ArrayList<String> offline = new ArrayList<>();
+        Platform.runLater(() -> {
+            userListView.getItems().clear();
+            ArrayList<String> online = new ArrayList<>();
+            ArrayList<String> offline = new ArrayList<>();
 
-                for (User u : controller.getList()){
-                    if (!u.equals(controller.getSelf())) {
-                        if(u.getStatus().equals(User.Status.offline)){
-                            offline.add(u.getPseudo() + " - Hors ligne");
-                        } else {
-                            online.add(u.getPseudo());
-                        }
+            for (User u : controller.getList()){
+                if (!u.equals(controller.getSelf())) {
+                    if(u.getStatus().equals(User.Status.offline)){
+                        offline.add(u.getPseudo() + " - Hors ligne");
+                    } else {
+                        online.add(u.getPseudo());
                     }
                 }
-
-                userListView.getItems().addAll(online);
-                userListView.getItems().addAll(offline);
-
-                if(activeUser != null) {
-                    boolean tmp = false ;
-                    for (User u : controller.getList()) {
-                        if (u.getAddress() == activeUser.getAddress()) {
-                            tmp = true;
-                        }
-                    }
-
-                    if (!tmp) {
-                        closeDiscussion();
-                    }
-                }
-
-                String s = online.size()+ "";
-                usersOnline.setText(s);
             }
+
+            userListView.getItems().addAll(online);
+            userListView.getItems().addAll(offline);
+
+            if(activeUser != null) {
+                boolean tmp = false ;
+                for (User u : controller.getList()) {
+                    if (u.getAddress() == activeUser.getAddress()) {
+                        tmp = true;
+                    }
+                }
+
+                if (!tmp) {
+                    closeDiscussion();
+                }
+            }
+
+            String s = online.size()+ "";
+            usersOnline.setText(s);
         });
     }
 
@@ -222,11 +222,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
 
     @FXML
     public void closeDiscussion () {
-        distantUser.setOpacity(0);
-        textArea.setOpacity(0);
-        closeDiscussionButton.setOpacity(0);
-        fileButton.setOpacity(0);
-        sendButton.setOpacity(0);
+        hideDistant();
         messageFeed.getItems().clear();
         textArea.setDisable(true);
 
@@ -256,7 +252,7 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         }
     }
 
-    public void send (){
+    private void send(){
         //Prendre le texte et l'envoyer
         System.out.println(textArea.getText());
         Message toSend = new Message(controller.getSelf(),activeUser,textArea.getText());

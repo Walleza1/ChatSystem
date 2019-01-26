@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
 
-    Controller controller = Controller.getInstance();
+    private Controller controller = Controller.getInstance();
 
     @FXML
     private Button test;
@@ -35,7 +35,7 @@ public class LoginController implements Initializable {
 
     public LoginController(){}
 
-    public void login (Event e) throws IOException{
+    private void login(Event e) throws IOException{
         if (userTextField.getText().equals("")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Erreur");
@@ -80,7 +80,7 @@ public class LoginController implements Initializable {
 
     @FXML
     public void servon (){
-        if (serverButton.getText() == "Server on"){
+        if (serverButton.getText().equals("Server on")){
             //eteint
             Controller.getInstance().initBroadcast();
             serverButton.setText("Server off");
