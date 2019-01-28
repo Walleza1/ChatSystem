@@ -14,7 +14,12 @@ L'historique des conversations d'un utilisateurs sont sauvegardées en local sur
 La vue de l'application a été réalisée avec JavaFX, ainsi que la librairie ControlsFX pour les notifications "push".
 
 ### Serveur de présence 
-JE TE LAISSE DECRIRE CETTE PARTIE SI TU VEUX PAS JE LE FERAI
+
+Lors du démarage de l'application, l'utilisateur peut choisir ou non d'utiliser un serveur de présence.
+
+L'utilisation normale, c'est-à-dire sans serveur de présence, est locale à notre réseau. Ainsi toute personne non présente sur notre réseau local ne sera pas visible. 
+
+Dans le cas de l'utilisation d'un serveur de présence, tout appareil connecté au réseau, et donc a signalé sa présence au serveur de présence, sera visible par l'utilisateur.
 
 ## Fonctionnalités du système
 
@@ -39,5 +44,9 @@ JE TE LAISSE DECRIRE CETTE PARTIE SI TU VEUX PAS JE LE FERAI
 ## Limites d'utilisation
 
 ### Limites de fiabilité liées à UDP
+
+Lors de l'utilisation normale, sans serveur de présence, notre application utilise le protocole UDP, ce qui provoque un manque de garanti de fiabilité. Ainsi, le paquet de notification peut se perdre, créant ainsi un décalage.
+
+Nous avons utilisé, pour nos tests, une répétition de l'envois.
 
 ### Cas limites non vérifiés par des tests

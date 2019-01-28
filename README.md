@@ -5,7 +5,7 @@ Système de conversation au sein d'un réseau local permettant l'échange de tex
 ## Déploiement
 
 ### Pré-requis
-Windows, Linux, MacOS supportés.  
+Windows, Linux, MacOS supportés. 
 Java 1.8.0 ou supérieur (1.8.0_191 recommandé).
 
 ### Installation
@@ -25,16 +25,17 @@ Entrer un nom d'utilisateur pour se connecter et échanger avec les autres utili
 Il est nécessaire de mettre en place notre solution dans un réseau local permettant le bon transit des paquets UDP et TCP utilisés par notre application. Vérifiez que votre réseau local est bien configuré et que le pare-feu de votre machine ne bloque pas certains paquets.
 
 ### Support
-Pour tout problème d'utilisation, vous pouvez contacter [Vincent Erb](erb@etud.insa-toulouse.fr) ou [Jérôme Kompé](mampiani@etud.insa-toulouse.fr].
+Pour tout problème d'utilisation, vous pouvez contacter [Vincent Erb](erb@etud.insa-toulouse.fr) ou [M M Jérôme Kompé](mampiani@etud.insa-toulouse.fr).
 
 ## Auteurs
 * **Vincent Erb** - [VincentErb](https://github.com/VincentErb)
-* **Jérôme Kompé** - [Walleza1](https://github.com/Walleza1)
+* **M M Jérôme Kompé** - [Walleza1](https://github.com/Walleza1)
 
 ## Annexes et Sources
 
 ### Manuel d'utilisateur
-Joint à ce projet, un manuel d'utilisateur reprenant les points suivants : 
+Joint à ce projet, un [manuel d'utilisateur](ManuelUtilisation.md) reprenant les points suivants :
+
 * **Architecture du système**
 * **Fonctionnalités du système**
 * **Limites d'utilisation**

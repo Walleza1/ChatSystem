@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="448.0" y="461.0">chat.models.User</node>
+    <node x="224.0" y="157.0">chat.net.NetworkManager</node>
+    <node x="420.0" y="81.0">chat.models.Message</node>
+    <node x="321.0" y="461.0">chat.Main</node>
+    <node x="0.0" y="233.0">chat.net.UserListManager</node>
+    <node x="0.0" y="81.0">chat.models.UserListPacket</node>
+    <node x="0.0" y="309.0">chat.view.LoginController</node>
+    <node x="163.0" y="461.0">chat.models.Database</node>
+    <node x="202.0" y="309.0">chat.net.ServerManager</node>
+    <node x="0.0" y="461.0">chat.Controller</node>
+    <node x="0.0" y="385.0">chat.view.ChatController</node>
+    <node x="221.49999999999997" y="0.0">chat.models.Packet</node>
+    <node x="195.0" y="385.0">chat.models.ObserverFlag</node>
+    <node x="0.0" y="157.0">chat.net.BroadcastManager</node>
+    <node x="169.99999999999997" y="81.0">chat.models.File</node>
+    <node x="210.0" y="233.0">chat.net.UnicastManager</node>
+    <node x="262.0" y="81.0">chat.models.Notifications</node>
+    <node x="381.0" y="385.0">chat.net.Discussion</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="chat.models.Message" target="chat.models.Packet">
+      <point x="0.0" y="-15.5" />
+      <point x="474.0" y="51.0" />
+      <point x="303.75" y="51.0" />
+      <point x="35.25" y="15.5" />
+    </edge>
+    <edge source="chat.models.File" target="chat.models.Packet">
+      <point x="0.0" y="-15.5" />
+      <point x="205.99999999999997" y="61.0" />
+      <point x="256.75" y="61.0" />
+      <point x="-11.75" y="15.5" />
+    </edge>
+    <edge source="chat.models.Notifications" target="chat.models.Packet">
+      <point x="0.0" y="-15.5" />
+      <point x="331.0" y="61.0" />
+      <point x="280.25" y="61.0" />
+      <point x="11.75" y="15.5" />
+    </edge>
+    <edge source="chat.models.UserListPacket" target="chat.models.Packet">
+      <point x="0.0" y="-15.5" />
+      <point x="75.0" y="51.0" />
+      <point x="233.24999999999997" y="51.0" />
+      <point x="-35.25" y="15.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="268.5" y="111.5" />
+  <SelectedNodes>
+    <node>chat.models.UserListPacket</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>packageLocal</VISIBILITY>
+</Diagram>
+

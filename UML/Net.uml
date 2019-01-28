@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="271.0" y="197.0">chat.net.NetworkManager</node>
+    <node x="395.0" y="24.0">chat.net.UserListManager</node>
+    <node x="580.0" y="36.0">chat.net.ServerManager</node>
+    <node x="105.00000000000006" y="0.0">chat.net.BroadcastManager</node>
+    <node x="162.37499999999997" y="481.0">chat.net.UnicastManager</node>
+    <node x="0.0" y="257.5">chat.net.Discussion</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="chat.net.UnicastManager" target="chat.net.Discussion">
+      <point x="-125.57142857142856" y="-75.5" />
+      <point x="183.30357142857142" y="461.0" />
+      <point x="41.833333333333314" y="461.0" />
+      <point x="-83.66666666666669" y="51.5" />
+    </edge>
+    <edge source="chat.net.BroadcastManager" target="chat.net.NetworkManager">
+      <point x="101.25" y="63.5" />
+      <point x="341.25000000000006" y="147.0" />
+      <point x="388.83333333333337" y="147.0" />
+      <point x="-33.66666666666657" y="-112.0" />
+    </edge>
+    <edge source="chat.net.NetworkManager" target="chat.net.UserListManager">
+      <point x="5.6843418860808015E-14" y="-112.0" />
+      <point x="-55.0" y="39.5" />
+    </edge>
+    <edge source="chat.net.NetworkManager" target="chat.net.ServerManager">
+      <point x="134.66666666666669" y="-112.0" />
+      <point x="557.1666666666666" y="177.0" />
+      <point x="790.75" y="177.0" />
+      <point x="70.25" y="27.5" />
+    </edge>
+    <edge source="chat.net.NetworkManager" target="chat.net.UnicastManager">
+      <point x="37.875" y="112.0" />
+      <point x="460.375" y="451.0" />
+      <point x="392.58928571428567" y="451.0" />
+      <point x="83.71428571428572" y="-75.5" />
+    </edge>
+    <edge source="chat.net.UnicastManager" target="chat.net.NetworkManager">
+      <point x="0.0" y="-75.5" />
+      <point x="-113.625" y="112.0" />
+    </edge>
+    <edge source="chat.net.NetworkManager" target="chat.net.BroadcastManager">
+      <point x="-67.3333333333332" y="-112.0" />
+      <point x="355.16666666666674" y="157.0" />
+      <point x="273.75000000000006" y="157.0" />
+      <point x="33.75" y="63.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="233.0" y="98.0" />
+  <SelectedNodes>
+    <node>chat.net.NetworkManager</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>packageLocal</VISIBILITY>
+</Diagram>
+
