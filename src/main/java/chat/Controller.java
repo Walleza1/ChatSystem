@@ -382,14 +382,25 @@ public class Controller implements Observer {
 
     private void handlerFile(Packet p){
         File f=(File) p;
-        popup("/file.png","Fichier reçu",f.getSource() +
+        popup("/file.png","Fichier reçu",f.getSource().getPseudo() +
                 " vous a envoyé "
                 + f.getName());
-        try (FileOutputStream fos = new FileOutputStream("~/Clavardage/Téléchargements/" + f.getName())) {
+        FileOutputStream fos = null;
+        try {
+            String HomeDir = System.getProperty("user.home");
+            if(new java.io.File(HomeDir + java.io.File.separator +
+                    "Clavardage"+ java.io.File.separator + "Téléchargements").mkdirs()){
+                System.out.println("Created folder : Téléchargements");
+            }
+            String s = HomeDir+ java.io.File.separator +
+                    "Clavardage" + java.io.File.separator + "Téléchargements" +
+                    java.io.File.separator + f.getName();
+            fos = new FileOutputStream(s);
             fos.write(f.getContent());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void handlerListUser(Packet p) {

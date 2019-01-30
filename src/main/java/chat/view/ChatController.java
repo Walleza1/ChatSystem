@@ -23,10 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ChatController implements Initializable, ListChangeListener, MapChangeListener {
 
@@ -286,6 +283,8 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
                 e.printStackTrace();
             }
 
+            toSend.setContent(byte_file);
+            System.out.println(Arrays.toString(toSend.getContent()));
             controller.sendPacket(toSend);
             System.out.println("File sent");
         }
