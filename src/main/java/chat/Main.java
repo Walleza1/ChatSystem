@@ -14,7 +14,7 @@ public class Main extends Application{
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/login.fxml"));
         Scene scene = new Scene (root);
-        primaryStage.setTitle("Clavardage 1.1");
+        primaryStage.setTitle("Clavardage 2.0");
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(windowEvent -> Controller.getInstance().stop());
         Image image = new Image("/icon2.png");

@@ -20,8 +20,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -271,7 +271,21 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
         File selectedFile = choice.showOpenDialog(app_stage);
         if(selectedFile != null){
             chat.models.File toSend = new chat.models.File(controller.getSelf(),
-                    activeUser, selectedFile);
+                    activeUser, null, selectedFile.getName());
+            byte [] byte_file  = new byte [(int)selectedFile.length()];
+
+            FileInputStream fis;
+            try {
+                fis = new FileInputStream(selectedFile);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                if(bis.read(byte_file,0,byte_file.length) == 1){
+                    System.out.println("Couldn't write into byte_file");
+                }
+                bis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             controller.sendPacket(toSend);
             System.out.println("File sent");
         }

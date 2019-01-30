@@ -86,8 +86,18 @@ public class LoginController implements Initializable {
             serverButton.setText("Server off");
         }else {
             //allumé
-            Controller.getInstance().initServer();
-            serverButton.setText("Server on");
+            if(controller.getUrlServer().equals("")){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous devez configurer le serveur de présence en entrant" +
+                        "son adresse IP dans le fichier ~/Clavardage/.configServer. " +
+                        "Redémarrez pour que les changements prennent effet");
+                alert.showAndWait();
+            } else {
+                Controller.getInstance().initServer();
+                serverButton.setText("Server on");
+            }
         }
     }
 

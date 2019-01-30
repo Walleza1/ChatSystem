@@ -1,6 +1,7 @@
 package chat;
 
 import chat.models.*;
+import chat.models.File;
 import chat.net.NetworkManager;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -13,6 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -38,7 +42,20 @@ public class Controller implements Observer {
         this.db = Database.getInstance();
         this.self=new User("Moi", myNet.getMyAddr(),db.getUUID(), online);
         this.userListSemaphore=new Semaphore(1);
-        this.urlServer="http://localhost:8080/Server_Web_exploded/usr";
+
+        try {
+            String HomeDir = System.getProperty("user.home");
+            java.io.File url = new java.io.File(HomeDir+ java.io.File.separator +
+                    "Clavardage" + java.io.File.separator + "configServer.txt");
+            if(url.createNewFile()) {
+                System.out.println("Creating new file");
+            } else {
+                this.urlServer=new String(Files.readAllBytes(Paths.get(HomeDir+ java.io.File.separator +
+                        "Clavardage" + java.io.File.separator + "configServer.txt")));           }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static Controller INSTANCE = null;
@@ -52,6 +69,10 @@ public class Controller implements Observer {
 
     public User getSelf () {
         return self;
+    }
+
+    public String getUrlServer(){
+        return urlServer;
     }
 
     public ObservableList<User> getList () {
@@ -212,7 +233,6 @@ public class Controller implements Observer {
             else if(p instanceof UserListPacket){
                 handlerListUser(p);
             }else if (p instanceof File){
-                System.out.println("File received");
                 handlerFile(p);
             }
         }
@@ -362,10 +382,14 @@ public class Controller implements Observer {
 
     private void handlerFile(Packet p){
         File f=(File) p;
-        popup("/file.png","Fichier reçu"," vous a envoyé  "
-                + f.getContent().getName());
-        Boolean newName = f.getContent().renameTo(new java.io.File("./"));
-        System.out.println(newName);
+        popup("/file.png","Fichier reçu",f.getSource() +
+                " vous a envoyé "
+                + f.getName());
+        try (FileOutputStream fos = new FileOutputStream("~/Clavardage/Téléchargements/" + f.getName())) {
+            fos.write(f.getContent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handlerListUser(Packet p) {
