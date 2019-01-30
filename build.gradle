@@ -33,6 +33,12 @@ dependencies {
 
 
 jar {
+    from('src/main/java') {
+        include  '**/*.properties'
+        include  '**/*.fxml'
+        include  '**/*.css'
+        include  '**/*.png'
+    }
     manifest {
         attributes 'Main-Class': 'chat.Main'
     }

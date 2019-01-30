@@ -20,7 +20,7 @@ public class NetworkManager extends Observable implements Observer {
     static int UNICAST_PORT=6667;
 
     public static int USERLIST_PORT=6668;
-    public static int USERLIST_TIMEOUT_MS=10000;
+    public static int USERLIST_TIMEOUT_MS=500;
 
     private DatagramSocket udpSocket;
     private InetAddress myAddr;
