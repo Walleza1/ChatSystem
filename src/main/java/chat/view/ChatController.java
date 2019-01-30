@@ -284,7 +284,6 @@ public class ChatController implements Initializable, ListChangeListener, MapCha
             }
 
             toSend.setContent(byte_file);
-            System.out.println(Arrays.toString(toSend.getContent()));
             controller.sendPacket(toSend);
             System.out.println("File sent");
         }
